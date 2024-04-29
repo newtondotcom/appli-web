@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white">
+  <header>
     <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
         <div class="md:flex md:items-center md:gap-12">
@@ -69,7 +69,7 @@
     </div>
   </header>
   <NuxtPage />
-  <footer class="bg-gray-100">
+  <footer>
     <div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
       <div class="flex justify-center text-primary">
         <svg class="h-8" viewBox="0 0 118 24" fill="none" xmlns="http://www.w3.org/2000/svg">
