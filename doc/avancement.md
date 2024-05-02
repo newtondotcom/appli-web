@@ -10,13 +10,6 @@ Ce projet utilise le fork [Wildfly](https://github.com/wildfly/wildfly) maintenu
 
 ## Spécifications : 
 
-### Admin
-
-Voir tous les évènements créés par les entreprises, les élèves qui ont réservé et leurs établissements et avoir tout control dessus
-Mêmes options que les Entreprises, Élèves et Établissement pour faire les choses à leur place s'il y a un problème de connexion
-Accéder aux informations rentrées par les utilisateurs (retrouver un mot de passe)
-
-
 ### Élèves 
 
 Se connecter et s'enregistrer comme les entreprises
@@ -78,4 +71,41 @@ Connexion (→ inscription si première ) → Page récapitulatif des évènemen
 
 **Avis** sur un établissement donné par un élève après un évènement
 
+## Enumeration des pages
+
+### Utilisateurs
+
+- Page d’accueil
+- Page de connexion
+- Page de recherche d’évèenemnt
+- Page d’évènement
+- Page utilisateur
+
+### Entreprise
+
+- Page d’accueil
+- Page de connexion
+- Création d’évènement
+- Page de compte
+- Page liste de ses évènement
+- Page Liste étudiant pour un évènement
+
+### Vue Admin ( fonctionnalité implantée en dernier )
+
+Voir tous les évènements créés par les entreprises, les élèves qui ont réservé et leurs établissements et avoir tout control dessus
+Mêmes options que les Entreprises, Élèves et Établissement pour faire les choses à leur place s'il y a un problème de connexion
+Accéder aux informations rentrées par les utilisateurs (retrouver un mot de passe)
+
 # Semaine du 29 avril au 3 mai
+
+Tout les implentations faites cette semaine sont visibles dans les pushs du git ou dans les fichiers indiqués
+
+## Création des entitiées et leurs associations
+
+- [Entitées et Associations](back/src/main/java/modele/)
+
+## Commencement des fonctionnalitées dans la Facade
+
+- [Facade](back/src/main/java/vue/)
+
+## Commencement de la vue Utilisateur
