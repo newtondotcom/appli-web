@@ -78,4 +78,24 @@ Connexion (→ inscription si première ) → Page récapitulatif des évènemen
 
 **Avis** sur un établissement donné par un élève après un évènement
 
+## Enumeration des pages
+
+### Utilisateurs
+
+- Page d’accueil
+- Page de connexion
+- Page de recherche d’évèenemnt
+- Page d’évènement
+- Page utilisateur
+
+### Entreprise
+
+- Page d’accueil
+- Page de connexion
+- Création d’évènement
+- Page de compte
+- Page liste de ses évènement
+- Page Liste étudiant pour un évènement
+
+
 # Semaine du 29 avril au 3 mai
