@@ -19,41 +19,13 @@ public class Facade {
   @PersistenceContext
   private EntityManager em;
 
-  public void ajoutPersonne(String nom, String prenom) {
-    Personne personne = new Personne(prenom, nom);
-    em.persist(personne);
-  }
-
-  public void ajoutAdresse(String rue, String ville) {
-    Adresse adresse = new Adresse(ville, rue);
-    em.persist(adresse);
-  }
-
-  public Collection<Personne> listePersonnes() {
-    return em.createQuery("SELECT p FROM Personne p",
-        Personne.class).getResultList();
-  }
-
-  public Collection<Adresse> listeAdresses() {
-    return em.createQuery("SELECT a FROM Adresse a",
-        Adresse.class).getResultList();
-  }
-
-  public void associer(int personneId, int adresseId) {
-    Personne personne = em.find(Personne.class, personneId);
-    Adresse adresse = em.find(Adresse.class, adresseId);
-    if (!(adresse == null) && !(personne == null)) {
-      adresse.setOwner(personne);
-    } else {
-      throw new RuntimeException("adresse (" + adresse + ") ou personne (" + personne + ") est null");
-    }
-  }
-
-  public HashMap<Personne, Set<Adresse>> lister() {
-    HashMap<Personne, Set<Adresse>> assoc = new HashMap<>();
-    for (Personne p : listePersonnes()) {
-      assoc.put(p, new HashSet<>(p.getAdresses()));
-    }
-    return assoc;
+ // Partie Eleves
+  public Utilisateur Enregistrer(String nom, String mdp, String SIREN, boolean entreprise, int INE, boolean admin, String email, String telephone, Etablissement etablissement_util) {
+    Utilisateur user = new Utilisateur(String nom, String mdp, String SIREN, boolean entreprise, int INE, boolean admin, String email, String telephone, Etablissement etablissement_util);
+    em.persist(user);
+  } 
+  public String SeConnecter(String nom, String mdp) {
+    Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where nom == "+nom+" and mdp == "+mdp, Utilisateur.class).getSingleResult();
+    return utilisateur.getId();
   }
 }

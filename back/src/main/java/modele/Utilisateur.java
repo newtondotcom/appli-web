@@ -26,7 +26,9 @@ public class Utilisateur {
     // L'établissement auquel il appartient
     @ManyToOne
     private Etablissement etablissement_util;
-
+    // Mise en place du token de la session
+    @OneToOne
+    private String token;
     // Les évenements auquels il a participé / participera
     @ManyToMany(mappedBy="utilisateurs_event",fetch = FetchType.EAGER)
     private Collection<Evenement> evenements_util;
