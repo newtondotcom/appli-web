@@ -108,6 +108,9 @@ Accéder aux informations rentrées par les utilisateurs (retrouver un mot de pa
 
 ## Commencement de la vue Utilisateur
 
+-[Listing des évènements visible par les étudiant](front/pages/etudiants/evenement/evenement.vue)
+-[Page d'un évenement avec le détail de l'entreprise](front/pages/etudiants/evenement/[id].vue)
+-[Page de compte d'un utilisateur](front/pages/etudiants/[id].vue)
 
 ## Vue Etablissement
 
