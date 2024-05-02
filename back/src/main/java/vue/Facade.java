@@ -30,17 +30,24 @@ public class Facade {
   }
   public Collection<Evenement> listeEvenement(String jour, String heure, String mois, String annee, String minute, String nom){
     if (jour == null || heure == null || mois == null || annee == null || minute == null){
+      if (nom == null) {
+        return null;
+      } else {
+        return em.createQuery("select e from Evenement e where etablissement_event == " + nom, Evenement.class).getListResult();
+      }
+    } else{
       String date = "" + annee + "-" + mois + "-" + jour + " " + heure + ":" + minute;
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
       LocalDateTime dateTime = LocalDateTime.parse(date, formatter)
-    } else{
-
+      if (nom == null){
+        return em.createQuery("select e from Evenement e where creneau => " + dateTime, Evenement.class).getListResult();
+      } else {
+        return em.createQuery("select e from Evenement e where creneau => " + dateTime + " and etablissement_event == " + nom, Evenement.class).getListResult();
+      }
     }
-    String date = "" + annee + "-" + mois + "-" + jour + " " + heure + ":" + minute;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    LocalDateTime dateTime = LocalDateTime.parse(date, formatter)
-    Collection<Evenement> ev = em.createQuery("select e from Evenement e where creneau == " + dateTime + " and etablissement_event == " + nom, Evenement.class).getListResult();
   }
 
-  public
+  public Evenement ficheEvenement(int id){
+    return em.find(Evenement.class, id);
+  }
 }
