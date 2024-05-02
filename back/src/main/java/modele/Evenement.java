@@ -34,6 +34,8 @@ public class Evenement {
     @OneToMany(mappedBy="evenement_avis")
     private Collection<Avis> avis_event;
 
+    // BOOLEEN POUR DIRE SI L EVENEMENT EST PASSE OU PAS
+
     public Evenement() {
         // Constructeur par défaut
     }
