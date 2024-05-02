@@ -24,7 +24,7 @@ public class Facade {
     Utilisateur user = new Utilisateur(String nom, String mdp, String SIREN, boolean entreprise, int INE, boolean admin, String email, String telephone, Etablissement etablissement_util);
     em.persist(user);
   } 
-  public String SeConnecter(String nom, String mdp) {
+  public String seConnecter(String nom, String mdp) {
     Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where nom == "+nom+" and mdp == "+mdp, Utilisateur.class).getSingleResult();
     return utilisateur.getToken();
   }
@@ -47,7 +47,13 @@ public class Facade {
     }
   }
 
-  public Evenement ficheEvenement(int id){
+  public Evenement ficheEvenement(int id_event){
     return em.find(Evenement.class, id);
   }
 }
+
+  public void demandeReservation(String token, int id_event ) {
+    Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where token == " + token + " and mdp == "+mdp, Utilisateur.class).getSingleResult();
+    Demande new_demande = Demande(false, false,utilisateur,em.createQuery("select e from Evenement e where id == " + id_event, Evenement.class).getSingleResult())
+    utilisateur.setutilisateur.getdemandes_util.add(Demandde) // A finir
+  }
