@@ -150,5 +150,11 @@ public class Utilisateur {
     public void setAvis_util(Collection<Avis> avis_util) {
         this.avis_util = avis_util;
     }
+    public String getToken(){
+        return this.token;
+    }
+    public void setToken(String token){
+        this.token = token;
+    }
 
 }

@@ -19,7 +19,7 @@ public class Etablissement {
     private String SIREN;
     private String nom;
     private boolean entreprise; // true si c'est une entreprise et false si c'est un étudiant
-
+    private String image;
     // Les utilisateurs relié
     @OneToMany(mappedBy="etablissement_util",fetch = FetchType.EAGER)
     private Collection<Utilisateur> utilisateur_etab;
@@ -106,5 +106,10 @@ public class Etablissement {
     public void setDomains_etab(Collection<Domain> domains_etab) {
         this.domains_etab = domains_etab;
     }
-
+    public String getImage() {
+        return this.image;
+    }
+    public void setImage(im) {
+        this.image = im;
+    }
 }

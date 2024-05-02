@@ -26,6 +26,21 @@ public class Facade {
   } 
   public String SeConnecter(String nom, String mdp) {
     Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where nom == "+nom+" and mdp == "+mdp, Utilisateur.class).getSingleResult();
-    return utilisateur.getId();
+    return utilisateur.getToken();
   }
+  public Collection<Evenement> listeEvenement(String jour, String heure, String mois, String annee, String minute, String nom){
+    if (jour == null || heure == null || mois == null || annee == null || minute == null){
+      String date = "" + annee + "-" + mois + "-" + jour + " " + heure + ":" + minute;
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+      LocalDateTime dateTime = LocalDateTime.parse(date, formatter)
+    } else{
+
+    }
+    String date = "" + annee + "-" + mois + "-" + jour + " " + heure + ":" + minute;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    LocalDateTime dateTime = LocalDateTime.parse(date, formatter)
+    Collection<Evenement> ev = em.createQuery("select e from Evenement e where creneau == " + dateTime + " and etablissement_event == " + nom, Evenement.class).getListResult();
+  }
+
+  public
 }
