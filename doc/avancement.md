@@ -92,13 +92,11 @@ Connexion (→ inscription si première ) → Page récapitulatif des évènemen
 
 ### Vue Admin ( fonctionnalité implantée en dernier )
 
-Voir tous les évènements créés par les entreprises, les élèves qui ont réservé et leurs établissements et avoir tout control dessus
+Voir tous les évènements créés par les entreprises, les élèves qui ont réservé et leurs établissements et avoir tout contrôle dessus.
 Mêmes options que les Entreprises, Élèves et Établissement pour faire les choses à leur place s'il y a un problème de connexion
 Accéder aux informations rentrées par les utilisateurs (retrouver un mot de passe)
 
 # Semaine du 29 avril au 3 mai
-
-Tout les implentations faites cette semaine sont visibles dans les pushs du git ou dans les fichiers indiqués
 
 ## Création des entitiées et leurs associations
 
@@ -109,3 +107,15 @@ Tout les implentations faites cette semaine sont visibles dans les pushs du git 
 - [Facade](back/src/main/java/vue/)
 
 ## Commencement de la vue Utilisateur
+
+
+## Vue Etablissement
+
+- [Listing des événements créés par l'entreprise](front/pages/etablissement/evenements.vue)
+- [Page d'un évènement avec la liste des postulants](front/pages/etablissement/evenement/[id].vue)
+- [Demande d'un postulant pour un évènement](front/pages/etablissement/demande/[id].vue)
+
+## Autres
+
+- [Page d'inscription](front/pages/auth/login.vue)
+- [Page d'authentification](front/pages/auth/signup.vue)
