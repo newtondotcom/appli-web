@@ -9,8 +9,73 @@ Ce projet utilise le fork [Wildfly](https://github.com/wildfly/wildfly) maintenu
 ## Création du "thème du site" sur [Figma](https://www.figma.com/file/HR0hwzph2oeCbt7P2aPQkL/appli_web?type=design&node-id=0%3A1&mode=design&t=iQpcZF4FbKFyWKLn-1)
 
 ## Spécifications : 
-fonctionnalités, enchaînement des
-pages, schéma de données (spec grossière, mais
-au propre)
+
+### Admin
+
+Voir tous les évènements créés par les entreprises, les élèves qui ont réservé et leurs établissements et avoir tout control dessus
+Mêmes options que les Entreprises, Élèves et Établissement pour faire les choses à leur place s'il y a un problème de connexion
+Accéder aux informations rentrées par les utilisateurs (retrouver un mot de passe)
+
+
+### Élèves 
+
+Se connecter et s'enregistrer comme les entreprises
+Parcourir les événements
+- Par date / thème / entreprise
+- En réserver un
+Voir ses évènements
+- Se désinscrire
+- Retourner la convention signée
+	- Un document spécial demandé par l’entreprise ( ID, passport )
+Pouvoir donner une avis sur un événement passé
+
+Enchaînement
+Connexion (→ inscription si première ) →  Page de récapitulatif des visites (Accueil) :
+→ Recherche d’une visite par domaine ou entreprise
+→ Cliquer sur un événement pour voir les détails et les documents ( convention et document spécial )
+
+
+### Etablissement
+
+
+Se connecter
+- Champ identifiant
+- Champ mot de passe
+S'enregistrer pour une première connexion
+- De nombreux champs d'information (SIREN, email, id, mdp ...)
+Ajouter une visite
+- Date / Heure
+- Informations sur l'entreprise et la visite
+- Nombre d'élèves
+Voir le récapitulatif des visites et des élèves inscrits
+- Supprimer l'un ou l'autre
+- Bouton qui indique à l'école l'absence d'un étudiant à sa visite
+Programmer l'envoi automatique de mails à des utilisateurs quand la date de la visite se rapproche
+Demander que l’étudiant dépose un document spécifique ( ex : ID pour Airbus )
+
+Se connecter comme les élèves
+Voir tous les créneaux réservé par des élèves de son établissement
+- Valider une demande d’élève pour participer un évènement
+Même envoie de mail que les entreprises
+
+Enchaînement 
+Connexion (→ inscription si première ) → Page récapitulatif des évènements  (Accueil)
+→ Un évènement envoie à sa page d’envoie de mail et de validation
+
+## Entities produits pour ces besoins
+
+**Utilisateur** (étudiant, admin, responsable dans une école ou une entreprise) 
+
+**Établissement** (école ou entreprise) 
+
+**Événement** organisé par l’entreprise 
+
+**Demande** de participation d’un étudiant à un événement 
+
+**Domaine** de l’entreprise ( IA, web, logiciel …)
+
+**Document** demandé par l'entreprise ( ID ) et convention
+
+**Avis** sur un établissement donné par un élève après un évènement
 
 # Semaine du 29 avril au 3 mai
