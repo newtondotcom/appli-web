@@ -18,6 +18,7 @@ public class Evenement {
 
     private String description;
     private LocalDateTime creneau;
+    private int duree; // Durée exprimer en min 
 
     @ManyToMany(mappedBy="evenements_util")
     private Collection<Utilisateur> utilisateurs_event;
@@ -110,4 +111,11 @@ public class Evenement {
         this.avis_event = avis_event;
     }
 
+    public int getDuree(){
+        return this.duree;
+    }
+
+    public void setDuree(int duree){
+        this.duree = duree;
+    }
 }
