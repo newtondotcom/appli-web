@@ -1,0 +1,9 @@
+<template>
+  <div>
+    <EvenementCarte />
+  </div>
+</template>
+
+<script></script>
+
+<style></style>
