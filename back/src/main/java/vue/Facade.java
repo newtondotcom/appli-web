@@ -47,17 +47,25 @@ public class Facade {
     }
   }
 
-  public Evenement ficheEvenement(int id_event){
-    return em.find(Evenement.class, id);
+  public List<Evenement,Int> ficheEvenement(int id_event){
+    Etablissement entreprise = em.find(Etablissement.class,id_event);
+    Collection<Evenement> event_entreprise = entreprise.getEvenements_etab();
+    int note_tot = 0;
+    for ( Evenelent event: event_entreprise) {
+      note_tot += event.getAvis_event();
+    }
+    return (em.find(Evenement.class, id), note_tot/length(event_entreprise));
   }
 }
 
   public void demandeReservation(String token, int id_event ) {
-    Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where token == " + token + " and mdp == "+mdp, Utilisateur.class).getSingleResult();
+    Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where token == " + token, Utilisateur.class).getSingleResult();
     Demande new_demande = Demande(false, false,utilisateur,em.find(Evenement.class, id_event))
-    utilisateur.setutilisateur.getdemandes_util.add(Demandde) // A finir
+    utilisateur.getDemandes_util.add(Demandde)
   }
 
   public void seDesinscrire(String token, int id_event) {
     Evenement event = em.
   }
+
+  public void 

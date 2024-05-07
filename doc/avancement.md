@@ -18,8 +18,8 @@ Parcourir les événements
 - En réserver un
 Voir ses évènements
 - Se désinscrire
-- Retourner la convention signée
-	- Un document spécial demandé par l’entreprise ( ID, passport )
+(- Retourner la convention signée
+	- Un document spécial demandé par l’entreprise ( ID, passport ) ) faire plus tard
 Pouvoir donner une avis sur un événement passé
 
 Enchaînement
