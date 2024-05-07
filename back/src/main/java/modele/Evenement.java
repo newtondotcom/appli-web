@@ -16,6 +16,7 @@ public class Evenement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private String titre;
     private String description;
     private LocalDateTime creneau;
     private int duree; // Durée exprimer en min 
@@ -117,5 +118,13 @@ public class Evenement {
 
     public void setDuree(int duree){
         this.duree = duree;
+    }
+
+    public void setTitre(String title){
+        this.titre = title;
+    }
+
+    public String getTitre(){
+        return this.titre;
     }
 }

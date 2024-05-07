@@ -28,10 +28,10 @@ public class Facade {
     Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where nom == "+nom+" and mdp == "+mdp, Utilisateur.class).getSingleResult();
     return utilisateur.getToken();
   }
-  public Collection<Evenement> listeEvenement(String jour, String heure, String mois, String annee, String minute, String nom){
+  public Collection<Evenement> trierEvenement(String jour, String heure, String mois, String annee, String minute, String nom){
     if (jour == null || heure == null || mois == null || annee == null || minute == null){
       if (nom == null) {
-        return null;
+        return em.createQuery("select e from Evenement e").getListResult();
       } else {
         return em.createQuery("select e from Evenement e where etablissement_event == " + nom, Evenement.class).getListResult();
       }
@@ -68,4 +68,10 @@ public class Facade {
     Evenement event = em.
   }
 
-  public void 
+  public void returnEvent(int id_event){
+    return em.find(Evenement.class,id_event);
+  }
+
+  public Collection<Evenement> listeTousEvent(){
+    return em.createQuery("select e from Evenement e").getListResult();
+  }
