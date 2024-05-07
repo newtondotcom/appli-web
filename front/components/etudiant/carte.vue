@@ -1,13 +1,4 @@
-<script lang="ts">
-import { CalendarDays } from "lucide-vue-next";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+<script setup lang="ts">
 interface Evenement {
   id: number;
   title: string;
@@ -15,23 +6,13 @@ interface Evenement {
   date: string;
   domaine: string;
 }
-export default {
-  props: {
-    evenement: {
-      type: Object as () => Evenement,
-      required: true,
-    },
+
+defineProps({
+  evenement: {
+    type: Object as () => Evenement,
+    required: true,
   },
-  components: {
-    CalendarDays,
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-  },
-};
+});
 </script>
 
 <template>
@@ -50,7 +31,7 @@ export default {
             <p class="text-[9px] place-self-center">{{ evenement.date }}</p>
           </div>
         </CardContent>
-        <CardFooter class="flex justify-around flex-wrap justify-start">
+        <CardFooter class="flex flex-wrap justify-start">
           <Card class="text-xs bg-stone-200 p-1">{{ evenement.domaine }}</Card>
         </CardFooter>
       </Card>
