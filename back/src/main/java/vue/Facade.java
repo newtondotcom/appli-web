@@ -78,3 +78,8 @@ public class Facade {
   public Collection<Evenement> listeTousEvent(){
     return em.createQuery("select e from Evenement e").getListResult();
   }
+
+  public void donnerAvis(int id_utilisateur, int id_event,String titre, String contenu, int note){
+    Avis new_avis = new Avis(titre,note,contenu,em.find(Utilisateur.class, id_utilisateur), em.find(Evenement.class, id_event));
+    em.persist(new_avis);
+  }
