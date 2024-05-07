@@ -61,11 +61,14 @@ public class Facade {
   public void demandeReservation(String token, int id_event ) {
     Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where token == " + token, Utilisateur.class).getSingleResult();
     Demande new_demande = Demande(false, false,utilisateur,em.find(Evenement.class, id_event))
-    utilisateur.getDemandes_util.add(Demandde)
+    utilisateur.getDemandes_util().add(Demandde)
   }
 
   public void seDesinscrire(String token, int id_event) {
-    Evenement event = em.
+    Evenement event = em.find(Evenement.class, id_event);
+    Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where token == " + token, Utilisateur.class).getSingleResult();
+    event.getUtilisateurs_event().remove(utilisateur);
+    em.merge(event);
   }
 
   public void returnEvent(int id_event){
