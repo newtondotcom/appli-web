@@ -24,7 +24,7 @@ const motivation = "Je suis très intéressé par l'intelligence artificielle et
     </Card>
 </div>
 <Titre :title="identite" subtitle="Découvrez sa demande" />
-        <div class="text-xs text-muted-foreground mb-6">
+        <div class="text-xs text-muted-foreground mb-6 ml-6">
         <Badge class="mr-2">{{ email }} </Badge> 
         <Badge  variant="secondary">{{ numero }}</Badge>
         </div>
