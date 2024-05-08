@@ -42,10 +42,12 @@ public class Evenement {
         // Constructeur par défaut
     }
 
-    public Evenement(String description, LocalDateTime creneau, Etablissement etablissement_event) {
+    public Evenement(String description, LocalDateTime creneau, Etablissement etablissement_event, int duree, String titre) {
         this.description = description;
         this.creneau = creneau;
         this.etablissement_event = etablissement_event;
+        this.duree = duree;
+        this.titre = titre;
     }
 
     public int getId() {

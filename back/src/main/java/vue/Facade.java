@@ -26,7 +26,11 @@ public class Facade {
   } 
   public String seConnecter(String nom, String mdp) {
     Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where nom == "+nom+" and mdp == "+mdp, Utilisateur.class).getSingleResult();
-    return utilisateur.getToken();
+      if (utilisateur != null) {
+        return utilisateur.getToken();
+      } else {
+        return null;
+      }
   }
   public Collection<Evenement> trierEvenement(String jour, String heure, String mois, String annee, String minute, String nom){
     if (jour == null || heure == null || mois == null || annee == null || minute == null){
@@ -38,7 +42,7 @@ public class Facade {
     } else{
       String date = "" + annee + "-" + mois + "-" + jour + " " + heure + ":" + minute;
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-      LocalDateTime dateTime = LocalDateTime.parse(date, formatter)
+      LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
       if (nom == null){
         return em.createQuery("select e from Evenement e where creneau => " + dateTime, Evenement.class).getListResult();
       } else {
@@ -71,7 +75,7 @@ public class Facade {
     em.merge(event);
   }
 
-  public void returnEvent(int id_event){
+  public Evenement returnEvent(int id_event){
     return em.find(Evenement.class,id_event);
   }
 
@@ -83,3 +87,34 @@ public class Facade {
     Avis new_avis = new Avis(titre,note,contenu,em.find(Utilisateur.class, id_utilisateur), em.find(Evenement.class, id_event));
     em.persist(new_avis);
   }
+
+  // Mettre un creneau sous la forme: yyyy-MM-dd HH:mm
+  public void ajouterEvenement(String titre, String description, int duree, String creneau, int id_etablissement) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    LocalDateTime dateTime = LocalDateTime.parse(creneau, formatter);
+    Evenement new_event = new Evenement(description,dateTime,em.find(Etablissement.class, id_event),duree,titre);
+    em.persist(new_event);
+  }
+
+  // Je renvoie les evenements liés à l'établissement école. Je ne sais pas si c'est l'ensemble des visites possibles ou l'ensemble des visites
+  // que les étudiants ont réservé. Ici je considère la deuxième option
+  public Collection<Evenement> listeEventParEcole(int id_ecole) {
+    Etablissement etab = em.find(Etablissement.class,id_ecole)
+    return etab.getEvenements_etab();
+  }
+
+// Dans l'entity "Demande", je ne comprends pas pk valide et refuse sont dans le constructeur
+// Sachant que de base une demande ets en attente. Et pourquoi les setValide ne change que un boolean et pas l'autre
+  public void validerDemande(int id_demande){
+    Demande demande_en_cours = em.find(Demande.class, id_demande);
+    demande_en_cours.setValide();
+    em.merge(demande_en_cours);
+  }
+
+  public void refuserDemande(int id_demande){
+    Demande demande_en_cours = em.find(Demande.class, id_demande);
+    demande_en_cours.setRefuse();
+    em.merge(demande_en_cours);
+  }
+
+  
