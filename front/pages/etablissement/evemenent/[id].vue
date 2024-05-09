@@ -19,10 +19,18 @@ const postulants = [
         numero: "06 12 34 56 78"
     }
 ];
+const nom = "Découverte IA";
+const description = "Venez découvrir l'intelligence artificielle avec nos collaborateurs durant ce stage de 3 semaines.";
+const creneau : string = new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
+const nom_etablissement = "Airbus";
+const id_etablissement = 0;
+const note_etablissement = 4.5;
+const tags = ["IA", "Stage", "Airbus"];
+const evenement : EvenementEtablissement = {id, nom, description, creneau, nom_etablissement, id_etablissement, note_etablissement, tags};
 </script>
 
 <template>
-<EvenementCarte />
+<EvenementCarte :key="evenement.id" :evenement="evenement"/>
 <div class="flex space-y-4 justify-center align-middle content-center mx-auto my-4">
 <Button>Modifier l'évenement</Button>
 </div>
