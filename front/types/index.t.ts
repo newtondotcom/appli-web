@@ -9,7 +9,7 @@ export interface EvenementEtablissement {
   id: number;
   nom: string;
   description: string;
-  creneau: string;
+  creneau: Date;
   nom_etablissement: string;
   id_etablissement: number;
   note_etablissement: number;
