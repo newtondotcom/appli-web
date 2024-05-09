@@ -19,9 +19,10 @@ const postulants = [
         numero: "06 12 34 56 78"
     }
 ];
+const id = 0;
 const nom = "Découverte IA";
-const description = "Venez découvrir l'intelligence artificielle avec nos collaborateurs durant ce stage de 3 semaines.";
-const creneau : string = new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
+const description = "Venez découvrir l'intelligence artificielle avec nos collaborateurs durant ce stage de 3 heures.";
+const creneau : Date = new Date();
 const nom_etablissement = "Airbus";
 const id_etablissement = 0;
 const note_etablissement = 4.5;
