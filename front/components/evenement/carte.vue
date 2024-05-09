@@ -1,35 +1,45 @@
 <script setup lang="ts">
-    import {Calendar, Star} from 'lucide-vue-next';
-    defineProps({
-        id: Number
-    });
-
-    const nom = "Découverte IA";
-    const description = "Venez découvrir l'intelligence artificielle avec nos collaborateurs durant ce stage de 3 semaines.";
-    const creneau : string = new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
-    const nom_etablissement = "Airbus";
-    const id_etablissement = 0;
-    const note_etablissement = 4.5;
+defineProps({
+  evenement: {
+    type: Object as () => EvenementEtablissement,
+    required: true,
+  },
+});
+import { Calendar, Star } from 'lucide-vue-next';
 </script>
 
 <template>
-<div class="flex space-y-4 justify-center align-middle content-center mx-auto">
+  <div class="flex space-y-4 justify-center align-middle content-center mx-auto"
+    :class="{ 'opacity-50': new Date(evenement.creneau) < new Date() }">
     <Card class="w-[70vw]">
       <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle class="text-2xl font-medium">
-          {{ nom }}
+          {{ evenement.nom }}
         </CardTitle>
-        <div class="flex flex-row"><Calendar class="mr-2" /> {{ creneau }}</div>
+        <div class="flex flex-row">
+          <Calendar class="mr-2" /> {{ new Date(evenement.creneau).toLocaleDateString() }} - {{ new Date(evenement.creneau).toLocaleTimeString() }}
+        </div>
       </CardHeader>
       <CardContent>
         <div class="text-xl">
-            {{ description }}
+          {{ evenement.description }}
         </div>
-        <div class="text-xs text-muted-foreground mt-4">
-        <Badge class="mr-2">{{ nom_etablissement }} </Badge> 
-        <Badge  variant="secondary">{{ note_etablissement }} / 5 <Star class="ml-1" size="14"/></Badge>
+        <div class="text-xs text-muted-foreground mt-4 flex-row">
+          <div class="text-xs text-muted-foreground mt-4 flex-row">
+            <div class="flex justify-between">
+              <div>
+                <Badge class="mr-2">{{ evenement.nom_etablissement }} </Badge>
+                <Badge variant="secondary">{{ evenement.note_etablissement }} / 5
+                  <Star class="ml-1" size="14" />
+                </Badge>
+              </div>
+              <div class="flex flex-row mt-2">
+                <Badge variant="primary" class="mr-2" v-for="tag in evenement.tags" :key="tag">{{ tag }}</Badge>
+              </div>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
-</div>
+  </div>
 </template>

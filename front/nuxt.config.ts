@@ -21,5 +21,12 @@ export default defineNuxtConfig({
       allowedHeaders: '*',
       exposeHeaders: '*',
     },
-  },
+  },  
+  app: {
+    head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      title: 'Trouve un mini-stage',
+    }
+  }
 })
