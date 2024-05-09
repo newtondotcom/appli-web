@@ -1,7 +1,7 @@
 package modele;
 
 import java.util.Collection;
-
+import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
+@Entity
 public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,18 +18,18 @@ public class Utilisateur {
 
     private String nom;
     private String mdp;
-    private int INE;
+    private String INE;
     private boolean admin; // True si c'est un administrateur
     private String email;
     private String telephone;
-    private String token; // Mise en place du token de la session
+    private boolean token; // Mise en place du token de la session
 
     // L'établissement auquel il appartient
     @ManyToOne
     private Etablissement etablissement_util;
 
     // Les évenements auquels il a participé / participera
-    @ManyToMany(mappedBy="utilisateurs_event",fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy="utilisateurs_event",fetch = FetchType.LAZY)
     private Collection<Evenement> evenements_util;
 
     // Les demandes qu'il a envoyé
@@ -45,7 +46,7 @@ public class Utilisateur {
 
     public Utilisateur() {}
 
-    public Utilisateur(String nom, String mdp, int INE, boolean admin, String email, String telephone, Etablissement etablissement_util, String token) {
+    public Utilisateur(String nom, String mdp, String INE, boolean admin, String email, String telephone, Etablissement etablissement_util, boolean token) {
         this.nom = nom;
         this.mdp = mdp;
         this.INE = INE;
@@ -80,11 +81,11 @@ public class Utilisateur {
         this.mdp = mdp;
     }
 
-    public int getINE() {
+    public String getINE() {
         return INE;
     }
 
-    public void setINE(int INE) {
+    public void setINE(String INE) {
         this.INE = INE;
     }
 
@@ -151,10 +152,10 @@ public class Utilisateur {
     public void setAvis_util(Collection<Avis> avis_util) {
         this.avis_util = avis_util;
     }
-    public String getToken(){
+    public boolean getToken(){
         return this.token;
     }
-    public void setToken(String token){
+    public void setToken(boolean token){
         this.token = token;
     }
 

@@ -1,9 +1,14 @@
 package vue;
-
-import modele.*;
+import modele.Avis;
+import modele.Demande;
+import modele.Etablissement;
+import modele.Evenement;
+import modele.Utilisateur;
 import jakarta.ejb.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,19 +25,49 @@ public class Facade {
   private EntityManager em;
 
  // Partie Eleves
-  public void Enregistrer(String nom, String mdp, int INE, boolean admin, String email, String telephone, Etablissement etablissement_util, String token) {
+ // Cette fonction revoie un boolean qui dit si l'enregistrement s'est bien passé ou pas
+  public boolean Enregistrer(String nom, String mdp, String INE, String mdp_admin, String email, String telephone, String nom_etablissement) {
+    // Le mec ne va pas cocher admin ou pas en s'inscrivant il doit rentré le bon mot de passe pour s'inscrire en temps que admin d'ou les lignes suivante
+    boolean admin = false;
+    if (mdp_admin.equals("je_suis_admin")){
+      admin = true;
+    }
+    // Recherche l'établissement dont le nom à était rentré
+    Etablissement etablissement_util = null;
+    try {
+      TypedQuery<Etablissement> query = em.createQuery("SELECT e FROM Etablissement e WHERE e.nom = :nom", Etablissement.class);
+      query.setParameter("nom", nom);
+      etablissement_util = query.getSingleResult();
+    } catch (IllegalArgumentException | PersistenceException e) {
+        // Gérer le cas où aucun établissement n'a était trouvé avec ce nom n'est trouvé
+        return false;
+    }
+    boolean token = false;
     Utilisateur user = new Utilisateur(nom, mdp, INE, admin, email, telephone, etablissement_util, token);
     em.persist(user);
-  } 
-  
-  public String seConnecter(String nom, String mdp) {
-    Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where nom == "+nom+" and mdp == "+mdp, Utilisateur.class).getSingleResult();
-      if (utilisateur != null) {
-        return utilisateur.getToken();
-      } else {
-        return null;
-      }
+    return true;
   }
+
+  public boolean seConnecter(String nom, String mdp){
+    Utilisateur user = null;
+    try {
+      TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.nom = :nom AND u.mdp = :mdp", Utilisateur.class);
+      query.setParameter("nom", nom);
+      query.setParameter("motDePasse", mdp);
+      user = query.getSingleResult();
+      user.setToken(true);
+      return true;
+    } catch (IllegalArgumentException | PersistenceException e) {
+      return false;
+    }
+  }
+
+   // Rajouter un etablissement
+   public void ajouterEtablissement(String adresse, String SIREN, String nom, boolean entreprise, String image) {
+    Etablissement new_etab = new Etablissement(adresse,SIREN,nom, entreprise,image);
+    em.persist(new_etab);
+  }
+
   public Collection<Evenement> trierEvenement(String jour, String heure, String mois, String annee, String minute, String nom){
     if (jour == null || heure == null || mois == null || annee == null || minute == null){
       if (nom == null) {
@@ -58,7 +93,7 @@ public class Facade {
     Etablissement entreprise = em.find(Etablissement.class,id_event);
     Collection<Evenement> event_entreprise = entreprise.getEvenements_etab();
     int note_tot = 0;
-    for ( Evenement event: event_entreprise) { 
+    for ( Evenement event: event_entreprise){
       note_tot += event.getAvis_event().getNote();
     }
     return (em.find(Evenement.class, id), note_tot/length(event_entreprise));
@@ -120,4 +155,3 @@ public class Facade {
     em.merge(demande_en_cours);
   }
 }
-  

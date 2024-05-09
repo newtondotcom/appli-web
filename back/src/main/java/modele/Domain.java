@@ -1,24 +1,24 @@
 package modele;
 
 import java.util.Collection;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 
-public class Domain {
-    
+@Entity
+public class Domain{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;   
-
+    private int id;
     private String nom;
 
-    @ManyToMany(mappedBy="domains_etab")
+    @ManyToMany(mappedBy="domains_etab",fetch = FetchType.LAZY)
     private Collection<Etablissement> etablissements_dom;
 
-    @ManyToMany(mappedBy="domains_event")
+    @ManyToMany(mappedBy="domains_event",fetch = FetchType.LAZY)
     private Collection<Evenement> evenement_dom;
 
     public Domain() {
