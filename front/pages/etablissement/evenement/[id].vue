@@ -54,8 +54,8 @@ const evenement : EvenementEtablissement = {id, nom, description, creneau, nom_e
                 <a v-if="postulant.statut=='en attente'" :href="'/etablissement/demande/' + postulant.id" >
                 <Button>Consulter la demande</Button>
                 </a>
-                <Button v-if="postulant.statut=='accepte'" class="bg-green-500">Accepté(e)</Button>
-                <Button v-if="postulant.statut=='refuse'" class="bg-red-500">Refusé(e)</Button>
+                <Button v-if="postulant.statut=='accepte'" disabled class="bg-green-500">Accepté(e)</Button>
+                <Button v-if="postulant.statut=='refuse'" disabled class="bg-red-500">Refusé(e)</Button>
               </CardFooter>
             </Card>
 </div>
