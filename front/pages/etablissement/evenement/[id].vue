@@ -33,7 +33,9 @@ const evenement : EvenementEtablissement = {id, nom, description, creneau, nom_e
 <template>
 <EvenementCarte :key="evenement.id" :evenement="evenement"/>
 <div class="flex space-y-4 justify-center align-middle content-center mx-auto my-4">
+<a :href="'/etablissement/evenement/modifier?id=' + evenement.id" >
 <Button>Modifier l'évenement</Button>
+</a>
 </div>
 <Titre title="Postulants" subtitle="Découvrez les postulants à cet évenement" />
 <div class="grid grid-cols-3 gap-4">
@@ -46,7 +48,9 @@ const evenement : EvenementEtablissement = {id, nom, description, creneau, nom_e
                 </CardDescription>
               </CardHeader>
               <CardFooter>
+                <a :href="'/etablissement/demande/' + postulant.id" >
                 <Button>Consulter la demande</Button>
+                </a>
               </CardFooter>
             </Card>
 </div>
