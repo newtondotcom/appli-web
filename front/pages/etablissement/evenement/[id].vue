@@ -4,19 +4,22 @@ const postulants = [
         id: 0,
         nom: "Jean Dupont",
         email: "jean.dupont@gmail.com",
-        numero: "06 12 34 56 78"
+        numero: "06 12 34 56 78",
+        statut : "accepte"
     },
     {
         id: 1,
         nom: "Marie Dupont",
         email: "marie.dupont@gmail.com",
-        numero: "06 12 34 56 78"
+        numero: "06 12 34 56 78",
+        statut : "refuse"
     },
     {
         id: 2,
         nom: "Paul Dupont",
         email: "paul.dupont@gmail.com",
-        numero: "06 12 34 56 78"
+        numero: "06 12 34 56 78",
+        statut : "en attente"
     }
 ];
 const id = 0;
@@ -48,9 +51,11 @@ const evenement : EvenementEtablissement = {id, nom, description, creneau, nom_e
                 </CardDescription>
               </CardHeader>
               <CardFooter>
-                <a :href="'/etablissement/demande/' + postulant.id" >
+                <a v-if="postulant.statut=='en attente'" :href="'/etablissement/demande/' + postulant.id" >
                 <Button>Consulter la demande</Button>
                 </a>
+                <Button v-if="postulant.statut=='accepte'" class="bg-green-500">Accepté(e)</Button>
+                <Button v-if="postulant.statut=='refuse'" class="bg-red-500">Refusé(e)</Button>
               </CardFooter>
             </Card>
 </div>
