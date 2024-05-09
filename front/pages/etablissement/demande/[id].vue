@@ -5,6 +5,7 @@ const id_evenement = 0;
 const identite = "Jean Dupont";
 const email = "jean.dupont@gmail.com";
 const numero = "06 12 34 56 78";
+const classe = "5 ème";
 const motivation = "Je suis très intéressé par l'intelligence artificielle et je souhaite en apprendre plus sur le sujet.";
 const creneau: string = new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
 const demandeRepondue = ref(false);
@@ -30,6 +31,7 @@ const demandeRepondue = ref(false);
   <div class="text-xs text-muted-foreground mb-6 ml-6">
     <Badge class="mr-2">{{ email }} </Badge>
     <Badge variant="secondary">{{ numero }}</Badge>
+    <Badge class="ml-2" variant="outline">{{ classe }}</Badge>
   </div>
   <div class="flex space-y-4 justify-center align-middle content-center mx-auto">
     <Textarea class="w-[60vw] h-[20vh]" :placeholder="motivation" disabled />
