@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {CircleUser} from 'lucide-vue-next';
 </script>
 
 <template>
@@ -95,6 +96,21 @@
               </div>
             </a>
           </div>
+
+
+          <DropdownMenu>
+            <DropdownMenuTrigger><CircleUser /></DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <a href="#">
+              <DropdownMenuItem>Paramètres</DropdownMenuItem>
+              </a>
+              <a href="#">
+              <DropdownMenuItem>Mes évènements</DropdownMenuItem>
+              </a>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <div class="block md:hidden">
             <Button>
