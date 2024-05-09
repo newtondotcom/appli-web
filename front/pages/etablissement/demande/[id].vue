@@ -7,6 +7,7 @@ const email = "jean.dupont@gmail.com";
 const numero = "06 12 34 56 78";
 const motivation = "Je suis très intéressé par l'intelligence artificielle et je souhaite en apprendre plus sur le sujet.";
 const creneau: string = new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
+const demandeRepondue = ref(false);
 </script>
 
 <template>
@@ -19,7 +20,9 @@ const creneau: string = new Date().toLocaleDateString() + " - " + new Date().toL
         <div class="flex flex-row">{{ creneau }}</div>
       </CardHeader>
       <CardContent class="flex space-y-4 justify-center align-middle content-center">
-        <Button>Modifier l'évenement</Button>
+    <a :href="'/etablissement/evenement/' + id_evenement" >
+        <Button>Voir l'évenement</Button>
+    </a>
       </CardContent>
     </Card>
   </div>
@@ -31,8 +34,11 @@ const creneau: string = new Date().toLocaleDateString() + " - " + new Date().toL
   <div class="flex space-y-4 justify-center align-middle content-center mx-auto">
     <Textarea class="w-[60vw] h-[20vh]" :placeholder="motivation" disabled />
   </div>
-  <div class="flex flex-row space-x-4 justify-center align-middle content-center mx-auto mt-8">
+  <div v-if="!demandeRepondue" class="flex flex-row space-x-4 justify-center align-middle content-center mx-auto mt-8">
     <Button>Accepter</Button>
     <Button variant="secondary">Refuser</Button>
+  </div>
+  <div v-else class="flex flex-row space-x-4 justify-center align-middle content-center mx-auto mt-8">
+    <Badge variant="primary">Demande traitée</Badge>
   </div>
 </template>
