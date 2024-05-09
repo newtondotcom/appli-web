@@ -45,7 +45,7 @@ public class Utilisateur {
 
     public Utilisateur() {}
 
-    public Utilisateur(String nom, String mdp, String SIREN, boolean entreprise, int INE, boolean admin, String email, String telephone, Etablissement etablissement_util) {
+    public Utilisateur(String nom, String mdp, int INE, boolean admin, String email, String telephone, Etablissement etablissement_util, String token) {
         this.nom = nom;
         this.mdp = mdp;
         this.INE = INE;
@@ -53,6 +53,7 @@ public class Utilisateur {
         this.email = email;
         this.telephone = telephone;
         this.etablissement_util = etablissement_util;
+        this.token = token;
     }
 
     public int getId() {

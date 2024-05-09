@@ -109,7 +109,7 @@ public class Etablissement {
     public String getImage() {
         return this.image;
     }
-    public void setImage(im) {
+    public void setImage(String im) {
         this.image = im;
     }
 }
