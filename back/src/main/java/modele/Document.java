@@ -21,33 +21,4 @@ public class Document {
     public Document() {
         // Constructeur par défaut
     }
-
-    public Document(Utilisateur utilisateur_doc, Demande demande_doc) {
-        this.utilisateur_doc = utilisateur_doc;
-        this.demande_doc = demande_doc;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Utilisateur getUtilisateur_doc() {
-        return utilisateur_doc;
-    }
-
-    public void setUtilisateur_doc(Utilisateur utilisateur_doc) {
-        this.utilisateur_doc = utilisateur_doc;
-    }
-
-    public Demande getDemande_doc() {
-        return demande_doc;
-    }
-
-    public void setDemande_doc(Demande demande_doc) {
-        this.demande_doc = demande_doc;
-    }
 }

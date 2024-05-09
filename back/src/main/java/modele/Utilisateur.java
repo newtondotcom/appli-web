@@ -28,9 +28,10 @@ public class Utilisateur {
     @ManyToOne
     private Etablissement etablissement_util;
 
+    // PB confirme
     // Les évenements auquels il a participé / participera
-    @ManyToMany(mappedBy="utilisateurs_event",fetch = FetchType.LAZY)
-    private Collection<Evenement> evenements_util;
+    //@ManyToMany(mappedBy="utilisateurs_event",fetch = FetchType.LAZY)
+    //private Collection<Evenement> evenements_util;
 
     // Les demandes qu'il a envoyé
     @OneToMany(mappedBy="utilisateur_dem",fetch = FetchType.EAGER)
@@ -45,118 +46,4 @@ public class Utilisateur {
     private Collection<Avis> avis_util;
 
     public Utilisateur() {}
-
-    public Utilisateur(String nom, String mdp, String INE, boolean admin, String email, String telephone, Etablissement etablissement_util, boolean token) {
-        this.nom = nom;
-        this.mdp = mdp;
-        this.INE = INE;
-        this.admin = admin;
-        this.email = email;
-        this.telephone = telephone;
-        this.etablissement_util = etablissement_util;
-        this.token = token;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getMdp() {
-        return mdp;
-    }
-
-    public void setMdp(String mdp) {
-        this.mdp = mdp;
-    }
-
-    public String getINE() {
-        return INE;
-    }
-
-    public void setINE(String INE) {
-        this.INE = INE;
-    }
-
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-    public Etablissement getEtablissement_util() {
-        return etablissement_util;
-    }
-
-    public void setEtablissement_util(Etablissement etablissement_util) {
-        this.etablissement_util = etablissement_util;
-    }
-
-    public Collection<Evenement> getEvenements_util() {
-        return evenements_util;
-    }
-
-    public void setEvenements_util(Collection<Evenement> evenements_util) {
-        this.evenements_util = evenements_util;
-    }
-
-    public Collection<Demande> getDemandes_util() {
-        return demandes_util;
-    }
-
-    public void setDemandes_util(Collection<Demande> demandes_util) {
-        this.demandes_util = demandes_util;
-    }
-
-    public Collection<Document> getDocuments_util() {
-        return documents_util;
-    }
-
-    public void setDocuments_util(Collection<Document> documents_util) {
-        this.documents_util = documents_util;
-    }
-
-    public Collection<Avis> getAvis_util() {
-        return avis_util;
-    }
-
-    public void setAvis_util(Collection<Avis> avis_util) {
-        this.avis_util = avis_util;
-    }
-    public boolean getToken(){
-        return this.token;
-    }
-    public void setToken(boolean token){
-        this.token = token;
-    }
-
 }

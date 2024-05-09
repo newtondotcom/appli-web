@@ -25,7 +25,7 @@ public class Serv extends HttpServlet {
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-
+      /*
       String op =  request.getParameter("op");
       if (op.equals("acceuil")) {
         String ac =  request.getParameter("action");
@@ -77,5 +77,6 @@ public class Serv extends HttpServlet {
           request.getRequestDispatcher("seconnecter.jsp").forward(request, response);
         }
       }
+      */
   }
 }

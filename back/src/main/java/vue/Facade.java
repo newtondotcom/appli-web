@@ -24,6 +24,8 @@ public class Facade {
   @PersistenceContext
   private EntityManager em;
 
+  /*
+
  // Partie Eleves
  // Cette fonction revoie un boolean qui dit si l'enregistrement s'est bien passé ou pas
   public boolean Enregistrer(String nom, String mdp, String INE, String mdp_admin, String email, String telephone, String nom_etablissement) {
@@ -88,7 +90,6 @@ public class Facade {
   }
 
   // Ca marche pas est je peux pas le débugger je sais pas ce que fait cette fonction
- /*
   public List<Evenement,Int> ficheEvenement(int id_event){
     Etablissement entreprise = em.find(Etablissement.class,id_event);
     Collection<Evenement> event_entreprise = entreprise.getEvenements_etab();
@@ -98,7 +99,6 @@ public class Facade {
     }
     return (em.find(Evenement.class, id), note_tot/length(event_entreprise));
   }
- */
 
   public void demandeReservation(String token, int id_event ) {
     Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where token == " + token, Utilisateur.class).getSingleResult();
@@ -154,4 +154,5 @@ public class Facade {
     demande_en_cours.setRefuse(true);
     em.merge(demande_en_cours);
   }
+  */
 }
