@@ -1,29 +1,34 @@
 <script setup lang="ts">
-import { ComboboxAnchor, ComboboxInput, ComboboxPortal, ComboboxRoot } from 'radix-vue'
-import {
-    DateFormatter,
-    type DateValue,
-    getLocalTimeZone,
-} from '@internationalized/date';
+import { ComboboxAnchor, ComboboxInput, ComboboxPortal, ComboboxRoot } from 'radix-vue';
+import { DateFormatter, type DateValue, getLocalTimeZone } from '@internationalized/date';
 import { Calendar as CalendarIcon } from 'lucide-vue-next';
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 const description = "";
 const df = new DateFormatter('fr-FR', {
     dateStyle: 'long',
-})
+});
 const domaines = [
     { value: 'next.js', label: 'Next.js' },
     { value: 'sveltekit', label: 'SvelteKit' },
     { value: 'nuxt.js', label: 'Nuxt.js' },
     { value: 'remix', label: 'Remix' },
     { value: 'astro', label: 'Astro' },
-]
-const value = ref<DateValue>()
-const modelValue = ref<string[]>([])
-const open = ref(false)
-const searchTerm = ref('')
+];
+const value = ref<DateValue>();
+const eventName = ref('');
+const eventDescription = ref('');
+const eventDuration = ref(0);
+const eventDateHour = ref({ hour: 0, minute: 0 });
+const modelValue = ref<string[]>([]);
+const open = ref(false);
+const searchTerm = ref('');
+const route = useRoute();
+let id = -1;
+if (route.query.id) {
+    id = route.query.id as number;
+}
 
-const filtereddomaines = computed(() => domaines.filter(i => !modelValue.value.includes(i.label)))
+const filtereddomaines = computed(() => domaines.filter(i => !modelValue.value.includes(i.label)));
 </script>
 
 <template>
@@ -34,20 +39,20 @@ const filtereddomaines = computed(() => domaines.filter(i => !modelValue.value.i
                 <div class="grid w-full items-start gap-6">
                     <fieldset class="grid gap-6 rounded-lg border p-4">
                         <div class="grid gap-3">
-                            <Label for="temperature">Nom de l'évenement</Label>
-                            <Input id="temperature" type="text" placeholder="Découverte IA" />
+                            <Label for="eventName">Nom de l'événement</Label>
+                            <Input id="eventName" type="text" placeholder="Découverte IA" v-model="eventName" />
                         </div>
                         <div class="grid gap-3">
-                            <Label for="temperature">Description de l'évenement</Label>
-                            <Textarea id="description" :placeholder="description" />
+                            <Label for="eventDescription">Description de l'événement</Label>
+                            <Textarea id="eventDescription" :placeholder="description" v-model="eventDescription" />
                         </div>
                         <div class="grid gap-3">
-                            <Label for="temperature">Durée en minutes</Label>
-                            <Input id="temperature" type="number" placeholder="60" />
+                            <Label for="eventDuration">Durée en minutes</Label>
+                            <Input id="eventDuration" type="number" placeholder="60" v-model="eventDuration" />
                         </div>
 
                         <div class="grid gap-3">
-                            <Label for="temperature">Date de l'évenement</Label>
+                            <Label for="eventDate">Date de l'événement</Label>
                             <Popover>
                                 <PopoverTrigger as-child>
                                     <div class="flex space-y-4 justify-center align-middle content-center mx-auto">
@@ -67,14 +72,14 @@ const filtereddomaines = computed(() => domaines.filter(i => !modelValue.value.i
                         </div>
 
                         <div class="grid gap-3">
-                            <Label for="temperature">Heure de l'évenement</Label>
+                            <Label for="eventHour">Heure de l'événement</Label>
                             <div class="flex space-x-4">
-                                <Input id="temperature" type="number" placeholder="14" />
-                                <Input id="temperature" type="number" placeholder="30" />
+                                <Input id="eventHour" type="number" placeholder="14" v-model="eventDateHour.hour" />
+                                <Input id="eventMinute" type="number" placeholder="30" v-model="eventDateHour.minute" />
                             </div>
                         </div>
                         <div class="grid gap-3">
-                            <Label for="temperature">Domaines concernés par l'évenement</Label>
+                            <Label for="eventDomain">Domaines concernés par l'événement</Label>
                             <TagsInput class="w-[70vw]" :model-value="modelValue">
                                 <div class="flex gap-2 flex-wrap items-center px-3">
                                     <TagsInputItem v-for="item in modelValue" :key="item" :value="item">
@@ -88,7 +93,7 @@ const filtereddomaines = computed(() => domaines.filter(i => !modelValue.value.i
                                     <ComboboxAnchor as-child>
                                         <ComboboxInput placeholder="Domaine..." as-child>
                                             <TagsInputInput class="w-full px-3"
-                                                :class="modelValue.length > 0 ? 'mt-2' : ''" @keydown.enter.prevent />
+                                                :class="modelValue.length > 0 ? 'mt-1' : ''" @keydown.enter.prevent />
                                         </ComboboxInput>
                                     </ComboboxAnchor>
 
@@ -110,6 +115,10 @@ const filtereddomaines = computed(() => domaines.filter(i => !modelValue.value.i
                             }">
                                                     {{ domaine.label }}
                                                 </CommandItem>
+                                                <div @click="open = false; searchTerm = '';"
+                                                    class="ml-2 text-sm text-semibold">
+                                                    Fermer
+                                                </div>
                                             </CommandGroup>
                                         </CommandList>
                                     </ComboboxPortal>
@@ -117,7 +126,7 @@ const filtereddomaines = computed(() => domaines.filter(i => !modelValue.value.i
                             </TagsInput>
                         </div>
                     </fieldset>
-                    <div class="grid gap-3 mx-auto w-40">
+                    <div class="grid gap-3 mx-auto w-40 my-50">
                         <Button>Enregistrer</Button>
                     </div>
                 </div>
