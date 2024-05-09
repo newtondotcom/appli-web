@@ -20,6 +20,7 @@ const eventDuration = ref(0);
 const eventHour = ref(0);
 const eventMinute = ref(0);
 const modelValue = ref<string[]>([]);
+const nbEleves = ref(0);
 const open = ref(false);
 const loading = ref(false);
 const description = ref('Description de l\'événement');
@@ -84,6 +85,10 @@ async function saveEvent() {
                         <div class="grid gap-3">
                             <Label for="eventDuration">Durée en minutes</Label>
                             <Input id="eventDuration" type="number" placeholder="60" v-model="eventDuration" />
+                        </div>
+                        <div class="grid gap-3">
+                            <Label for="studentNumber">Durée en minutes</Label>
+                            <Input id="studentNumber" type="number" placeholder="60" v-model="nbEleves" />
                         </div>
 
                         <div class="grid gap-3">
