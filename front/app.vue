@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {CircleUser} from 'lucide-vue-next';
+import { CircleUser } from "lucide-vue-next";
 </script>
 
 <template>
-   <Toaster />
+  <Toaster />
   <header>
     <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
@@ -24,15 +24,15 @@ import {CircleUser} from 'lucide-vue-next';
           </a>
         </div>
 
-        <div class="hidden md:block">
+        <div class="md:block">
           <nav aria-label="Global">
             <ul class="flex items-center gap-6 text-sm">
               <li>
                 <a
                   class="text-gray-500 transition hover:text-gray-500/75"
-                  href="#"
+                  href="/etudiants/evenement/evenements"
                 >
-                  About
+                  Chercher Evenement
                 </a>
               </li>
             </ul>
@@ -52,17 +52,16 @@ import {CircleUser} from 'lucide-vue-next';
             </a>
           </div>
 
-
           <DropdownMenu>
             <DropdownMenuTrigger><CircleUser /></DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <a href="#">
-              <DropdownMenuItem>Paramètres</DropdownMenuItem>
+                <DropdownMenuItem>Paramètres</DropdownMenuItem>
               </a>
               <a href="#">
-              <DropdownMenuItem>Mes évènements</DropdownMenuItem>
+                <DropdownMenuItem>Mes évènements</DropdownMenuItem>
               </a>
             </DropdownMenuContent>
           </DropdownMenu>
