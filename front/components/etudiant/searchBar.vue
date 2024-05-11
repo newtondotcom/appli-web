@@ -42,19 +42,7 @@ const domaines: Domaine[] = [
 ];
 
 const selectedEntreprise = ref("");
-
-type Checked = DropdownMenuCheckboxItemProps["checked"];
-
-const showDomaine = domaines.map(() => ref<Checked>(false));
-showDomaine[1].value = false;
-const showStatusBar = ref<Checked>(false);
-const showActivityBar = ref<Checked>(false);
-const showPanel = ref<Checked>(false);
-
-onMounted(() => {
-  console.log("showDomaine:", showDomaine);
-  console.log("showStatusBar:", showStatusBar);
-});
+const selectedDomaine = ref("");
 </script>
 
 <template>
@@ -96,26 +84,24 @@ onMounted(() => {
     <div class="mx-4">
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
-          <Button variant="outline"> Domaines </Button>
+          <Button variant="outline">
+            {{ selectedDomaine === "" ? "Domaine" : selectedDomaine }}
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent class="w-56">
-          <DropdownMenuLabel
-            >Choisis un ou plusieurs Domaines
-          </DropdownMenuLabel>
+          <DropdownMenuLabel>Choisis un Domainne</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <ScrollArea class="h-40 w-48 rounded-md">
-            <DropdownMenuCheckboxItem
-              v-for="domaine in domaines"
-              :key="domaine.id"
-              :value="domaine.nom"
-              v-model:checked="showDomaine[domaine.id - 1]"
-            >
-              {{ domaine.nom }}
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem v-model:checked="showStatusBar">
-              Status Bar
-            </DropdownMenuCheckboxItem>
-          </ScrollArea>
+          <DropdownMenuRadioGroup v-model="selectedDomaine">
+            <ScrollArea class="h-40 w-48 rounded-md">
+              <DropdownMenuRadioItem
+                v-for="domaine in domaines"
+                :key="domaine.id"
+                :value="domaine.nom"
+              >
+                {{ domaine.nom }}
+              </DropdownMenuRadioItem>
+            </ScrollArea>
+          </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
