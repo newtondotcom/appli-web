@@ -1,6 +1,7 @@
 package modele;
 
 import java.util.Collection;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -25,7 +26,7 @@ public class Demande {
     Evenement evenement_dem;
 
     // Les documents attaché à la demande
-    @OneToMany(mappedBy="demande_doc",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "demande_doc", fetch = FetchType.EAGER)
     private Collection<Document> documents_dem;
 
     public Demande() {

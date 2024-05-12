@@ -1,6 +1,7 @@
 package modele;
 
 import java.util.Collection;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,24 +30,26 @@ public class Utilisateur {
     private Etablissement etablissement_util;
 
     // Les évenements auquels il a participé / participera
-    @ManyToMany(mappedBy="utilisateurs_event",fetch = FetchType.LAZY)
+    @ManyToMany
     private Collection<Evenement> evenements_util;
 
-    // Les demandes qu'il a envoyé
-    @OneToMany(mappedBy="utilisateur_dem",fetch = FetchType.EAGER)
+    // // Les demandes qu'il a envoyé
+    @OneToMany(mappedBy = "utilisateur_dem", fetch = FetchType.EAGER)
     private Collection<Demande> demandes_util;
 
     // Les documents qu'il a envoyé ou qu'il a reçu
-    @OneToMany(mappedBy="utilisateur_doc",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "utilisateur_doc", fetch = FetchType.EAGER)
     private Collection<Document> documents_util;
 
     // Les avis qu'il a laissé sur des évenements
-    @OneToMany(mappedBy="utilisateur_avis",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "utilisateur_avis", fetch = FetchType.EAGER)
     private Collection<Avis> avis_util;
 
-    public Utilisateur() {}
+    public Utilisateur() {
+    }
 
-    public Utilisateur(String nom, String mdp, String INE, boolean admin, String email, String telephone, Etablissement etablissement_util, boolean token) {
+    public Utilisateur(String nom, String mdp, String INE, boolean admin, String email, String telephone,
+            Etablissement etablissement_util, boolean token) {
         this.nom = nom;
         this.mdp = mdp;
         this.INE = INE;
@@ -152,10 +155,12 @@ public class Utilisateur {
     public void setAvis_util(Collection<Avis> avis_util) {
         this.avis_util = avis_util;
     }
-    public boolean getToken(){
+
+    public boolean getToken() {
         return this.token;
     }
-    public void setToken(boolean token){
+
+    public void setToken(boolean token) {
         this.token = token;
     }
 

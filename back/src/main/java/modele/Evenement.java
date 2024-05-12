@@ -1,7 +1,8 @@
 package modele;
 
-import java.util.Collection;
 import java.time.LocalDateTime;
+import java.util.Collection;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,19 +22,19 @@ public class Evenement {
     private LocalDateTime creneau;
     private int duree;// Durée exprimer en min
 
-    @ManyToMany(mappedBy="evenements_util")
+    @ManyToMany(mappedBy = "evenements_util", fetch = FetchType.LAZY)
     private Collection<Utilisateur> utilisateurs_event;
 
     @ManyToOne
     private Etablissement etablissement_event;
 
-    @OneToMany(mappedBy="evenement_dem",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "evenement_dem", fetch = FetchType.EAGER)
     private Collection<Demande> demandes_event;
 
-    @ManyToMany(mappedBy="evenement_dom",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "evenement_dom", fetch = FetchType.LAZY)
     private Collection<Domain> domains_event;
 
-    @OneToMany(mappedBy="evenement_avis",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "evenement_avis", fetch = FetchType.EAGER)
     private Collection<Avis> avis_event;
 
     // BOOLEEN POUR DIRE SI L EVENEMENT EST PASSE OU PAS
@@ -42,7 +43,8 @@ public class Evenement {
         // Constructeur par défaut
     }
 
-    public Evenement(String description, LocalDateTime creneau, Etablissement etablissement_event, int duree, String titre) {
+    public Evenement(String description, LocalDateTime creneau, Etablissement etablissement_event, int duree,
+            String titre) {
         this.description = description;
         this.creneau = creneau;
         this.etablissement_event = etablissement_event;
@@ -114,19 +116,19 @@ public class Evenement {
         this.avis_event = avis_event;
     }
 
-    public int getDuree(){
+    public int getDuree() {
         return this.duree;
     }
 
-    public void setDuree(int duree){
+    public void setDuree(int duree) {
         this.duree = duree;
     }
 
-    public void setTitre(String title){
+    public void setTitre(String title) {
         this.titre = title;
     }
 
-    public String getTitre(){
+    public String getTitre() {
         return this.titre;
     }
 }

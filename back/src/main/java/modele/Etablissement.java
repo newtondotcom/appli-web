@@ -1,6 +1,7 @@
 package modele;
 
 import java.util.Collection;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -19,16 +20,17 @@ public class Etablissement {
     private String nom;
     private boolean entreprise; // true si c'est une entreprise et false si c'est un étudiant
     private String image;
-    // Les utilisateurs relié
-    @OneToMany(mappedBy="etablissement_util",fetch = FetchType.EAGER)
+
+    // // Les utilisateurs relié
+    @OneToMany(mappedBy = "etablissement_util", fetch = FetchType.EAGER)
     private Collection<Utilisateur> utilisateur_etab;
 
     // Les évenements organisé
-    @OneToMany(mappedBy="etablissement_event",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "etablissement_event", fetch = FetchType.EAGER)
     private Collection<Evenement> evenements_etab;
 
     // Les domains associé
-    @ManyToMany(mappedBy="etablissements_dom",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "etablissements_dom", fetch = FetchType.LAZY)
     private Collection<Domain> domains_etab;
 
     public Etablissement() {
@@ -106,9 +108,11 @@ public class Etablissement {
     public void setDomains_etab(Collection<Domain> domains_etab) {
         this.domains_etab = domains_etab;
     }
+
     public String getImage() {
         return this.image;
     }
+
     public void setImage(String im) {
         this.image = im;
     }
