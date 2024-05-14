@@ -16,7 +16,7 @@ String message = (String)request.getAttribute("msg");
 %>
 <br><br>
 Nom : <input type="text" name="nom"><br>
-Prénom : <input type="text" name="prenom"><br>
+Mot de passe : <input type="text" name="mdp"><br>
 INE : <input type="text" name="ine"><br>
 Mot de passe administrateur : <input type="text" name="mdp_admin"><br>
 Email : <input type="text" name="email"><br>
