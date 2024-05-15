@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import type { EvenementEtablissement } from "~/types";
 const postulants = [
   {
     id: 0,
