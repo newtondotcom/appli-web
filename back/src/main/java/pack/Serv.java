@@ -45,8 +45,16 @@ public class Serv extends HttpServlet {
         String entrepriseParam = request.getParameter("entreprise");
         boolean estEntreprise = Boolean.parseBoolean(entrepriseParam);
         String image = request.getParameter("image");
-        facade.ajouterEtablissement(adresse, SIREN, nom, estEntreprise, image);
-        request.getRequestDispatcher("acceuil.html").forward(request, response);
+        boolean reussi = facade.ajouterEtablissement(adresse, SIREN, nom, estEntreprise, image);
+        if (reussi){
+          request.getRequestDispatcher("acceuil.html").forward(request, response);
+        } else {
+          request.getRequestDispatcher("ajouteretab.html").forward(request, response);
+        }
+      }
+      if (op.equals("lister")) {
+        request.setAttribute("listeetab", facade.listeEtablissements());
+        request.getRequestDispatcher("liste.jsp").forward(request, response);
       }
       if (op.equals("enregistrer")) {
         String nom = request.getParameter("nom");

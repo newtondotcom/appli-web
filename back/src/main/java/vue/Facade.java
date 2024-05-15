@@ -38,14 +38,15 @@ public class Facade {
       TypedQuery<Etablissement> query = em.createQuery("SELECT e FROM Etablissement e WHERE e.nom = :nom", Etablissement.class);
       query.setParameter("nom", nom);
       etablissement_util = query.getSingleResult();
+      boolean token = false;
+      Utilisateur user = new Utilisateur(nom, mdp, INE, admin, email, telephone, etablissement_util, token);
+      em.persist(user);
+      user.setEtablissement_util(etablissement_util);
+      return true;
     } catch (IllegalArgumentException | PersistenceException e) {
         // Gérer le cas où aucun établissement n'a était trouvé avec ce nom n'est trouvé
         return false;
     }
-    boolean token = false;
-    Utilisateur user = new Utilisateur(nom, mdp, INE, admin, email, telephone, etablissement_util, token);
-    em.persist(user);
-    return true;
   }
 
   public boolean seConnecter(String nom, String mdp){
@@ -55,6 +56,7 @@ public class Facade {
       query.setParameter("nom", nom);
       query.setParameter("motDePasse", mdp);
       user = query.getSingleResult();
+      em.persist(user);
       user.setToken(true);
       return true;
     } catch (IllegalArgumentException | PersistenceException e) {
@@ -63,11 +65,21 @@ public class Facade {
   }
 
    // Rajouter un etablissement
-   public void ajouterEtablissement(String adresse, String SIREN, String nom, boolean entreprise, String image) {
-    Etablissement new_etab = new Etablissement(adresse,SIREN,nom, entreprise,image);
-    em.persist(new_etab);
-  }
+   public boolean ajouterEtablissement(String adresse, String SIREN, String nom, boolean entreprise, String image) {
+    try {
+      TypedQuery<Etablissement> query = em.createQuery("SELECT e FROM Etablissement e WHERE e.nom = :nom", Etablissement.class);
+      query.setParameter("nom", nom);
+      return false;
+    } catch (IllegalArgumentException | PersistenceException e) {
+      Etablissement new_etab = new Etablissement(adresse,SIREN,nom, entreprise,image);
+      em.persist(new_etab);        
+      return true;
+    }
 
+  }
+  public Collection<Etablissement> listeEtablissements(){
+    return em.createQuery("select e from Etablissement e",Etablissement.class).getResultList();
+  }
   public Collection<Evenement> trierEvenement(String jour, String heure, String mois, String annee, String minute, String nom){
     if (jour == null || heure == null || mois == null || annee == null || minute == null){
       if (nom == null) {
