@@ -1,8 +1,6 @@
 package modele;
-
 import java.time.LocalDateTime;
 import java.util.Collection;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
