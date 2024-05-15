@@ -3,6 +3,7 @@ import { CircleUser } from "lucide-vue-next";
 </script>
 
 <template>
+<div>
   <Toaster />
   <header>
     <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
@@ -32,7 +33,7 @@ import { CircleUser } from "lucide-vue-next";
                   class="text-gray-500 transition hover:text-gray-500/75"
                   href="/etudiants/evenement/evenements"
                 >
-                  Chercher Evenement
+                  Rechercher un évènement
                 </a>
               </li>
             </ul>
@@ -252,4 +253,5 @@ import { CircleUser } from "lucide-vue-next";
       </ul>
     </div>
   </footer>
+</div>
 </template>
