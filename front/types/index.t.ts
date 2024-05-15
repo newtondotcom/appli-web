@@ -14,4 +14,5 @@ export interface EvenementEtablissement {
   id_etablissement: number;
   note_etablissement: number;
   tags : string[];
+  duree: number;
 }

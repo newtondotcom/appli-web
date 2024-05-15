@@ -42,6 +42,7 @@ const evenement: EvenementEtablissement = {
   id_etablissement,
   note_etablissement,
   tags,
+  duree,
 };
 
 const evenementPassed = computed(() => {
