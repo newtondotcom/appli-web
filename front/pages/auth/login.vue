@@ -8,10 +8,10 @@ definePageMeta({
   <Card class="mx-auto max-w-sm mt-[100px]">
     <CardHeader>
       <CardTitle class="text-2xl">
-        Login
+        Se connecter
       </CardTitle>
       <CardDescription>
-        Enter your email below to login to your account
+        Entrez vos informations pour vous connecter
       </CardDescription>
     </CardHeader>
     <CardContent>
@@ -27,21 +27,21 @@ definePageMeta({
         </div>
         <div class="grid gap-2">
           <div class="flex items-center">
-            <Label for="password">Password</Label>
+            <Label for="password">Mot de passe</Label>
             <a href="#" class="ml-auto inline-block text-sm underline">
-              Forgot your password?
+              Oubli de votre mot de passe ?
             </a>
           </div>
           <Input id="password" type="password" required />
         </div>
         <Button type="submit" class="w-full">
-          Login
+          Se connecter
         </Button>
       </div>
       <div class="mt-4 text-center text-sm">
-        Don't have an account?
+        Vous n'avez pas de compte ?&nbsp;
         <a href="#" class="underline">
-          Sign up
+          Créer un compte
         </a>
       </div>
     </CardContent>
