@@ -30,7 +30,7 @@ public class Etablissement {
     private Collection<Evenement> evenements_etab;
 
     // Les domains associé
-    @ManyToMany(mappedBy = "etablissements_dom", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "etablissements_dom", fetch = FetchType.EAGER)
     private Collection<Domain> domains_etab;
 
     public Etablissement() {
