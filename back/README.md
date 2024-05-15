@@ -3,3 +3,6 @@ Pour lancer, il suffit d'installer wildfly en téléchargeant l'[archive sur le 
 Pour déployer le TP sur wildfly, il suffit d'installer maven et de faire `mvn wildfly:deploy` dans un autre terminal dans le répertoire du TP, ca va construire le `.war` et le mettre dans le dossier de wildfly.
 
 Persistence DB : `<property name="hibernate.hbm2ddl.auto" value="update" />`
+
+
+Pour ignore le checkstyle : `-Dcheckstyle.skip=true`
