@@ -1,7 +1,18 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: false,
-})
+import {cn} from '~/lib/utils'
+import { ref } from 'vue'
+import { Check, ChevronsUpDown } from 'lucide-vue-next'
+
+const open = ref(false)
+const value = ref('')
+
+const etablissements = [
+  { value: 'next.js', label: 'Next.js' },
+  { value: 'sveltekit', label: 'SvelteKit' },
+  { value: 'nuxt.js', label: 'Nuxt.js' },
+  { value: 'remix', label: 'Remix' },
+  { value: 'astro', label: 'Astro' },
+]
 </script>
 
 <template>
@@ -39,6 +50,56 @@ definePageMeta({
           <Label for="password">Password</Label>
           <Input id="password" type="password" />
         </div>
+
+
+        <div class="grid gap-2">
+          <Label for="password">Etablissement</Label>
+          <Popover v-model:open="open">
+            <PopoverTrigger as-child>
+              <Button
+                variant="outline"
+                role="combobox"
+                :aria-expanded="open"
+                class="justify-between"
+              >
+                {{ value
+                  ? etablissements.find((framework) => framework.value === value)?.label
+                  : "Sélectionner votre établissement..." }}
+                <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent class="p-0">
+              <Command>
+                <CommandInput class="h-9" placeholder="Chercher un établissement..." />
+                <CommandEmpty>Pas d'établissement trouvé.</CommandEmpty>
+                <CommandList>
+                  <CommandGroup>
+                    <CommandItem
+                      v-for="framework in etablissements"
+                      :key="framework.value"
+                      :value="framework.value"
+                      @select="(ev) => {
+                        if (typeof ev.detail.value === 'string') {
+                          value = ev.detail.value
+                        }
+                        open = false
+                      }"
+                    >
+                      {{ framework.label }}
+                      <Check
+                        :class="cn(
+                          'ml-auto h-4 w-4',
+                          value === framework.value ? 'opacity-100' : 'opacity-0',
+                        )"
+                      />
+                    </CommandItem>
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
+
         <Button type="submit" class="w-full">
           Create an account
         </Button>
