@@ -74,6 +74,29 @@ async function marquerPersonnePresente(id: number) {
 async function marquerPersonneAbsente(id: number) {
   console.log("Absent");
 }
+
+const statistiques = [
+    {
+        titre: "Nombre de participants ayant postulé",
+        valeur: 45,
+        sous_titre: "+20.1% from last month",
+    },
+    {
+        titre: "Nombre de participants retenus",
+        valeur: 30,
+        sous_titre: "+20.1% from last month"
+    },
+    {
+        titre: "Nombre de participants présents",
+        valeur: 23,
+        sous_titre: "+20.1% from last month"
+    },
+    {
+        titre: "Note moyenne des participants",
+        valeur: 2.5,
+        sous_titre: "+20.1% from last month"
+    },
+];
 </script>
 
 <template>
@@ -82,8 +105,8 @@ async function marquerPersonneAbsente(id: number) {
   <div
     class="flex space-y-4 justify-center align-middle content-center mx-auto my-4"
   >
-    <a :href="'/etablissement/evenement/modifier?id=' + evenement.id">
-      <Button disabled="evenementPassed">Modifier l'évenement</Button>
+    <a v-if="!evenementPassed" :href="'/etablissement/evenement/modifier?id=' + evenement.id">
+      <Button >Modifier l'évenement</Button>
     </a>
   </div>
 
@@ -153,29 +176,24 @@ async function marquerPersonneAbsente(id: number) {
     </div>
   </div>
   <div v-else>
-    <Titre title="Récapitulatif" subtitle="Récapitulatif cet évènement" />
-    <div class="grid grid-cols-1 gap-4 justify-center mx-auto items-center">
-      <div v-for="postulant in postulants" :key="postulant.id">
-        <Card class="sm:col-span-2 w-[80%]">
-          <CardHeader class="pb-3">
-            <CardTitle>
-              <div class="flex justify-between flex-row">
-                <div>
-                  {{ postulant.nom }}
-                </div>
-                <div>
-                  <Button @click="marquerPersonnePresente(postulant.id)" class="mr-2">Présent</Button>
-                  <Button @click="marquerPersonneAbsente(postulant.id)" class="bg-red-500">Absent</Button>
-                </div>
-              </div>
+    <Titre title="Récapitulatif" subtitle="Récapitulatif de cet évènement" />
+    <div class="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+        <Card v-for="statistique in statistiques" :key="statistique.index">
+          <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle class="text-sm font-medium">
+                {{ statistique.titre }}
             </CardTitle>
-            <CardDescription class="max-w-lg text-balance leading-relaxed">
-              {{ postulant.email }} <br />
-              {{ postulant.numero }}
-            </CardDescription>
+            <DollarSign class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
+          <CardContent>
+            <div class="text-2xl font-bold">
+                {{ statistique.valeur }}
+            </div>
+            <p class="text-xs text-muted-foreground">
+                {{ statistique.sous_titre }}
+            </p>
+          </CardContent>
         </Card>
-      </div>
     </div>
   </div>
 </div>
