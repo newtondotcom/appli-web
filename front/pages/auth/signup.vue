@@ -19,21 +19,21 @@ const etablissements = [
   <Card class="mx-auto max-w-sm mt-[100px]">
     <CardHeader>
       <CardTitle class="text-xl">
-        Sign Up
+        Créer un compte
       </CardTitle>
       <CardDescription>
-        Enter your information to create an account
+        Entrez vos informations pour créer un compte
       </CardDescription>
     </CardHeader>
     <CardContent>
       <div class="grid gap-4">
         <div class="grid grid-cols-2 gap-4">
           <div class="grid gap-2">
-            <Label for="first-name">First name</Label>
+            <Label for="first-name">Prénom</Label>
             <Input id="first-name" placeholder="Max" required />
           </div>
           <div class="grid gap-2">
-            <Label for="last-name">Last name</Label>
+            <Label for="last-name">Nom</Label>
             <Input id="last-name" placeholder="Robinson" required />
           </div>
         </div>
@@ -47,13 +47,13 @@ const etablissements = [
           />
         </div>
         <div class="grid gap-2">
-          <Label for="password">Password</Label>
+          <Label for="password">Mot de passe</Label>
           <Input id="password" type="password" />
         </div>
 
 
         <div class="grid gap-2">
-          <Label for="password">Etablissement</Label>
+          <Label for="password">Établissement</Label>
           <Popover v-model:open="open">
             <PopoverTrigger as-child>
               <Button
@@ -101,13 +101,13 @@ const etablissements = [
         </div>
 
         <Button type="submit" class="w-full">
-          Create an account
+          Créer un compte
         </Button>
       </div>
       <div class="mt-4 text-center text-sm">
-        Already have an account?
-        <a href="#" class="underline">
-          Sign in
+        Vous avez déjà un compte ?
+        <a href="/auth/login" class="underline">
+          Se connecter
         </a>
       </div>
     </CardContent>
