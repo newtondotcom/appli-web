@@ -23,7 +23,7 @@ public class Utilisateur {
     private boolean admin; // True si c'est un administrateur
     private String email;
     private String telephone;
-    private boolean token; // Mise en place du token de la session
+    private String token; // Mise en place du token de la session
 
     // L'établissement auquel il appartient
     @ManyToOne
@@ -49,7 +49,7 @@ public class Utilisateur {
     }
 
     public Utilisateur(String nom, String mdp, String INE, boolean admin, String email, String telephone,
-            Etablissement etablissement_util, boolean token) {
+            Etablissement etablissement_util, String token) {
         this.nom = nom;
         this.mdp = mdp;
         this.INE = INE;
@@ -156,11 +156,11 @@ public class Utilisateur {
         this.avis_util = avis_util;
     }
 
-    public boolean getToken() {
+    public String getToken() {
         return this.token;
     }
 
-    public void setToken(boolean token) {
+    public void setToken(String token) {
         this.token = token;
     }
 

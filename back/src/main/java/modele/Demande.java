@@ -2,6 +2,8 @@ package modele;
 
 import java.util.Collection;
 
+import com.google.gson.annotations.Expose;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,16 +14,18 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Demande {
+    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @Expose
     private boolean valide; // True veut dire validé et false en attente
+    @Expose
     private boolean refuse; // True veut dire refusé et false en attente ou validé
-
+    @Expose
     @ManyToOne
     Utilisateur utilisateur_dem;
-
+    @Expose
     @ManyToOne
     Evenement evenement_dem;
 
@@ -33,11 +37,12 @@ public class Demande {
         // Constructeur par défaut
     }
 
-    public Demande(boolean valide, boolean refuse, Utilisateur utilisateur_dem, Evenement evenement_dem) {
-        this.valide = valide;
-        this.refuse = refuse;
+    public Demande(Utilisateur utilisateur_dem, Evenement evenement_dem) {
+        this.valide = false;
+        this.refuse = false;
         this.utilisateur_dem = utilisateur_dem;
         this.evenement_dem = evenement_dem;
+        this.documents_dem = null;
     }
 
     public int getId() {

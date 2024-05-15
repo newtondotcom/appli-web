@@ -14,87 +14,106 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.time.LocalDateTime;
 
-
 @WebServlet("/Serv")
 public class Serv extends HttpServlet {
   @EJB
   Facade facade;
+
   public Serv() {
     super();
   }
 
+  Gson gson = new GsonBuilder()
+      .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+      .excludeFieldsWithoutExposeAnnotation()
+      .create();
+
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-      
-      String op =  request.getParameter("op");
-      
-      if (op.equals("lister")) {
-        Collection<Etablissement> listeetab = facade.listeEtablissements();
-        Gson gson = new GsonBuilder()
-        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-        .create();
-        String json = gson.toJson(listeetab);
-        response.getWriter().write(json);
-      }
+      throws ServletException, IOException {
+
+    String op = request.getParameter("op");
+    // NULL -> Lister tout les établissements et domaines
+    if (op.equals("lister_etab_domain")) {
+      Collection<Etablissement> listeetab = facade.listeEtablissements();
+      Collection<Domain> listedom = facade.listeDomain();
+      String json1 = gson.toJson(listeetab);
+      String json2 = gson.toJson(listedom);
+      String json = json1 + json2;
+      response.getWriter().write(json);
+    }
+    // ID_Event -> Utilisateur qui on envoyé des demandes
+    if (op.equals("lister_util_event")) {
+      int id = Integer.parseInt(request.getParameter("id"));
+      Collection<Utilisateur> listeutil = facade.utilEvent(id);
+      String json = gson.toJson(listeutil);
+      response.getWriter().write(json);
+    }
+    // ID_Demande -> Demande
+    if (op.equals("idDemmande")) {
+      int id = Integer.parseInt(request.getParameter("id"));
+      Demande dem = facade.idDemande(id);
+      String json = gson.toJson(dem);
+      response.getWriter().write(json);
+    }
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
 
-      String op =  request.getParameter("op");
-      if (op.equals("acceuil")) {
-        String ac =  request.getParameter("action");
-        if (ac.equals("enregistrer")){
-          request.setAttribute("msg", "Bienvenue sur la page d'enregistrement");
-          request.getRequestDispatcher("enregistrer.jsp").forward(request, response);
-        }
-        if (ac.equals("seconnecter")){
-          request.setAttribute("msg", "Bienvenue sur la page de connexion");
-          request.getRequestDispatcher("seconnecter.jsp").forward(request, response);
-        }
-      }
-      if (op.equals("ajouteretab")) {
-        String adresse = request.getParameter("adresse");
-        String SIREN = request.getParameter("SIREN");
-        String nom = request.getParameter("nom");
-        String entrepriseParam = request.getParameter("entreprise");
-        boolean estEntreprise = Boolean.parseBoolean(entrepriseParam);
-        String image = request.getParameter("image");
-        boolean reussi = facade.ajouterEtablissement(adresse, SIREN, nom, estEntreprise, image);
-        if (reussi){
-          request.getRequestDispatcher("acceuil.html").forward(request, response);
-        } else {
-          request.getRequestDispatcher("ajouteretab.html").forward(request, response);
-        }
-      }
-      if (op.equals("enregistrer")) {
-        String nom = request.getParameter("nom");
-        String mdp = request.getParameter("mdp");
-        String INE = request.getParameter("ine");
-        String mdp_admin = request.getParameter("mdp_admin");
-        String email = request.getParameter("email");
-        String telephone = request.getParameter("telephone");
-        String nom_etablissement = request.getParameter("nom_etablissement");
-        boolean reussi = facade.Enregistrer( nom, mdp, INE, mdp_admin, email, telephone, nom_etablissement) ;
-        if (reussi) {
-          request.setAttribute("msg", "Enregistrement réussi, veuillez vous connecter.");
-          request.getRequestDispatcher("seconnecter.jsp").forward(request, response);
-        } else {
-          request.setAttribute("msg", "Vous avez rentré un établissement qui n'est pas connu");
-          request.getRequestDispatcher("enregistrer.jsp").forward(request, response);
-        }
-      }
-      if (op.equals("seconnecter")) {
-        String nom = request.getParameter("nom");
-        String mdp = request.getParameter("mdp");
-        boolean reussi = facade.seConnecter(nom, mdp);
-        if (reussi) {
-          request.setAttribute("msg", "Connexion réussi");
-          request.getRequestDispatcher("menu.jsp").forward(request, response);
-        } else {
-          request.setAttribute("msg", "Mauvais mot de passe ou mauvais identifiant");
-          request.getRequestDispatcher("seconnecter.jsp").forward(request, response);
-        }
-      }
+    String op = request.getParameter("op");
+    // Initialise la BD avec des entitées
+    if (op.equals("init")) {
+      facade.initialisation();
+      String json = gson.toJson("OK");
+      response.getWriter().write(json);
+    }
+    // Information_etablissement -> Si l'enregistemenent a était fait
+    if (op.equals("ajouter_etab")) {
+      String adresse = request.getParameter("adresse");
+      int SIREN = Integer.parseInt(request.getParameter("SIREN"));
+      String nom = request.getParameter("nom");
+      String entrepriseParam = request.getParameter("entreprise");
+      boolean estEntreprise = Boolean.parseBoolean(entrepriseParam);
+      String image = request.getParameter("image");
+      String msg = facade.ajouterEtablissement(adresse, SIREN, nom, estEntreprise, image);
+      String json = gson.toJson(msg);
+      response.getWriter().write(json);
+    }
+    // Information_Utilisateur -> Si l'enregistemenent a était fait
+    if (op.equals("enregistrer_util")) {
+      String nom = request.getParameter("nom");
+      String mdp = request.getParameter("mdp");
+      String INE = request.getParameter("ine");
+      String mdp_admin = request.getParameter("mdp_admin");
+      String email = request.getParameter("email");
+      String telephone = request.getParameter("telephone");
+      String nom_etablissement = request.getParameter("nom_etablissement");
+      String msg = facade.Enregistrer(nom, mdp, INE, mdp_admin, email, telephone, nom_etablissement);
+      String json = gson.toJson(msg);
+      response.getWriter().write(json);
+    }
+    // Mail et Mdp -> Tokken si ok ou Error sinon
+    if (op.equals("seconnecter")) {
+      String nom = request.getParameter("email");
+      String mdp = request.getParameter("mdp");
+      String msg = facade.seConnecter(nom, mdp);
+      String json = gson.toJson(msg);
+      response.getWriter().write(json);
+    }
+    // NULL -> Success si validé ou Error sinon
+    if (op.equals("validerdemande")) {
+      int id = Integer.parseInt(request.getParameter("id"));
+      String msg = facade.accepterDemande(id);
+      String json = gson.toJson(msg);
+      response.getWriter().write(json);
+    }
+    // NULL -> Success si refusé ou Error sinon
+    if (op.equals("refuserdemande")) {
+      int id = Integer.parseInt(request.getParameter("id"));
+      String msg = facade.refuserDemande(id);
+      String json = gson.toJson(msg);
+      response.getWriter().write(json);
+    }
+
   }
 }

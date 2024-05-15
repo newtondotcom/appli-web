@@ -1,4 +1,5 @@
 package modele;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ public class Evenement {
     private LocalDateTime creneau;
     private int duree;// Durée exprimer en min
 
-    @ManyToMany(mappedBy = "evenements_util", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "evenements_util", fetch = FetchType.EAGER)
     private Collection<Utilisateur> utilisateurs_event;
 
     @ManyToOne
@@ -29,7 +30,7 @@ public class Evenement {
     @OneToMany(mappedBy = "evenement_dem", fetch = FetchType.EAGER)
     private Collection<Demande> demandes_event;
 
-    @ManyToMany(mappedBy = "evenement_dom", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "evenement_dom", fetch = FetchType.EAGER)
     private Collection<Domain> domains_event;
 
     @OneToMany(mappedBy = "evenement_avis", fetch = FetchType.EAGER)
