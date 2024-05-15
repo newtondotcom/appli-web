@@ -69,10 +69,11 @@ public class Facade {
     try {
       TypedQuery<Etablissement> query = em.createQuery("SELECT e FROM Etablissement e WHERE e.nom = :nom", Etablissement.class);
       query.setParameter("nom", nom);
+      Etablissement etablissement = query.getSingleResult();
       return false;
     } catch (IllegalArgumentException | PersistenceException e) {
       Etablissement new_etab = new Etablissement(adresse,SIREN,nom, entreprise,image);
-      em.persist(new_etab);        
+      em.persist(new_etab);
       return true;
     }
 

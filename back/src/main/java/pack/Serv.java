@@ -1,7 +1,6 @@
 package pack;
 
 import java.io.IOException;
-
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
@@ -9,6 +8,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import vue.Facade;
+import modele.*;
+import java.util.Collection;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.time.LocalDateTime;
+
 
 @WebServlet("/Serv")
 public class Serv extends HttpServlet {
@@ -20,7 +25,17 @@ public class Serv extends HttpServlet {
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-      doPost(request,response);
+      
+      String op =  request.getParameter("op");
+      
+      if (op.equals("lister")) {
+        Collection<Etablissement> listeetab = facade.listeEtablissements();
+        Gson gson = new GsonBuilder()
+        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+        .create();
+        String json = gson.toJson(listeetab);
+        response.getWriter().write(json);
+      }
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -51,10 +66,6 @@ public class Serv extends HttpServlet {
         } else {
           request.getRequestDispatcher("ajouteretab.html").forward(request, response);
         }
-      }
-      if (op.equals("lister")) {
-        request.setAttribute("listeetab", facade.listeEtablissements());
-        request.getRequestDispatcher("liste.jsp").forward(request, response);
       }
       if (op.equals("enregistrer")) {
         String nom = request.getParameter("nom");
