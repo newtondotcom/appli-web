@@ -44,16 +44,46 @@ const accordionItems = [
   { value: 'item-2', title: 'Is it unstyled?', content: 'Yes. It\'s unstyled by default, giving you freedom over the look and feel.' },
   { value: 'item-3', title: 'Can it be animated?', content: 'Yes! You can use the transition prop to configure the animation.' },
 ]
+
+const words = [" métier.", "e entreprise.", "e spécialisation"];
+let currentText = ref("");
+let i = 0;
+let j = 0;
+let currentWord = "";
+let isDeleting = false;
+
+onMounted(() => {
+  type();
+});
+function type() {
+  currentWord = words[i];
+  if (isDeleting) {
+    currentText.value = currentWord.substring(0, j-1);
+    j--;
+    if (j == 0) {
+      isDeleting = false;
+      i++;
+      if (i == words.length) {
+        i = 0;
+      }
+    }
+  } else {
+    currentText.value = currentWord.substring(0, j+1);
+    j++;
+    if (j == currentWord.length) {
+      isDeleting = true;
+    }
+  }
+  setTimeout(type, 100);
+}
 </script>
 
 <template>
 <div class="flex flex-col justify-center items-center h-full">
-    <Alert class="w-[60%] my-6">
-    <AlertTitle>Heads up!</AlertTitle>
-    <AlertDescription>
-      You can add components to your app using the cli.
-    </AlertDescription>
-  </Alert>
+  <div class="w-full h-20 flex justify-center items-center">
+    <h1 class="text-4xl font-bold bg-gradient-to-r from-cyan-500 to-blue-500 text-transparent bg-clip-text">Découvrez un{{ currentText }}</h1>
+</div>
+
 <div class="flex flex-row justify-center items-center">
 <ScrollArea class="h-[450px] w-[300px] rounded-md border mr-8  my-6">
     <div class="p-4">
