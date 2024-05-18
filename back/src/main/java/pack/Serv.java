@@ -103,6 +103,14 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(event);
         response.getWriter().write(json);
       }
+      // Utilisateur id -> Liste_evenement
+      if (op.equals("idUtil_event")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Collection<Evenement> events = facade.idUtil_event(id);
+        String json = gson.toJson(events);
+        response.getWriter().write(json);
+      }
     } else {
       String json = gson.toJson("Mauvais_Token");
       response.getWriter().write(json);
@@ -133,8 +141,9 @@ public class Serv extends HttpServlet {
       String mdp_admin = request.getParameter("mdp_admin");
       String email = request.getParameter("email");
       String telephone = request.getParameter("telephone");
+      String classe = request.getParameter("classe");
       String nom_etablissement = request.getParameter("nom_etablissement");
-      String msg = facade.Enregistrer(nom, mdp, INE, mdp_admin, email, telephone, nom_etablissement);
+      String msg = facade.Enregistrer(nom, mdp, INE, mdp_admin, email, telephone, classe, nom_etablissement);
       String json = gson.toJson(msg);
       response.getWriter().write(json);
       fct_sans_token = true;
@@ -217,6 +226,16 @@ public class Serv extends HttpServlet {
         String champs = request.getParameter("champs");
 
         String msg = facade.modifier_etablissement_attribut(id, type_champs, champs);
+        String json = gson.toJson(msg);
+        response.getWriter().write(json);
+      }
+      // Création d'une demande
+      if (op.equals("creer_demande")) {
+        String motivation = request.getParameter("motivation");
+        int id_etudiant = Integer.parseInt(request.getParameter("id_etudiant"));
+        int id_evenement = Integer.parseInt(request.getParameter("id_evenement"));
+
+        String msg = facade.creer_demande(motivation, id_etudiant, id_evenement);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }

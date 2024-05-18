@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import com.google.gson.annotations.Expose;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

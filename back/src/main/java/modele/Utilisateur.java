@@ -40,6 +40,9 @@ public class Utilisateur {
     private String telephone;
 
     @Expose
+    private String classe;
+
+    @Expose
     private String token; // Mise en place du token de la session
 
     // L'établissement auquel il appartient
@@ -47,7 +50,7 @@ public class Utilisateur {
     private Etablissement etablissement_util;
 
     // Les évenements auquels il a participé / participera
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Evenement> evenements_util;
 
     // // Les demandes qu'il a envoyé
@@ -65,7 +68,7 @@ public class Utilisateur {
     public Utilisateur() {
     }
 
-    public Utilisateur(String nom, String mdp, String INE, boolean admin, String email, String telephone,
+    public Utilisateur(String nom, String mdp, String INE, boolean admin, String email, String telephone, String classe,
             Etablissement etablissement_util, String token) {
         this.nom = nom;
         this.mdp = mdp;
@@ -73,6 +76,7 @@ public class Utilisateur {
         this.admin = admin;
         this.email = email;
         this.telephone = telephone;
+        this.classe = classe;
         this.etablissement_util = etablissement_util;
         this.evenements_util = new HashSet<>();
         this.token = token;

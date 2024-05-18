@@ -31,7 +31,7 @@ public class Facade {
   public void initialisation() {
     Etablissement new_etab1 = new Etablissement("4 rue test1", 1, "IKEA", true, "chat");
     em.persist(new_etab1);
-    Utilisateur util = new Utilisateur("Fredo", "1234", "20", true, "@test.com", "06", new_etab1, "1");
+    Utilisateur util = new Utilisateur("Fredo", "1234", "20", true, "@test.com", "06", "2A", new_etab1, "1");
     em.persist(util);
     Domain dom1 = new Domain("IA");
     em.persist(dom1);
@@ -69,6 +69,7 @@ public class Facade {
   // Cette fonction revoie un boolean qui dit si l'enregistrement s'est bien passé
   // ou pas
   public String Enregistrer(String nom, String mdp, String INE, String mdp_admin, String email, String telephone,
+      String classe,
       String nom_etablissement) {
     // Le mec ne va pas cocher admin ou pas en s'inscrivant il doit rentré le bon
     // mot de passe pour s'inscrire en temps que admin d'ou les lignes suivante
@@ -88,7 +89,7 @@ public class Facade {
       String sel = BCrypt.gensalt(12);
       String mdpHacher = BCrypt.hashpw(mdp, sel);
       Utilisateur user = new Utilisateur(nom, mdpHacher, INE, admin, email,
-          telephone, etablissement_util, token);
+          telephone, classe, etablissement_util, token);
       em.persist(user);
       user.setEtablissement_util(etablissement_util);
       return token;
@@ -305,6 +306,23 @@ public class Facade {
     return em.find(Evenement.class, id);
   }
 
+  // Donne la liste des evenements d'un utilisateur
+  public Collection<Evenement> idUtil_event(int id_util) {
+    Utilisateur util = em.find(Utilisateur.class, id_util);
+    return util.getEvenements_util();
+  }
+
+  public String creer_demande(String motivation, int id_etudiant, int id_evenement) {
+    try {
+      Utilisateur util = em.find(Utilisateur.class, id_etudiant);
+      Evenement event = em.find(Evenement.class, id_evenement);
+      Demande dem = new Demande(motivation, util, event);
+      em.persist(dem);
+      return "Success";
+    } catch (IllegalArgumentException | PersistenceException e) {
+      return "Error";
+    }
+  }
   // public Collection<Evenement> trierEvenement(String jour, String heure, String
   // mois, String annee, String minute,
   // String nom) {
