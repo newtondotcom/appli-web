@@ -28,6 +28,9 @@ public class Demande {
     @Expose
     private boolean present;
 
+    @Expose
+    private String motivation;
+
     @ManyToOne
     Utilisateur utilisateur_dem;
 
@@ -42,10 +45,11 @@ public class Demande {
         // Constructeur par défaut
     }
 
-    public Demande(Utilisateur utilisateur_dem, Evenement evenement_dem) {
+    public Demande(String motivation, Utilisateur utilisateur_dem, Evenement evenement_dem) {
         this.valide = false;
         this.refuse = false;
         this.present = false;
+        this.motivation = motivation;
         this.utilisateur_dem = utilisateur_dem;
         this.evenement_dem = evenement_dem;
         this.documents_dem = null;

@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.security.SecureRandom;
 import java.math.BigInteger;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Facade
@@ -41,7 +42,7 @@ public class Facade {
     em.persist(event);
     Avis avis = new Avis("Super", 5, "Génial", util, event);
     em.persist(avis);
-    Demande dem = new Demande(util, event);
+    Demande dem = new Demande("oui", util, event);
     em.persist(dem);
     util.getEvenements_util().add(event);
   }
@@ -50,6 +51,18 @@ public class Facade {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
     return dateTime;
+  }
+
+  public boolean verifierToken(String token) {
+    try {
+      TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",
+          Utilisateur.class);
+      query.setParameter("token", token);
+      Utilisateur utilisateur = query.getSingleResult();
+      return true;
+    } catch (IllegalArgumentException | PersistenceException e) {
+      return false;
+    }
   }
 
   // Partie Eleves
@@ -66,12 +79,16 @@ public class Facade {
     // Recherche l'établissement dont le nom à était rentré
     Etablissement etablissement_util = null;
     try {
-      TypedQuery<Etablissement> query = em.createQuery("SELECT e FROM Etablissement e WHERE e.nom = :nom",
+      TypedQuery<Etablissement> query = em.createQuery(
+          "SELECT e FROM Etablissement e WHERE e.nom = :nom",
           Etablissement.class);
-      query.setParameter("nom", nom);
+      query.setParameter("nom", nom_etablissement);
       etablissement_util = query.getSingleResult();
       String token = new BigInteger(32 * 5, random).toString(32);
-      Utilisateur user = new Utilisateur(nom, mdp, INE, admin, email, telephone, etablissement_util, token);
+      String sel = BCrypt.gensalt(12);
+      String mdpHacher = BCrypt.hashpw(mdp, sel);
+      Utilisateur user = new Utilisateur(nom, mdpHacher, INE, admin, email,
+          telephone, etablissement_util, token);
       em.persist(user);
       user.setEtablissement_util(etablissement_util);
       return token;
@@ -81,18 +98,23 @@ public class Facade {
     }
   }
 
-  public String seConnecter(String nom, String mdp) {
+  public String seConnecter(String email, String mdp) {
     Utilisateur user = null;
     try {
-      TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.nom = :nom AND u.mdp = :mdp",
+      TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.email = :email",
           Utilisateur.class);
-      query.setParameter("eamil", nom);
-      query.setParameter("motDePasse", mdp);
+      query.setParameter("email", email);
       user = query.getSingleResult();
       em.persist(user);
-      String token = new BigInteger(32 * 5, random).toString(32);
-      user.setToken(token);
-      return token;
+      String mdpHacher = user.getMdp();
+      if (BCrypt.checkpw(mdp, mdpHacher)) {
+        String token = new BigInteger(32 * 5, random).toString(32);
+        user.setToken(token);
+        return token;
+      } else {
+        return "Le mot de passe est incorrect.";
+      }
+
     } catch (IllegalArgumentException | PersistenceException e) {
       return "Error";
     }
