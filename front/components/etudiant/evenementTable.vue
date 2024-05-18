@@ -1,4 +1,6 @@
-<script setup lang="ts">
+<script lang="ts" setup>
+import { Search } from "lucide-vue-next";
+import { ref, watch, onMounted, computed } from "vue";
 interface EvenementEtablissement {
   id: number;
   nom: string;
@@ -10,7 +12,7 @@ interface EvenementEtablissement {
   tags: string[];
 }
 
-const evenements: EvenementEtablissement[] = [
+const evenementsStart: EvenementEtablissement[] = [
   {
     id: 0,
     nom: "Découverte IA",
@@ -45,18 +47,53 @@ const evenements: EvenementEtablissement[] = [
     tags: ["Design Thinking", "Atelier", "Google"],
   },
 ];
+
+const searchFilter = ref("");
+const domaineFilter = ref("");
+const entreprisesFilter = ref("");
+
+const filteredEvenements = computed(() => {
+  let evenements = evenementsStart;
+  if (searchFilter.value !== "") {
+    evenements = evenements.filter(
+      (evenement: { nom: string; description: string }) =>
+        evenement.nom.includes(searchFilter.value) ||
+        evenement.description.includes(searchFilter.value)
+    );
+  }
+  if (entreprisesFilter.value !== "") {
+    evenements = evenements.filter(
+      (evenement: { nom_etablissement: string }) =>
+        evenement.nom_etablissement === entreprisesFilter.value
+    );
+  }
+  return evenements;
+});
+computed(() => {
+  console.log(entreprisesFilter.value);
+});
+
+const handleSearch = (search: string) => {
+  searchFilter.value = search;
+};
+const handleEntrepriseFilter = (filter: string) => {
+  entreprisesFilter.value = filter;
+};
 </script>
 
 <template>
-  <div class="">
-    <EtudiantSearchBar />
+  <div class="flex flex-col justify-center">
+    <div class="flex flex-row w-full align-center justify-center">
+      <EtudiantSearchForm @search="handleSearch" />
+      <EtudiantEntrepriseFilter @filter="handleEntrepriseFilter" />
+    </div>
     <div class="flex flex-wrap justify-center">
       <div
-        v-for="evenement in evenements"
+        v-for="evenement in filteredEvenements"
         :key="evenement.id"
         class="w-[40%] mx-4"
       >
-        <a :href="'' + evenement.id" class="">
+        <a :href="'./evenement/' + evenement.id" class="">
           <EvenementCarte class="my-4 mx-4" :evenement="evenement" />
         </a>
       </div>
