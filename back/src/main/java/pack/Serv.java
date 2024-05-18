@@ -180,6 +180,7 @@ public class Serv extends HttpServlet {
     if (op.equals("modifier_etablissement")) {
       int id = Integer.parseInt(request.getParameter("id"));
       String type_champs = request.getParameter("type_champs");
+      // Si le champs et une établissement on indiquera son id (SIREN)
       String champs = request.getParameter("champs");
 
       String msg = facade.modifier_etablissement_attribut(id, type_champs, champs);

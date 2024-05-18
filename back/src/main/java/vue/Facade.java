@@ -208,6 +208,11 @@ public class Facade {
           break;
         case "duree":
           event.setDuree(Integer.parseInt(champs));
+          break;
+        case "etablissement":
+          Etablissement etab = em.find(Etablissement.class, Integer.parseInt(champs));
+          event.setEtablissement_event(etab);
+          break;
         default:
           return "Invalid field type";
       }
