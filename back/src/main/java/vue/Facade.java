@@ -150,6 +150,11 @@ public class Facade {
     return em.createQuery("select e from Etablissement e", Etablissement.class).getResultList();
   }
 
+  // Lister tout les event
+  public Collection<Evenement> listEvent() {
+    return em.createQuery("select e from Evenement e", Evenement.class).getResultList();
+  }
+
   // Lister tout les domains
   public Collection<Domain> listeDomain() {
     return em.createQuery("select d from Domain d", Domain.class).getResultList();
@@ -267,29 +272,43 @@ public class Facade {
     return stats;
   }
 
-  public Collection<Evenement> trierEvenement(String jour, String heure, String mois, String annee, String minute,
-      String nom) {
-    if (jour == null || heure == null || mois == null || annee == null || minute == null) {
-      if (nom == null) {
-        return em.createQuery("select e from Evenement e", Evenement.class).getResultList();
-      } else {
-        return em.createQuery("select e from Evenement e where etablissement_event == " + nom, Evenement.class)
-            .getResultList();
-      }
-    } else {
-      String date = "" + annee + "-" + mois + "-" + jour + " " + heure + ":" + minute;
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-      LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-      if (nom == null) {
-        return em.createQuery("select e from Evenement e where creneau => " + dateTime, Evenement.class)
-            .getResultList();
-      } else {
-        return em.createQuery(
-            "select e from Evenement e where creneau => " + dateTime + " and etablissement_event == " + nom,
-            Evenement.class).getResultList();
-      }
-    }
+  // Donne l'évenement suivant son id
+
+  public Evenement idEvenement(int id) {
+    return em.find(Evenement.class, id);
   }
+
+  // public Collection<Evenement> trierEvenement(String jour, String heure, String
+  // mois, String annee, String minute,
+  // String nom) {
+  // if (jour == null || heure == null || mois == null || annee == null || minute
+  // == null) {
+  // if (nom == null) {
+  // return em.createQuery("select e from Evenement e",
+  // Evenement.class).getResultList();
+  // } else {
+  // return em.createQuery("select e from Evenement e where etablissement_event ==
+  // " + nom, Evenement.class)
+  // .getResultList();
+  // }
+  // } else {
+  // String date = "" + annee + "-" + mois + "-" + jour + " " + heure + ":" +
+  // minute;
+  // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd
+  // HH:mm");
+  // LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+  // if (nom == null) {
+  // return em.createQuery("select e from Evenement e where creneau => " +
+  // dateTime, Evenement.class)
+  // .getResultList();
+  // } else {
+  // return em.createQuery(
+  // "select e from Evenement e where creneau => " + dateTime + " and
+  // etablissement_event == " + nom,
+  // Evenement.class).getResultList();
+  // }
+  // }
+  // }
 
   // Ca marche pas est je peux pas le débugger je sais pas ce que fait cette
   // fonction
@@ -305,25 +324,30 @@ public class Facade {
    * }
    */
 
-  public void demandeReservation(String token, int id_event) {
-    Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where token == " + token, Utilisateur.class)
-        .getSingleResult();
-    Demande new_demande = new Demande(utilisateur, em.find(Evenement.class, id_event));
-    utilisateur.getDemandes_util().add(new_demande);
-  }
+  // public void demandeReservation(String token, int id_event) {
+  // Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where
+  // token == " + token, Utilisateur.class)
+  // .getSingleResult();
+  // Demande new_demande = new Demande(utilisateur, em.find(Evenement.class,
+  // id_event));
+  // utilisateur.getDemandes_util().add(new_demande);
+  // }
 
-  public void seDesinscrire(String token, int id_event) {
-    Evenement event = em.find(Evenement.class, id_event);
-    Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where token == " + token, Utilisateur.class)
-        .getSingleResult();
-    event.getUtilisateurs_event().remove(utilisateur);
-    em.merge(event);
-  }
+  // public void seDesinscrire(String token, int id_event) {
+  // Evenement event = em.find(Evenement.class, id_event);
+  // Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where
+  // token == " + token, Utilisateur.class)
+  // .getSingleResult();
+  // event.getUtilisateurs_event().remove(utilisateur);
+  // em.merge(event);
+  // }
 
-  public void donnerAvis(int id_utilisateur, int id_event, String titre, String contenu, int note) {
-    Avis new_avis = new Avis(titre, note, contenu, em.find(Utilisateur.class, id_utilisateur),
-        em.find(Evenement.class, id_event));
-    em.persist(new_avis);
-  }
+  // public void donnerAvis(int id_utilisateur, int id_event, String titre, String
+  // contenu, int note) {
+  // Avis new_avis = new Avis(titre, note, contenu, em.find(Utilisateur.class,
+  // id_utilisateur),
+  // em.find(Evenement.class, id_event));
+  // em.persist(new_avis);
+  // }
 
 }

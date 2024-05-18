@@ -42,6 +42,12 @@ public class Serv extends HttpServlet {
       String json = json1 + json2;
       response.getWriter().write(json);
     }
+    // NULL -> Lister tout les établissements et domaines
+    if (op.equals("lister_event")) {
+      Collection<Evenement> listEvent = facade.listEvent();
+      String json = gson.toJson(listEvent);
+      response.getWriter().write(json);
+    }
     // ID_Event -> Utilisateur qui on envoyé des demandes
     if (op.equals("lister_util_event")) {
       int id = Integer.parseInt(request.getParameter("id"));
@@ -69,6 +75,14 @@ public class Serv extends HttpServlet {
 
       float[] stat = facade.liste_stat_event(id);
       String json = gson.toJson(stat);
+      response.getWriter().write(json);
+    }
+    // id Evenement -> Evenement
+    if (op.equals("idEvenement")) {
+      int id = Integer.parseInt(request.getParameter("id"));
+
+      Evenement event = facade.idEvenement(id);
+      String json = gson.toJson(event);
       response.getWriter().write(json);
     }
   }
@@ -162,6 +176,7 @@ public class Serv extends HttpServlet {
       String json = gson.toJson(msg);
       response.getWriter().write(json);
     }
+    // Modification d'un evenement
     if (op.equals("modifier_etablissement")) {
       int id = Integer.parseInt(request.getParameter("id"));
       String type_champs = request.getParameter("type_champs");
