@@ -1,5 +1,7 @@
 package modele;
 
+import com.google.gson.annotations.Expose;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,9 +12,16 @@ import jakarta.persistence.ManyToOne;
 public class Avis {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Expose
     private int id;
+
+    @Expose
     private String titre;
+
+    @Expose
     private int note;
+
+    @Expose
     private String contenu;
 
     // A quel utilisateur appartient il

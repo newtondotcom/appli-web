@@ -2,6 +2,8 @@ package modele;
 
 import java.util.Collection;
 
+import com.google.gson.annotations.Expose;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -10,11 +12,21 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Etablissement {
+
     @Id
+    @Expose
     private int SIREN;
+
+    @Expose
     private String adresse;
+
+    @Expose
     private String nom;
+
+    @Expose
     private boolean entreprise; // true si c'est une entreprise et false si c'est un étudiant
+
+    @Expose
     private String image;
 
     // // Les utilisateurs relié

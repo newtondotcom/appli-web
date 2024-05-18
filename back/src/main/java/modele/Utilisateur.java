@@ -1,6 +1,9 @@
 package modele;
 
 import java.util.Collection;
+import java.util.HashSet;
+
+import com.google.gson.annotations.Expose;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,14 +18,28 @@ import jakarta.persistence.OneToMany;
 public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Expose
     private int id;
 
+    @Expose
     private String nom;
+
+    @Expose
     private String mdp;
+
+    @Expose
     private String INE;
+
+    @Expose
     private boolean admin; // True si c'est un administrateur
+
+    @Expose
     private String email;
+
+    @Expose
     private String telephone;
+
+    @Expose
     private String token; // Mise en place du token de la session
 
     // L'établissement auquel il appartient
@@ -57,6 +74,7 @@ public class Utilisateur {
         this.email = email;
         this.telephone = telephone;
         this.etablissement_util = etablissement_util;
+        this.evenements_util = new HashSet<>();
         this.token = token;
     }
 

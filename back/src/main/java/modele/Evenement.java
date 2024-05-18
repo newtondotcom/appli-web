@@ -2,6 +2,9 @@ package modele;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+
+import com.google.gson.annotations.Expose;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -15,10 +18,19 @@ import jakarta.persistence.OneToMany;
 public class Evenement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Expose
     private int id;
+
+    @Expose
     private String titre;
+
+    @Expose
     private String description;
+
+    @Expose
     private LocalDateTime creneau;
+
+    @Expose
     private int duree;// Durée exprimer en min
 
     @ManyToMany(mappedBy = "evenements_util", fetch = FetchType.EAGER)
@@ -43,12 +55,13 @@ public class Evenement {
     }
 
     public Evenement(String description, LocalDateTime creneau, Etablissement etablissement_event, int duree,
-            String titre) {
+            String titre, Collection<Domain> domains_event) {
         this.description = description;
         this.creneau = creneau;
         this.etablissement_event = etablissement_event;
         this.duree = duree;
         this.titre = titre;
+        this.domains_event = domains_event;
     }
 
     public int getId() {

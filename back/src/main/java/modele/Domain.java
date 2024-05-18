@@ -2,6 +2,8 @@ package modele;
 
 import java.util.Collection;
 
+import com.google.gson.annotations.Expose;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +14,10 @@ import jakarta.persistence.ManyToMany;
 public class Domain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Expose
     private int id;
+
+    @Expose
     private String nom;
 
     @ManyToMany

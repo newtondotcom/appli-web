@@ -18,14 +18,19 @@ public class Demande {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Expose
     private boolean valide; // True veut dire validé et false en attente
+
     @Expose
     private boolean refuse; // True veut dire refusé et false en attente ou validé
+
     @Expose
+    private boolean present;
+
     @ManyToOne
     Utilisateur utilisateur_dem;
-    @Expose
+
     @ManyToOne
     Evenement evenement_dem;
 
@@ -40,6 +45,7 @@ public class Demande {
     public Demande(Utilisateur utilisateur_dem, Evenement evenement_dem) {
         this.valide = false;
         this.refuse = false;
+        this.present = false;
         this.utilisateur_dem = utilisateur_dem;
         this.evenement_dem = evenement_dem;
         this.documents_dem = null;
@@ -67,6 +73,14 @@ public class Demande {
 
     public void setRefuse(boolean refuse) {
         this.refuse = refuse;
+    }
+
+    public boolean isPresent() {
+        return present;
+    }
+
+    public void setPresent(boolean present) {
+        this.present = present;
     }
 
     public Utilisateur getUtilisateur_dem() {

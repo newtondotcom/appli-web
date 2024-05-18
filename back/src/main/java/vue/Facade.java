@@ -10,7 +10,9 @@ import jakarta.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.security.SecureRandom;
 import java.math.BigInteger;
 
@@ -32,12 +34,22 @@ public class Facade {
     em.persist(util);
     Domain dom1 = new Domain("IA");
     em.persist(dom1);
+    Collection<Domain> domains = new HashSet<>();
+    domains.add(dom1);
     Evenement event = new Evenement("cool", LocalDateTime.of(2024, Month.MAY, 15, 14, 30, 0), new_etab1, 60,
-        "Super");
+        "Super", domains);
     em.persist(event);
+    Avis avis = new Avis("Super", 5, "Génial", util, event);
+    em.persist(avis);
     Demande dem = new Demande(util, event);
     em.persist(dem);
+    util.getEvenements_util().add(event);
+  }
 
+  public LocalDateTime StringToTime(String date) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+    return dateTime;
   }
 
   // Partie Eleves
@@ -98,41 +110,161 @@ public class Facade {
     }
   }
 
+  // Accepter une demande
   public String accepterDemande(int id_demande) {
     Demande demande_en_cours = em.find(Demande.class, id_demande);
     if (demande_en_cours.isValide()) {
       return "Error";
     } else {
       demande_en_cours.setValide(true);
+      demande_en_cours.setRefuse(false);
       return "demande_validé";
     }
   }
 
+  // Mettre présent une demande
+  public String presentDemande(int id_demande) {
+    Demande demande_en_cours = em.find(Demande.class, id_demande);
+    if (demande_en_cours.isPresent()) {
+      return "Error";
+    } else {
+      demande_en_cours.setPresent(true);
+      return "demande_noté_présent";
+    }
+  }
+
+  // Refuser une demande
   public String refuserDemande(int id_demande) {
     Demande demande_en_cours = em.find(Demande.class, id_demande);
     if (demande_en_cours.isRefuse()) {
       return "Error";
     } else {
       demande_en_cours.setRefuse(true);
+      demande_en_cours.setValide(false);
       return "demande_refusé";
     }
   }
 
+  // Lister tout les établissements
   public Collection<Etablissement> listeEtablissements() {
     return em.createQuery("select e from Etablissement e", Etablissement.class).getResultList();
   }
 
+  // Lister tout les domains
   public Collection<Domain> listeDomain() {
     return em.createQuery("select d from Domain d", Domain.class).getResultList();
   }
 
+  // Lister les utilisateurs d'un évenement
   public Collection<Utilisateur> utilEvent(int id) {
     Evenement event = em.find(Evenement.class, id);
     return event.getUtilisateurs_event();
   }
 
+  // Renvoie la demande connaissant son id
   public Demande idDemande(int id_demande) {
     return em.find(Demande.class, id_demande);
+  }
+
+  // Enregister un nouvel évenement (un domain obligatoire)
+  public String ajouterEvenement(String titre, String description, String duree, String creneau,
+      String id_etablissement, String id_domain) {
+    try {
+      Collection<Domain> domains_event = new HashSet<>();
+      domains_event.add(em.find(Domain.class, Integer.parseInt(id_domain)));
+      Evenement new_event = new Evenement(description, StringToTime(creneau),
+          em.find(Etablissement.class, Integer.parseInt(id_etablissement)), Integer.parseInt(duree),
+          titre, domains_event);
+      em.persist(new_event);
+      return "Success";
+    } catch (IllegalArgumentException | PersistenceException | DateTimeParseException e) {
+      return "Error";
+    }
+  }
+
+  // Donne la liste des évenements d'un établissement
+  public Collection<Evenement> lister_event_etab(int id_etab) {
+    Etablissement etab = em.find(Etablissement.class, id_etab);
+    return etab.getEvenements_etab();
+  }
+
+  public String modifer_event_attribut(int id, String type_champs, String champs) {
+    try {
+      Evenement event = em.find(Evenement.class, id);
+      switch (type_champs) {
+        case "titre":
+          event.setTitre(champs);
+          break;
+        case "description":
+          event.setDescription(champs);
+          break;
+        case "creneau":
+          event.setCreneau(StringToTime(champs));
+          break;
+        case "duree":
+          event.setDuree(Integer.parseInt(champs));
+        default:
+          return "Invalid field type";
+      }
+      return "Success";
+    } catch (IllegalArgumentException | PersistenceException e) {
+      return "Error";
+    }
+
+  }
+
+  public String modifier_etablissement_attribut(int id, String type_champs, String champs) {
+    try {
+      Etablissement etablissement = em.find(Etablissement.class, id);
+      switch (type_champs) {
+        case "adresse":
+          etablissement.setAdresse(champs);
+          break;
+        case "nom":
+          etablissement.setNom(champs);
+          break;
+        case "entreprise":
+          etablissement.setEntreprise(Boolean.parseBoolean(champs));
+          break;
+        case "image":
+          etablissement.setImage(champs);
+          break;
+        default:
+          return "Invalid field type";
+      }
+      return "Success";
+    } catch (IllegalArgumentException | PersistenceException e) {
+      return "Error: " + e.getMessage();
+    }
+  }
+
+  // Lister stat event
+
+  public float[] liste_stat_event(int id) {
+    Evenement event = em.find(Evenement.class, id);
+    float[] stats = new float[4];
+    Collection<Demande> demandes = event.getDemandes_event();
+    stats[0] = demandes.size();
+    int accepter = 0;
+    int present = 0;
+    for (Demande dem : demandes) {
+      if (dem.isValide()) {
+        accepter += 1;
+      }
+      if (dem.isPresent()) {
+        present += 1;
+      }
+    }
+    Collection<Avis> avis = event.getAvis_event();
+    int somme_note = 0;
+    for (Avis av : avis) {
+      somme_note += av.getNote();
+    }
+    float moyenne = somme_note / avis.size();
+    stats[1] = accepter;
+    stats[2] = present;
+    stats[3] = moyenne;
+    return stats;
   }
 
   public Collection<Evenement> trierEvenement(String jour, String heure, String mois, String annee, String minute,
@@ -192,15 +324,6 @@ public class Facade {
     Avis new_avis = new Avis(titre, note, contenu, em.find(Utilisateur.class, id_utilisateur),
         em.find(Evenement.class, id_event));
     em.persist(new_avis);
-  }
-
-  // Mettre un creneau sous la forme: yyyy-MM-dd HH:mm
-  public void ajouterEvenement(String titre, String description, int duree, String creneau, int id_etablissement) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    LocalDateTime dateTime = LocalDateTime.parse(creneau, formatter);
-    Evenement new_event = new Evenement(description, dateTime, em.find(Etablissement.class, id_etablissement), duree,
-        titre);
-    em.persist(new_event);
   }
 
 }

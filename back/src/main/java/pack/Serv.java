@@ -13,6 +13,7 @@ import java.util.Collection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @WebServlet("/Serv")
 public class Serv extends HttpServlet {
@@ -53,6 +54,21 @@ public class Serv extends HttpServlet {
       int id = Integer.parseInt(request.getParameter("id"));
       Demande dem = facade.idDemande(id);
       String json = gson.toJson(dem);
+      response.getWriter().write(json);
+    }
+    // id établissement -> La liste évenement de l'établissement
+    if (op.equals("lister_event_etab")) {
+      int id = Integer.parseInt(request.getParameter("id"));
+      Collection<Evenement> coll_event = facade.lister_event_etab(id);
+      String json = gson.toJson(coll_event);
+      response.getWriter().write(json);
+    }
+    // Lister les stats d'un evenement
+    if (op.equals("lister_stat_event")) {
+      int id = Integer.parseInt(request.getParameter("id"));
+
+      float[] stat = facade.liste_stat_event(id);
+      String json = gson.toJson(stat);
       response.getWriter().write(json);
     }
   }
@@ -114,6 +130,47 @@ public class Serv extends HttpServlet {
       String json = gson.toJson(msg);
       response.getWriter().write(json);
     }
+    // Mettre présent
+    if (op.equals("presentdemande")) {
+      int id = Integer.parseInt(request.getParameter("id"));
+      String msg = facade.presentDemande(id);
+      String json = gson.toJson(msg);
+      response.getWriter().write(json);
+    }
+    // token -> Création d'un évenement
+    if (op.equals("créerEvent")) {
+      String titre = request.getParameter("titre");
+      String description = request.getParameter("description");
+      String creneau = request.getParameter("creneau");
+      String duree = request.getParameter("duree");
+      String id_etablissement_event = request.getParameter("id_etablissement_event");
+      String id_domains_event = request.getParameter("id_domains_event");
+      String msg = facade.ajouterEvenement(titre, description, duree, creneau, id_etablissement_event,
+          id_domains_event);
+      String json = gson.toJson(msg);
+      response.getWriter().write(json);
+    }
+    // Modification champs evenement
+    if (op.equals("modifier_event")) {
+      int id = Integer.parseInt(request.getParameter("id"));
+      // Le type du champs de l'entité à modfier
+      String type_champs = request.getParameter("type_champs");
+      // Le champs de l'entité à modfier
+      String champs = request.getParameter("champs");
 
+      String msg = facade.modifer_event_attribut(id, type_champs, champs);
+      String json = gson.toJson(msg);
+      response.getWriter().write(json);
+    }
+    if (op.equals("modifier_etablissement")) {
+      int id = Integer.parseInt(request.getParameter("id"));
+      String type_champs = request.getParameter("type_champs");
+      String champs = request.getParameter("champs");
+
+      String msg = facade.modifier_etablissement_attribut(id, type_champs, champs);
+      String json = gson.toJson(msg);
+      response.getWriter().write(json);
+    }
   }
+
 }
