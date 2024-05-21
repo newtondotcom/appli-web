@@ -20,7 +20,7 @@ const evenement2 : EvenementEtablissement = {id: 1, nom: "Découverte IA", descr
 <a :href="'/etablissement/evenement/' + evenement.id" >
 <EvenementCarte class="my-4" :evenement="evenement" :key="evenement.id" />
 </a>
-<a href="/etablissement/evenements/0">
+<a href="/etablissement/evenement/1">
 <EvenementCarte :evenement="evenement2" :key="evenement2.id" />
 </a>
 
