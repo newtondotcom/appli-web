@@ -302,12 +302,12 @@ public class Facade {
 
   // Donne l'évenement suivant son id
 
-  public Evenement idEvenement(int id) {
+  public Evenement get_evenement_from_id(int id) {
     return em.find(Evenement.class, id);
   }
 
   // Donne la liste des evenements d'un utilisateur
-  public Collection<Evenement> idUtil_event(int id_util) {
+  public Collection<Evenement> get_evenement_from_uid(int id_util) {
     Utilisateur util = em.find(Utilisateur.class, id_util);
     return util.getEvenements_util();
   }

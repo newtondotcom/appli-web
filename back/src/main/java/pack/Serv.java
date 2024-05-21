@@ -74,7 +74,7 @@ public class Serv extends HttpServlet {
         response.getWriter().write(json);
       }
       // ID_Demande -> Demande
-      if (op.equals("idDemmande")) {
+      if (op.equals("get_demande_from_id")) {
         int id = Integer.parseInt(request.getParameter("id"));
         Demande dem = facade.idDemande(id);
         String json = gson.toJson(dem);
@@ -96,18 +96,18 @@ public class Serv extends HttpServlet {
         response.getWriter().write(json);
       }
       // id Evenement -> Evenement
-      if (op.equals("idEvenement")) {
+      if (op.equals("get_evenement_from_id")) {
         int id = Integer.parseInt(request.getParameter("id"));
 
-        Evenement event = facade.idEvenement(id);
+        Evenement event = facade.get_evenement_from_id(id);
         String json = gson.toJson(event);
         response.getWriter().write(json);
       }
       // Utilisateur id -> Liste_evenement
-      if (op.equals("idUtil_event")) {
+      if (op.equals("get_evenement_from_uid")) {
         int id = Integer.parseInt(request.getParameter("id"));
 
-        Collection<Evenement> events = facade.idUtil_event(id);
+        Collection<Evenement> events = facade.get_evenement_from_uid(id);
         String json = gson.toJson(events);
         response.getWriter().write(json);
       }
