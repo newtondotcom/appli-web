@@ -18,6 +18,7 @@ const search = (e: Event) => {
   if (!(e.target instanceof HTMLInputElement)) return;
   emit("search", e.target.value);
 };
+import { Search } from 'lucide-vue-next';
 </script>
 
 <style></style>
