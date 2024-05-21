@@ -102,7 +102,7 @@ import { CircleUser } from "lucide-vue-next";
         >
           <li>
             <a class="text-gray-700 transition hover:text-gray-700/75" href="#">
-              About
+              Mentions légales
             </a>
           </li>
         </ul>
