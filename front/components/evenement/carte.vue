@@ -5,7 +5,7 @@ defineProps({
     required: true,
   },
 });
-import { Calendar, Star } from 'lucide-vue-next';
+import { Calendar, Star} from 'lucide-vue-next';
 </script>
 
 <template>
@@ -30,11 +30,11 @@ import { Calendar, Star } from 'lucide-vue-next';
               <div>
                 <Badge class="mr-2">{{ evenement.nom_etablissement }} </Badge>
                 <Badge variant="secondary">{{ evenement.note_etablissement }} / 5
-                  <Star class="ml-1" size="14" />
+                  <Star class="ml-1" :size=14 />
                 </Badge>
               </div>
               <div class="flex flex-row mt-2">
-                <Badge variant="primary" class="mr-2" v-for="tag in evenement.tags" :key="tag">{{ tag }}</Badge>
+                <Badge class="mr-2" v-for="tag in evenement.tags" :key="tag">{{ tag }}</Badge>
               </div>
             </div>
           </div>
