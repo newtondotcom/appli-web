@@ -45,7 +45,7 @@ const accordionItems = [
   { value: 'item-3', title: 'Can it be animated?', content: 'Yes! You can use the transition prop to configure the animation.' },
 ]
 
-const words = [" métier.", "e entreprise.", "e spécialisation"];
+const words = ["entreprise.", "spécialisation.", "carrière.", "passion."];
 let currentText = ref("");
 let i = 0;
 let j = 0;
@@ -81,8 +81,13 @@ function type() {
 <template>
 <div class="flex flex-col justify-center items-center h-full">
   <div class="w-full h-20 flex justify-center items-center">
-    <h1 class="text-4xl font-bold bg-gradient-to-r from-cyan-500 to-blue-500 text-transparent bg-clip-text">Découvrez un{{ currentText }}</h1>
-</div>
+    <h1 class="text-4xl font-bold flex flex-row items-center">
+      <div class="mr-2">Découvrez une</div>
+      <div class="min-w-[250px] flex bg-gradient-to-r from-cyan-500 to-blue-500 text-transparent bg-clip-text">
+        {{ currentText }}
+      </div>
+    </h1>
+  </div>
 
 <div class="flex flex-row justify-center items-center">
 <ScrollArea class="h-[450px] w-[300px] rounded-md border mr-8  my-6">
