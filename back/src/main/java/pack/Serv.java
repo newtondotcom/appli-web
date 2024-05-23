@@ -145,8 +145,8 @@ public class Serv extends HttpServlet {
       String email = request.getParameter("email");
       String telephone = request.getParameter("telephone");
       String classe = request.getParameter("classe");
-      String nom_etablissement = request.getParameter("nom_etablissement");
-      String msg = facade.Enregistrer(nom, mdp, INE, mdp_admin, email, telephone, classe, nom_etablissement);
+      String siren = request.getParameter("siren");
+      String msg = facade.Enregistrer(nom, mdp, INE, mdp_admin, email, telephone, classe, siren);
       String json = gson.toJson(msg);
       response.getWriter().write(json);
       fct_sans_token = true;

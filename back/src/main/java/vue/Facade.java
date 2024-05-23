@@ -70,7 +70,7 @@ public class Facade {
   // ou pas
   public String Enregistrer(String nom, String mdp, String INE, String mdp_admin, String email, String telephone,
       String classe,
-      String nom_etablissement) {
+      String siren) {
     // Le mec ne va pas cocher admin ou pas en s'inscrivant il doit rentré le bon
     // mot de passe pour s'inscrire en temps que admin d'ou les lignes suivante
     boolean admin = false;
@@ -80,11 +80,7 @@ public class Facade {
     // Recherche l'établissement dont le nom à était rentré
     Etablissement etablissement_util = null;
     try {
-      TypedQuery<Etablissement> query = em.createQuery(
-          "SELECT e FROM Etablissement e WHERE e.nom = :nom",
-          Etablissement.class);
-      query.setParameter("nom", nom_etablissement);
-      etablissement_util = query.getSingleResult();
+      etablissement_util = em.find(Etablissement.class,siren);
       String token = new BigInteger(32 * 5, random).toString(32);
       String sel = BCrypt.gensalt(12);
       String mdpHacher = BCrypt.hashpw(mdp, sel);
