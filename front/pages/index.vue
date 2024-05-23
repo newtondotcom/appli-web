@@ -38,6 +38,9 @@ const companies = [
 "Zoom",
 ]
 
+const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=lister_etab_domain')
+console.log(data)
+
 const defaultValue = 'item-1'
 const accordionItems = [
   { value: 'item-1', title: 'Is it accessible?', content: 'Yes. It adheres to the WAI-ARIA design pattern.' },
