@@ -56,8 +56,8 @@ const filteredEvenements = computed(() => {
   let evenements = evenementsStart;
   if (searchFilter.value !== "") {
     evenements = evenements.filter(
-      (evenement: { nom: string; description: string }) =>
-        evenement.nom.includes(searchFilter.value) ||
+      (evenement: { titre: string; description: string }) =>
+        evenement.titre.includes(searchFilter.value) ||
         evenement.description.includes(searchFilter.value)
     );
   }
