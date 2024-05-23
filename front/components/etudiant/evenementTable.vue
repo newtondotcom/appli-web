@@ -12,7 +12,7 @@ interface EvenementEtablissement {
   tags: string[];
 }
 
-const evenementsStart: EvenementEtablissement[] = [
+const evenementsStar: EvenementEtablissement[] = [
   {
     id: 0,
     nom: "Découverte IA",
@@ -69,9 +69,11 @@ const filteredEvenements = computed(() => {
   }
   return evenements;
 });
-computed(() => {
-  console.log(entreprisesFilter.value);
-});
+
+const data = await $fetch(
+  "http://localhost:8080/PasserellePro/Serv?op=lister_event"
+);
+const evenementsStart = data;
 
 const handleSearch = (search: string) => {
   searchFilter.value = search;
