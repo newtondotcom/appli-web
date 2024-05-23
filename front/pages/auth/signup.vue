@@ -5,14 +5,21 @@ import { Check, ChevronsUpDown } from 'lucide-vue-next'
 
 const open = ref(false)
 const value = ref('')
+const label = ref('')
+const etu = ref(false)
 
+/*
 const etablissements = [
   { value: 'next.js', label: 'Next.js' },
   { value: 'sveltekit', label: 'SvelteKit' },
   { value: 'nuxt.js', label: 'Nuxt.js' },
   { value: 'remix', label: 'Remix' },
   { value: 'astro', label: 'Astro' },
-]
+]*/
+
+const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=lister_etab_domain');
+const companies = JSON.parse(data.split(";")[0])
+const etablissements = companies.map((company) => ({ value: company.SIREN, label: company.nom }))
 </script>
 
 <template>
@@ -63,14 +70,14 @@ const etablissements = [
                 class="justify-between"
               >
                 {{ value
-                  ? etablissements.find((framework) => framework.value === value)?.label
+                  ? label
                   : "Sélectionner votre établissement..." }}
                 <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent class="p-0">
               <Command>
-                <CommandInput class="h-9" placeholder="Chercher un établissement..." />
+                <CommandInput class="h-9" placeholder="Chercher un établissement..."/>
                 <CommandEmpty>Pas d'établissement trouvé.</CommandEmpty>
                 <CommandList>
                   <CommandGroup>
@@ -79,8 +86,10 @@ const etablissements = [
                       :key="framework.value"
                       :value="framework.value"
                       @select="(ev) => {
-                        if (typeof ev.detail.value === 'string') {
-                          value = ev.detail.value
+                        if (typeof ev.detail.value === 'number') {
+                          value = ev.detail.value.toString()
+                          label = framework.label
+                          console.log(label)
                         }
                         open = false
                       }"
@@ -98,6 +107,12 @@ const etablissements = [
               </Command>
             </PopoverContent>
           </Popover>
+        </div>
+
+        <div class="gap-2 flex flex-row">
+        <Switch v-model:checked="etu" />
+        <div class="flex" v-if="etu">Etudiant</div>
+        <div class="flex" v-else>Membre d'un établissement</div>
         </div>
 
         <Button type="submit" class="w-full">
