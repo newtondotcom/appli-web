@@ -3,6 +3,8 @@ package vue;
 import modele.*;
 import jakarta.ejb.Singleton;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
@@ -13,6 +15,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.HashSet;
+
+import javax.print.Doc;
+import javax.print.DocFlavor;
+
 import java.security.SecureRandom;
 import java.math.BigInteger;
 import org.mindrot.jbcrypt.BCrypt;
@@ -35,15 +41,16 @@ public class Facade {
     em.persist(util);
     Domain dom1 = new Domain("IA");
     em.persist(dom1);
-    Collection<Domain> domains = new HashSet<>();
-    domains.add(dom1);
     Evenement event = new Evenement("cool", LocalDateTime.of(2024, Month.MAY, 15, 14, 30, 0), new_etab1, 60,
-        "Super", domains);
+        "Super");
     em.persist(event);
+    event.getDomains_event().add(dom1);
     Avis avis = new Avis("Super", 5, "Génial", util, event);
     em.persist(avis);
     Demande dem = new Demande("oui", util, event);
     em.persist(dem);
+    Document doc = new Document(util, dem);
+    em.persist(doc);
     util.getEvenements_util().add(event);
   }
 
@@ -80,7 +87,7 @@ public class Facade {
     // Recherche l'établissement dont le nom à était rentré
     Etablissement etablissement_util = null;
     try {
-      etablissement_util = em.find(Etablissement.class,siren);
+      etablissement_util = em.find(Etablissement.class, siren);
       String token = new BigInteger(32 * 5, random).toString(32);
       String sel = BCrypt.gensalt(12);
       String mdpHacher = BCrypt.hashpw(mdp, sel);
@@ -194,12 +201,12 @@ public class Facade {
   public String ajouterEvenement(String titre, String description, String duree, String creneau,
       String id_etablissement, String id_domain) {
     try {
-      Collection<Domain> domains_event = new HashSet<>();
-      domains_event.add(em.find(Domain.class, Integer.parseInt(id_domain)));
       Evenement new_event = new Evenement(description, StringToTime(creneau),
           em.find(Etablissement.class, Integer.parseInt(id_etablissement)), Integer.parseInt(duree),
-          titre, domains_event);
+          titre);
       em.persist(new_event);
+      Domain domain_event = em.find(Domain.class, Integer.parseInt(id_domain));
+      new_event.getDomains_event().add(domain_event);
       return "Success";
     } catch (IllegalArgumentException | PersistenceException | DateTimeParseException e) {
       return "Error";
@@ -302,12 +309,6 @@ public class Facade {
     return em.find(Evenement.class, id);
   }
 
-  // Donne la liste des evenements d'un utilisateur
-  public Collection<Evenement> get_evenement_from_uid(int id_util) {
-    Utilisateur util = em.find(Utilisateur.class, id_util);
-    return util.getEvenements_util();
-  }
-
   public String creer_demande(String motivation, int id_etudiant, int id_evenement) {
     try {
       Utilisateur util = em.find(Utilisateur.class, id_etudiant);
@@ -319,76 +320,97 @@ public class Facade {
       return "Error";
     }
   }
-  // public Collection<Evenement> trierEvenement(String jour, String heure, String
-  // mois, String annee, String minute,
-  // String nom) {
-  // if (jour == null || heure == null || mois == null || annee == null || minute
-  // == null) {
-  // if (nom == null) {
-  // return em.createQuery("select e from Evenement e",
-  // Evenement.class).getResultList();
-  // } else {
-  // return em.createQuery("select e from Evenement e where etablissement_event ==
-  // " + nom, Evenement.class)
-  // .getResultList();
-  // }
-  // } else {
-  // String date = "" + annee + "-" + mois + "-" + jour + " " + heure + ":" +
-  // minute;
-  // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd
-  // HH:mm");
-  // LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-  // if (nom == null) {
-  // return em.createQuery("select e from Evenement e where creneau => " +
-  // dateTime, Evenement.class)
-  // .getResultList();
-  // } else {
-  // return em.createQuery(
-  // "select e from Evenement e where creneau => " + dateTime + " and
-  // etablissement_event == " + nom,
-  // Evenement.class).getResultList();
-  // }
-  // }
-  // }
 
-  // Ca marche pas est je peux pas le débugger je sais pas ce que fait cette
-  // fonction
-  /*
-   * public List<Evenement,Int> ficheEvenement(int id_event){
-   * Etablissement entreprise = em.find(Etablissement.class,id_event);
-   * Collection<Evenement> event_entreprise = entreprise.getEvenements_etab();
-   * int note_tot = 0;
-   * for ( Evenement event: event_entreprise){
-   * note_tot += event.getAvis_event().getNote();
-   * }
-   * return (em.find(Evenement.class, id), note_tot/length(event_entreprise));
-   * }
-   */
+  // Donne l'établissement d'un évenement
+  public Etablissement get_etab_from_eventid(int id_event) {
+    Evenement event = em.find(Evenement.class, id_event);
+    return event.getEtablissement_event();
+  }
 
-  // public void demandeReservation(String token, int id_event) {
-  // Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where
-  // token == " + token, Utilisateur.class)
-  // .getSingleResult();
-  // Demande new_demande = new Demande(utilisateur, em.find(Evenement.class,
-  // id_event));
-  // utilisateur.getDemandes_util().add(new_demande);
-  // }
+  // Donne les domains d'un évenement
+  public Collection<Domain> get_domains_from_eventid(int id_event) {
+    Evenement event = em.find(Evenement.class, id_event);
+    return event.getDomains_event();
+  }
 
-  // public void seDesinscrire(String token, int id_event) {
-  // Evenement event = em.find(Evenement.class, id_event);
-  // Utilisateur utilisateur = em.createQuery("select m from Utilisateur m where
-  // token == " + token, Utilisateur.class)
-  // .getSingleResult();
-  // event.getUtilisateurs_event().remove(utilisateur);
-  // em.merge(event);
-  // }
+  // Donne les avis d'un évenement
+  public Collection<Avis> get_avis_from_eventid(int id_event) {
+    Evenement event = em.find(Evenement.class, id_event);
+    return event.getAvis_event();
+  }
 
-  // public void donnerAvis(int id_utilisateur, int id_event, String titre, String
-  // contenu, int note) {
-  // Avis new_avis = new Avis(titre, note, contenu, em.find(Utilisateur.class,
-  // id_utilisateur),
-  // em.find(Evenement.class, id_event));
-  // em.persist(new_avis);
-  // }
+  // Dit si une demande existe avec un évenement et un utilisateur
+  public boolean get_bool_demande_from_eventid_utilid(int id_event, int id_util) {
+    try {
 
+      Utilisateur utilisateur = em.find(Utilisateur.class, id_util);
+      Evenement evenement = em.find(Evenement.class, id_event);
+
+      TypedQuery<Demande> query = em.createQuery(
+          "SELECT d FROM Demande d WHERE d.utilisateur_dem = :utilisateur AND d.evenement_dem = :evenement",
+          Demande.class);
+      query.setParameter("utilisateur", utilisateur);
+      query.setParameter("evenement", evenement);
+
+      Demande demande = query.getSingleResult();
+      return true;
+    } catch (IllegalArgumentException | PersistenceException e) {
+      return false;
+    }
+  }
+
+  // Dit si une demande existe avec un évenement et un utilisateur
+  public Demande get_demande_from_eventid_utilid(int id_event, int id_util) {
+    try {
+
+      Utilisateur utilisateur = em.find(Utilisateur.class, id_util);
+      Evenement evenement = em.find(Evenement.class, id_event);
+
+      TypedQuery<Demande> query = em.createQuery(
+          "SELECT d FROM Demande d WHERE d.utilisateur_dem = :utilisateur AND d.evenement_dem = :evenement",
+          Demande.class);
+      query.setParameter("utilisateur", utilisateur);
+      query.setParameter("evenement", evenement);
+
+      Demande demande = query.getSingleResult();
+      return demande;
+    } catch (IllegalArgumentException | PersistenceException e) {
+      return null;
+    }
+  }
+
+  // Donne les attributs d'un utilisateurs
+  public Utilisateur get_util_from_uid(int id_util) {
+    return em.find(Utilisateur.class, id_util);
+  }
+
+  // Donne l' Etablissement d'un utilisateurs
+  public Etablissement get_etab_from_uid(int id_util) {
+    Utilisateur util = em.find(Utilisateur.class, id_util);
+    return util.getEtablissement_util();
+  }
+
+  // Donne les Demandes d'un utilisateurs
+  public Collection<Demande> get_demande_from_uid(int id_util) {
+    Utilisateur util = em.find(Utilisateur.class, id_util);
+    return util.getDemandes_util();
+  }
+
+  // Donne les Documents d'un utilisateurs
+  public Collection<Document> get_doc_from_uid(int id_util) {
+    Utilisateur util = em.find(Utilisateur.class, id_util);
+    return util.getDocuments_util();
+  }
+
+  // Donne les Documents d'un utilisateurs
+  public Collection<Avis> get_avis_from_uid(int id_util) {
+    Utilisateur util = em.find(Utilisateur.class, id_util);
+    return util.getAvis_util();
+  }
+
+  // Donne la liste des evenements d'un utilisateur
+  public Collection<Evenement> get_evenement_from_uid(int id_util) {
+    Utilisateur util = em.find(Utilisateur.class, id_util);
+    return util.getEvenements_util();
+  }
 }

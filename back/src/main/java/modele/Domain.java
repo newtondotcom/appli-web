@@ -5,6 +5,7 @@ import java.util.Collection;
 import com.google.gson.annotations.Expose;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,10 +21,10 @@ public class Domain {
     @Expose
     private String nom;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "domains_etab", fetch = FetchType.EAGER)
     private Collection<Etablissement> etablissements_dom;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "domains_event", fetch = FetchType.EAGER)
     private Collection<Evenement> evenement_dom;
 
     public Domain() {

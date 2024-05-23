@@ -48,7 +48,8 @@ public class Serv extends HttpServlet {
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Credentials", "true");
     response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
-    response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+    response.setHeader("Access-Control-Allow-Headers",
+        "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
 
     Cookie[] cookies = request.getCookies();
     String token = getToken(cookies);
@@ -116,12 +117,93 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(event);
         response.getWriter().write(json);
       }
+      // Utilisateur id -> Attribut
+      if (op.equals("get_util_from_uid")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Utilisateur util = facade.get_util_from_uid(id);
+        String json = gson.toJson(util);
+        response.getWriter().write(json);
+      }
       // Utilisateur id -> Liste_evenement
       if (op.equals("get_evenement_from_uid")) {
         int id = Integer.parseInt(request.getParameter("id"));
 
         Collection<Evenement> events = facade.get_evenement_from_uid(id);
         String json = gson.toJson(events);
+        response.getWriter().write(json);
+      }
+      // Utilisateur id -> etab
+      if (op.equals("get_etab_from_uid")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Etablissement etab = facade.get_etab_from_uid(id);
+        String json = gson.toJson(etab);
+        response.getWriter().write(json);
+      }
+      // Utilisateur id -> Demandes
+      if (op.equals("get_demande_from_uid")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Collection<Demande> dems = facade.get_demande_from_uid(id);
+        String json = gson.toJson(dems);
+        response.getWriter().write(json);
+      }
+      // Utilisateur id -> Documents
+      if (op.equals("get_doc_from_uid")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Collection<Document> docs = facade.get_doc_from_uid(id);
+        String json = gson.toJson(docs);
+        response.getWriter().write(json);
+      }
+      // Utilisateur id -> Avis
+      if (op.equals("get_avis_from_uid")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Collection<Avis> avis = facade.get_avis_from_uid(id);
+        String json = gson.toJson(avis);
+        response.getWriter().write(json);
+      }
+      // Event id -> Etablisement
+      if (op.equals("get_etab_from_eventid")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Etablissement etab = facade.get_etab_from_eventid(id);
+        String json = gson.toJson(etab);
+        response.getWriter().write(json);
+      }
+      // Event id -> Liste des domains
+      if (op.equals("get_domains_from_eventid")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Collection<Domain> domains = facade.get_domains_from_eventid(id);
+
+        String json = gson.toJson(domains);
+        response.getWriter().write(json);
+      }
+      // Event id -> Liste des avis
+      if (op.equals("get_avis_from_eventid")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Collection<Avis> avis = facade.get_avis_from_eventid(id);
+        String json = gson.toJson(avis);
+        response.getWriter().write(json);
+      }
+      // util id, event id -> boolean demande
+      if (op.equals("get_bool_demande_from_eventid_utilid")) {
+        int id_util = Integer.parseInt(request.getParameter("id_util"));
+        int id_event = Integer.parseInt(request.getParameter("id_event"));
+        boolean dem = facade.get_bool_demande_from_eventid_utilid(id_event, id_util);
+        String json = gson.toJson(dem);
+        response.getWriter().write(json);
+      }
+      // util id, event id -> demande
+      if (op.equals("get_demande_from_eventid_utilid")) {
+        int id_util = Integer.parseInt(request.getParameter("id_util"));
+        int id_event = Integer.parseInt(request.getParameter("id_event"));
+        Demande dem = facade.get_demande_from_eventid_utilid(id_event, id_util);
+        String json = gson.toJson(dem);
         response.getWriter().write(json);
       }
     } else {
@@ -138,7 +220,8 @@ public class Serv extends HttpServlet {
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Credentials", "true");
     response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
-    response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+    response.setHeader("Access-Control-Allow-Headers",
+        "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
 
     Cookie[] cookies = request.getCookies();
     String token = getToken(cookies);
@@ -213,9 +296,9 @@ public class Serv extends HttpServlet {
         String creneau = request.getParameter("creneau");
         String duree = request.getParameter("duree");
         String id_etablissement_event = request.getParameter("id_etablissement_event");
-        String id_domains_event = request.getParameter("id_domains_event");
+        String id_domain_event = request.getParameter("id_domain_event");
         String msg = facade.ajouterEvenement(titre, description, duree, creneau, id_etablissement_event,
-            id_domains_event);
+            id_domain_event);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }

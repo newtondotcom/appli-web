@@ -2,6 +2,7 @@ package modele;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 
 import com.google.gson.annotations.Expose;
 
@@ -43,7 +44,7 @@ public class Evenement {
     @OneToMany(mappedBy = "evenement_dem", fetch = FetchType.EAGER)
     private Collection<Demande> demandes_event;
 
-    @ManyToMany(mappedBy = "evenement_dom", fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Domain> domains_event;
 
     @OneToMany(mappedBy = "evenement_avis", fetch = FetchType.EAGER)
@@ -56,13 +57,13 @@ public class Evenement {
     }
 
     public Evenement(String description, LocalDateTime creneau, Etablissement etablissement_event, int duree,
-            String titre, Collection<Domain> domains_event) {
+            String titre) {
         this.description = description;
         this.creneau = creneau;
         this.etablissement_event = etablissement_event;
         this.duree = duree;
         this.titre = titre;
-        this.domains_event = domains_event;
+        this.domains_event = new HashSet<>();
     }
 
     public int getId() {
