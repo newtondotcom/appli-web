@@ -50,6 +50,13 @@ public class Serv extends HttpServlet {
 
     String op = request.getParameter("op");
 
+    // Initialise la BD avec des entitées
+    if (op.equals("init")) {
+      facade.initialisation();
+      String json = gson.toJson("OK");
+      response.getWriter().write(json);
+    }
+
     if (facade.verifierToken(token)) {
       // NULL -> Lister tout les établissements et domaines
       if (op.equals("lister_etab_domain")) {
@@ -126,13 +133,6 @@ public class Serv extends HttpServlet {
     boolean fct_sans_token = false;
 
     String op = request.getParameter("op");
-    // Initialise la BD avec des entitées
-    if (op.equals("init")) {
-      facade.initialisation();
-      String json = gson.toJson("OK");
-      response.getWriter().write(json);
-      fct_sans_token = true;
-    }
     // Information_Utilisateur -> Si l'enregistemenent a était fait
     if (op.equals("enregistrer_util")) {
       String nom = request.getParameter("nom");
