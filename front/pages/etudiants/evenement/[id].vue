@@ -1,54 +1,36 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Loader2 } from "lucide-vue-next";
-const postulants = [
-  {
-    id: 0,
-    nom: "Jean Dupont",
-    email: "jean.dupont@gmail.com",
-    numero: "06 12 34 56 78",
-    statut: "accepte",
-  },
-  {
-    id: 1,
-    nom: "Marie Dupont",
-    email: "marie.dupont@gmail.com",
-    numero: "06 12 34 56 78",
-    statut: "refuse",
-  },
-  {
-    id: 2,
-    nom: "Paul Dupont",
-    email: "paul.dupont@gmail.com",
-    numero: "06 12 34 56 78",
-    statut: "en attente",
-  },
-];
-const idd = 0;
-const nom = "Découverte IA";
-const description =
-  "Venez découvrir l'intelligence artificielle avec nos collaborateurs durant ce stage de 3 heures.";
-const creneau: Date = new Date();
-const nom_etablissement = "Airbus";
-const id_etablissement = 0;
-const note_etablissement = 4.5;
-const tags = ["IA", "Stage", "Airbus"];
-const evenement: EvenementEtablissement = {
-  idd,
-  nom,
-  description,
-  creneau,
-  nom_etablissement,
-  id_etablissement,
-  note_etablissement,
-  tags,
-};
+import { Loader2, TicketCheck, TicketSlash, TicketX } from "lucide-vue-next";
+
 const lettreDeMotiv = ref("");
 const requeteFausse = ref(false);
 const loading = ref(false);
 const fileSelected = ref(false);
 const fileName = ref("");
 const demandeEnvoyee = ref(false);
+
+const route = useRoute();
+
+const id = route.params.id;
+const bool = route.query.bool === "true";
+console.log(route);
+console.log(id);
+console.log(bool);
+
+const data = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id&id=${id}`
+);
+const evenement = data;
+
+/* Demande déja effectué */
+const demandeEffectue = true;
+const demandeValide = ref(false);
+const demandeEnAttente = ref(true);
+const demandeRefuse = ref(false);
+if (demandeEffectue) {
+  demandeEnvoyee.value = true;
+  // Récupérer la demande du boug
+}
 
 async function sendDemand() {
   console.log("sendDemand");
@@ -79,6 +61,15 @@ const handleFileChange = (event: Event) => {
   <div class="flex flex-wrap justify-center gap-10">
     <EvenementCarte :key="evenement.id" :evenement="evenement" />
     <div class="grid w-full max-w-sm items-center gap-14 content-center">
+      <div v-if="demandeEnvoyee" class="flex justify-center">
+        <TicketCheck color="#3e9392" class="w-20 h-20" v-if="demandeValide" />
+        <TicketSlash
+          color="#c4bc00"
+          class="w-20 h-20"
+          v-if="demandeEnAttente"
+        />
+        <TicketX color="#b51a00" class="w-20 h-20" v-if="demandeRefuse" />
+      </div>
       <div>
         <Label for="lettreDeMotiv" class="place-self-center"
           >Lettre de Motivation</Label
@@ -89,15 +80,6 @@ const handleFileChange = (event: Event) => {
           placeholder="Cette visite m'intéresse car …"
           class="h-48"
           v-model="lettreDeMotiv"
-          :disabled="demandeEnvoyee"
-        />
-      </div>
-      <div>
-        <Label for="picture">Papier d'identité</Label>
-        <Input
-          id="picture"
-          type="file"
-          @change="handleFileChange"
           :disabled="demandeEnvoyee"
         />
       </div>
