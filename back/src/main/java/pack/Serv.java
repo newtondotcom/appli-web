@@ -68,7 +68,7 @@ public class Serv extends HttpServlet {
       fct_sans_token = true;
     }
     if (facade.verifierToken(token)) {
-      // NULL -> Lister tout les établissements et domaines
+      // NULL -> Lister tout les évenemtents et domaines
       if (op.equals("lister_event")) {
         Collection<Evenement> listEvent = facade.listEvent();
         String json = gson.toJson(listEvent);
