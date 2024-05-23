@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {cn} from '~/lib/utils'
+import {cn} from '~/lib/utils';
 import { ref } from 'vue'
 import { Check, ChevronsUpDown } from 'lucide-vue-next'
 
