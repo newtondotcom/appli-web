@@ -68,7 +68,7 @@ public class Serv extends HttpServlet {
       Collection<Domain> listedom = facade.listeDomain();
       String json1 = gson.toJson(listeetab);
       String json2 = gson.toJson(listedom);
-      String json = json1 + json2;
+      String json = json1 + ";" + json2;
       response.getWriter().write(json);
       fct_sans_token = true;
     }
