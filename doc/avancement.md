@@ -137,3 +137,20 @@ Accéder aux informations rentrées par les utilisateurs (retrouver un mot de pa
 - [Création de la page qui permet de visualiser tous les évènement sauquel un etudiant à postuler](front/pages/etudiants/mesEvenement.vue)
 - [AJout de filtre pour l'affichage de tous les évèenements](front/pages/etudiants/evenements.vue)
 - Commencement de l'intégration de l'API Wildlfy
+
+## Facade
+
+- Génération des tokens pour les utilisateurs après l'inscription et la connexion.
+- Hachage du mot de passe à l'inscription avant de le rentrer dans la BD et comparaison avec le hachage du mot de passe rentré à la connexion.
+- Création des fonctions nécessaires pour extraire les éléments de la BD pour le front.
+
+## Serveur
+
+- Extraction du token des cookies et vérification pour les requêtes qui le nécessitent.
+- Implémentation d'un builderJson pour envoyer les réponses de la facade sous format JSON pour le front.
+- Création des conditions pour que le champ opérateur des requêtes utilise les bonnes fonctions de la facade.
+
+## BD
+
+- Modification des entités pour que le builderJson ne sélectionne que les champs voulus et ne boucle pas.
+
