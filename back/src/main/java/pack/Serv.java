@@ -45,6 +45,11 @@ public class Serv extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Access-Control-Allow-Credentials", "true");
+    response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
+    response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+
     Cookie[] cookies = request.getCookies();
     String token = getToken(cookies);
     boolean fct_sans_token = false;
@@ -63,7 +68,7 @@ public class Serv extends HttpServlet {
       Collection<Domain> listedom = facade.listeDomain();
       String json1 = gson.toJson(listeetab);
       String json2 = gson.toJson(listedom);
-      String json = json1 + json2;
+      String json = json1 + ";" + json2;
       response.getWriter().write(json);
       fct_sans_token = true;
     }
@@ -129,6 +134,11 @@ public class Serv extends HttpServlet {
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Access-Control-Allow-Credentials", "true");
+    response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
+    response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
 
     Cookie[] cookies = request.getCookies();
     String token = getToken(cookies);

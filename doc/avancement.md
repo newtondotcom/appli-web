@@ -122,3 +122,18 @@ Accéder aux informations rentrées par les utilisateurs (retrouver un mot de pa
 
 - [Page d'inscription](front/pages/auth/login.vue)
 - [Page d'authentification](front/pages/auth/signup.vue)
+
+# Semaine du 19 mai au 24 mai
+
+## Vue Etablissement
+
+- [Création de la page de modification du compte d'un personnel d'un établissement](front/pages/etablissement/demande/compte.vue)
+- [Création de la page pour créer et modifier un évènement](front/pages/etablissement/evenement/modifier.vue)
+- [Modification de la page d'un évènement avec la liste des postulants si l'évènement n'est pas passé, si l'évènement est en cours possibilité de faire l'appel, sinon le personnel voit des statistiques sur l'évènement](front/pages/etablissement/evenement/[id].vue)
+- Commencement de l'intégration de l'API Wildlfy
+
+## Vue Etudiant
+- [Création de la page de visualisation & modification du compte d'un étudiant](front/pages/etudiants/[id].vue)
+- [Création de la page qui permet de visualiser tous les évènement sauquel un etudiant à postuler](front/pages/etudiants/mesEvenement.vue)
+- [AJout de filtre pour l'affichage de tous les évèenements](front/pages/etudiants/evenements.vue)
+- Commencement de l'intégration de l'API Wildlfy

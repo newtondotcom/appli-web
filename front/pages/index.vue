@@ -1,42 +1,9 @@
 <script setup lang="ts">
 import {MoveRight} from 'lucide-vue-next';
 
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`,
-)
-const domains = [
-  'Développement logiciel',
-  'Développement web',
-  'Développement mobile',
-  'Conception de produits',
-  'Marketing numérique',
-  'Analyse de données',
-  'Science des données',
-  'Ingénierie des données',
-  'Sécurité informatique',
-  'Réseaux informatiques',
-  'Administration système',
-  'Gestion de projet',
-    'Gestion de produit',
-    'Gestion de projet',
-]
-
-const companies = [
-"SAP",
-"Salesforce",
-"VMware",
-"Dell",
-"HP",
-"Intuit",
-"Uber",
-"Airbnb",
-"Dropbox",
-"Slack",
-"Twilio",
-"Stripe",
-"Shopify",
-"Zoom",
-]
+const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=lister_etab_domain');
+const companies = JSON.parse(data.split(";")[0])
+const domains = JSON.parse(data.split(";")[1])
 
 const defaultValue = 'item-1'
 const accordionItems = [
@@ -98,11 +65,11 @@ function type() {
 
       <div v-for="tag in domains" :key="tag">
         <div class="text-sm">
-          {{ tag }}
+          {{ tag.nom }}
         </div>
         <Separator class="my-2" />
       </div>
-      <div class="font-medium flex">Voir plus <MoveRight class="ml-2" /></div>
+      <a href="" class="font-medium flex">Voir plus <MoveRight class="ml-2" /></a>
     </div>
   </ScrollArea>
 
@@ -114,11 +81,11 @@ function type() {
 
       <div v-for="tag in companies" :key="tag">
         <div class="text-sm">
-          {{ tag }}
+          {{ tag.nom }}
         </div>
         <Separator class="my-2" />
       </div>
-      <div class="font-medium flex">Voir plus <MoveRight class="ml-2" /></div>
+      <a  class="font-medium flex">Voir plus <MoveRight class="ml-2" /></a>
     </div>
   </ScrollArea>
 </div> 
