@@ -8,15 +8,6 @@ const value = ref('')
 const label = ref('')
 const etu = ref(false)
 
-/*
-const etablissements = [
-  { value: 'next.js', label: 'Next.js' },
-  { value: 'sveltekit', label: 'SvelteKit' },
-  { value: 'nuxt.js', label: 'Nuxt.js' },
-  { value: 'remix', label: 'Remix' },
-  { value: 'astro', label: 'Astro' },
-]*/
-
 const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=lister_etab_domain');
 const companies = JSON.parse(data.split(";")[0])
 const etablissements = companies.map((company) => ({ value: company.SIREN, label: company.nom }))
