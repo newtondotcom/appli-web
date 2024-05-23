@@ -18,8 +18,8 @@
         <DropdownMenuRadioGroup v-model="selectedEntreprise">
           <ScrollArea class="h-40 w-48 rounded-md">
             <DropdownMenuRadioItem
-              v-for="entreprise in entreprises"
-              :key="entreprise.id"
+              v-for="(entreprise, index) in entreprises"
+              :key="index"
               :value="entreprise.nom"
             >
               {{ entreprise.nom }}
@@ -34,15 +34,10 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from "vue";
 const selectedEntreprise = ref("");
-interface Entreprise {
-  id: number;
-  nom: string;
-}
-const entreprises: Entreprise[] = [
-  { id: 1, nom: "Google" },
-  { id: 2, nom: "Microsoft" },
-  { id: 3, nom: "Airbus" },
-];
+const data = await $fetch(
+  "http://localhost:8080/PasserellePro/Serv?op=lister_etab_domain"
+);
+const entreprises = JSON.parse(data.split(";")[0]);
 const emit = defineEmits(["filter"]);
 watchEffect(() => {
   console.log(selectedEntreprise.value);
