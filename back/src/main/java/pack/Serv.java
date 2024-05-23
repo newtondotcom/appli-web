@@ -47,7 +47,7 @@ public class Serv extends HttpServlet {
 
     Cookie[] cookies = request.getCookies();
     String token = getToken(cookies);
-
+    boolean fct_sans_token = false;
     String op = request.getParameter("op");
 
     // Initialise la BD avec des entitées
@@ -55,6 +55,7 @@ public class Serv extends HttpServlet {
       facade.initialisation();
       String json = gson.toJson("OK");
       response.getWriter().write(json);
+      fct_sans_token = true;
     }
 
     if (facade.verifierToken(token)) {
@@ -119,8 +120,10 @@ public class Serv extends HttpServlet {
         response.getWriter().write(json);
       }
     } else {
-      String json = gson.toJson("Mauvais_Token");
-      response.getWriter().write(json);
+      if (!fct_sans_token) {
+        String json = gson.toJson("Mauvais_Token");
+        response.getWriter().write(json);
+      }
     }
   }
 
