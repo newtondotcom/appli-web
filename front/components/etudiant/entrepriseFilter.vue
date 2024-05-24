@@ -40,7 +40,6 @@ const data = await $fetch(
 const entreprises = JSON.parse(data.split(";")[0]);
 const emit = defineEmits(["filter"]);
 watchEffect(() => {
-  console.log(selectedEntreprise.value);
   emit("filter", selectedEntreprise.value);
 });
 </script>
