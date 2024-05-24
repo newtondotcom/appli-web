@@ -13,23 +13,51 @@ const route = useRoute();
 
 const id = route.params.id;
 const bool = route.query.bool === "true";
-console.log(route);
-console.log(id);
-console.log(bool);
 
+/* Récupération de l'Evenement */
 const data = await $fetch(
   `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id&id=${id}`
 );
 const evenement = data;
 
-/* Demande déja effectué */
-const demandeEffectue = true;
+const etab = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_eventid&id=${id}`
+);
+const domains = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${id}`
+);
+const stats = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=lister_stat_event&id=${id}`
+);
+const doma = domains.map((d) => d.nom);
+const event = {
+  id: evenement.id,
+  titre: evenement.titre,
+  description: evenement.description,
+  creneau: new Date(evenement.creneau),
+  nom_etablissement: etab.nom,
+  id_etablissement: etab.SIREN,
+  note_etablissement: stats[3],
+  tags: doma,
+};
+/* Traitement de la demande */
 const demandeValide = ref(false);
 const demandeEnAttente = ref(true);
 const demandeRefuse = ref(false);
+const demandeEffectue = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_bool_demande_from_eventid_utilid&id_util=${id}&id_event=${event.id}`
+);
 if (demandeEffectue) {
-  demandeEnvoyee.value = true;
-  // Récupérer la demande du boug
+  const demande = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_eventid_utilid&id_util=${id}&id_event=${event.id}`
+  );
+  console.log(demande);
+  demandeValide.value = demande.valide;
+  demandeRefuse.value = demande.refuse;
+  if (!demande.valide && !demande.refuse) {
+    demandeEnAttente.value = true;
+  }
+  lettreDeMotiv.value = demande.motivation;
 }
 
 async function sendDemand() {
@@ -59,9 +87,9 @@ const handleFileChange = (event: Event) => {
 
 <template>
   <div class="flex flex-wrap justify-center gap-10">
-    <EvenementCarte :key="evenement.id" :evenement="evenement" />
+    <EvenementCarte :key="event.id" :evenement="event" />
     <div class="grid w-full max-w-sm items-center gap-14 content-center">
-      <div v-if="demandeEnvoyee" class="flex justify-center">
+      <div v-if="demandeEffectue" class="flex justify-center">
         <TicketCheck color="#3e9392" class="w-20 h-20" v-if="demandeValide" />
         <TicketSlash
           color="#c4bc00"
@@ -80,14 +108,14 @@ const handleFileChange = (event: Event) => {
           placeholder="Cette visite m'intéresse car …"
           class="h-48"
           v-model="lettreDeMotiv"
-          :disabled="demandeEnvoyee"
+          :disabled="demandeEffectue"
         />
       </div>
       <Button
         @click="sendDemand"
         variant="secondary"
         class="w-[20%] place-self-center"
-        :disabled="demandeEnvoyee"
+        :disabled="demandeEffectue"
       >
         <div v-if="loading">
           <Loader2 class="w-4 h-4 mr-2 animate-spin" />
