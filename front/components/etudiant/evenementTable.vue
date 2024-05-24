@@ -1,59 +1,46 @@
 <script lang="ts" setup>
-import { Search } from "lucide-vue-next";
+import { Search, Tag } from "lucide-vue-next";
 import { ref, watch, onMounted, computed } from "vue";
-interface EvenementEtablissement {
-  id: number;
-  nom: string;
-  description: string;
-  creneau: Date;
-  nom_etablissement: string;
-  id_etablissement: number;
-  note_etablissement: number;
-  tags: string[];
+
+/* Récupérer les Evenements */
+const data = await $fetch(
+  "http://localhost:8080/PasserellePro/Serv?op=lister_event"
+);
+const evenementsStart = data;
+
+let events = [];
+
+for (let i = 0; i < evenementsStart.length; i++) {
+  const etab = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_eventid&id=${evenementsStart[i].id}`
+  );
+  const domains = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${evenementsStart[i].id}`
+  );
+  const stats = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=lister_stat_event&id=${evenementsStart[i].id}`
+  );
+  const doma = domains.map((d) => d.nom);
+  const event = {
+    id: evenementsStart[i].id,
+    titre: evenementsStart[i].titre,
+    description: evenementsStart[i].description,
+    creneau: new Date(evenementsStart[i].creneau),
+    nom_etablissement: etab.nom,
+    id_etablissement: etab.SIREN,
+    note_etablissement: stats[3],
+    tags: doma,
+  };
+  events.push(event);
 }
 
-const evenementsStar: EvenementEtablissement[] = [
-  {
-    id: 0,
-    nom: "Découverte IA",
-    description:
-      "Venez découvrir l'intelligence artificielle avec nos collaborateurs durant ce stage de 3 heures.",
-    creneau: new Date(),
-    nom_etablissement: "Airbus",
-    id_etablissement: 0,
-    note_etablissement: 4.5,
-    tags: ["IA", "Stage", "Airbus"],
-  },
-  {
-    id: 1,
-    nom: "Formation Python",
-    description:
-      "Apprenez les bases du langage de programmation Python avec nos experts.",
-    creneau: new Date(),
-    nom_etablissement: "Microsoft",
-    id_etablissement: 1,
-    note_etablissement: 4.8,
-    tags: ["Python", "Formation", "Microsoft"],
-  },
-  {
-    id: 2,
-    nom: "Atelier Design Thinking",
-    description:
-      "Découvrez la méthode de Design Thinking pour résoudre des problèmes complexes en équipe.",
-    creneau: new Date(),
-    nom_etablissement: "Google",
-    id_etablissement: 2,
-    note_etablissement: 4.7,
-    tags: ["Design Thinking", "Atelier", "Google"],
-  },
-];
-
+/* Gestion des filtres */
 const searchFilter = ref("");
 const domaineFilter = ref("");
 const entreprisesFilter = ref("");
 
 const filteredEvenements = computed(() => {
-  let evenements = evenementsStart;
+  let evenements = events;
   if (searchFilter.value !== "") {
     evenements = evenements.filter(
       (evenement: { titre: string; description: string }) =>
@@ -69,12 +56,6 @@ const filteredEvenements = computed(() => {
   }
   return evenements;
 });
-
-const data = await $fetch(
-  "http://localhost:8080/PasserellePro/Serv?op=lister_event"
-);
-const evenementsStart = data;
-
 const handleSearch = (search: string) => {
   searchFilter.value = search;
 };
