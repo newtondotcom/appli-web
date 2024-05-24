@@ -89,14 +89,23 @@ const handleFileChange = (event: Event) => {
   <div class="flex flex-wrap justify-center gap-10">
     <EvenementCarte :key="event.id" :evenement="event" />
     <div class="grid w-full max-w-sm items-center gap-14 content-center">
-      <div v-if="demandeEffectue" class="flex justify-center">
-        <TicketCheck color="#3e9392" class="w-20 h-20" v-if="demandeValide" />
+      <div v-if="demandeEffectue" class="flex justify-center grid">
+        <h1 class="w-full">Demade Effectué</h1>
+        <TicketCheck
+          color="#3e9392"
+          class="w-20 h-20 justify-self-center"
+          v-if="demandeValide"
+        />
         <TicketSlash
           color="#c4bc00"
-          class="w-20 h-20"
+          class="w-20 h-20 justify-self-center"
           v-if="demandeEnAttente"
         />
-        <TicketX color="#b51a00" class="w-20 h-20" v-if="demandeRefuse" />
+        <TicketX
+          color="#b51a00"
+          class="w-20 h-20 justify-self-center"
+          v-if="demandeRefuse"
+        />
       </div>
       <div>
         <Label for="lettreDeMotiv" class="place-self-center"
