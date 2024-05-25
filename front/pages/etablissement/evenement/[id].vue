@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { EvenementEtablissement } from "~/types";
+import {DollarSign} from 'lucide-vue-next';
 const postulants = [
   {
     id: 0,
@@ -68,15 +69,19 @@ const listeAppels = [
   },
 ];
 
-const appelEffectue = ref(true);
+const avancementAppel = ref([]);
+avancementAppel.value = listeAppels.map((appel) => {
+  return {
+    id: appel.id,
+    nom: appel.nom,
+    email: appel.email,
+    numero: appel.numero,
+    statut: appel.statut,
+    presence : null,
+  };
+});
 
-async function marquerPersonnePresente(id: number) {
-  console.log("Présent");
-}
-
-async function marquerPersonneAbsente(id: number) {
-  console.log("Absent");
-}
+const appelEffectue = ref(false);
 
 const statistiques = [
     {
@@ -102,6 +107,7 @@ const statistiques = [
 ];
 
 async function mettreElevePresent(id: number) {
+  /*
   const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=presentdemande', {
     method: 'POST',
     headers: {
@@ -112,9 +118,17 @@ async function mettreElevePresent(id: number) {
     }),
   });
   console.log(data);
+  */
+  avancementAppel.value = avancementAppel.value.map((appel) => {
+    if (appel.id == id) {
+      appel.presence = true;
+    }
+    return appel;
+  });
 }
 
 async function mettreEleveAbsent(id: number) {  
+  /*
   const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=absentdemande', {
     method: 'POST',
     headers: {
@@ -125,6 +139,13 @@ async function mettreEleveAbsent(id: number) {
     }),
   });
   console.log(data);
+  */
+  avancementAppel.value = avancementAppel.value.map((appel) => {
+    if (appel.id == id) {
+      appel.presence = false;
+    }
+    return appel;
+  });
 }
 
 </script>
@@ -182,7 +203,7 @@ async function mettreEleveAbsent(id: number) {
   <div v-if="evenementPassed && !appelEffectue">
     <Titre title="Appel" subtitle="Faire l'appel pour cet évenement" />
     <div class="grid grid-cols-1 gap-4 justify-center mx-auto items-center">
-      <div v-for="postulant in postulants" :key="postulant.id">
+      <div v-for="postulant in avancementAppel" :key="postulant.id">
         <Card class="sm:col-span-2 w-[80%]">
           <CardHeader class="pb-3">
             <CardTitle>
@@ -190,10 +211,16 @@ async function mettreEleveAbsent(id: number) {
                 <div>
                   {{ postulant.nom }}
                 </div>
-                <div>
-                  <Button @click="marquerPersonnePresente(postulant.id)" class="mr-2">Présent</Button>
-                  <Button @click="marquerPersonneAbsente(postulant.id)" class="bg-red-500">Absent</Button>
+                <div v-if="postulant.presence==null">
+                  <Button @click="mettreElevePresent(postulant.id)" class="mr-2">Présent</Button>
+                  <Button @click="mettreEleveAbsent(postulant.id)" class="bg-red-400">Absent</Button>
                 </div>
+                <div v-else-if="postulant.presence == true">
+                  <Badge variant="primary">Présent</Badge>
+              </div>
+              <div v-else-if="postulant.presence == false">
+                <Badge variant="secondary">Absent</Badge>
+              </div>
               </div>
             </CardTitle>
             <CardDescription class="max-w-lg text-balance leading-relaxed">
