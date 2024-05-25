@@ -15,8 +15,8 @@ const prenom = ref('')
 const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=lister_etab_domain');
 const companies = JSON.parse(data.split(";")[0])
 const etablissements = companies.map((company) => ({ value: company.SIREN, label: company.nom, isEntreprise : company.entreprise }))
-console.log(companies)
-const etablissementsAffiches = ref(etablissements.filter((company) => company.isEntreprise === false))
+const etablissementsAffiches = ref([])
+etablissementsAffiches.value = etablissements.filter((company) => company.isEntreprise === true)
 
 watch(etu, (value) => {
   if (value) {
