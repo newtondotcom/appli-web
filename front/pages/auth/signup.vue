@@ -1,16 +1,31 @@
 <script setup lang="ts">
 import {cn} from '~/lib/utils';
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { Check, ChevronsUpDown } from 'lucide-vue-next'
 
 const open = ref(false)
 const value = ref('')
 const label = ref('')
 const etu = ref(false)
+const email = ref('f@test.com')
+const password = ref('1234')
+const nom = ref('')
+const prenom = ref('')
 
 const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=lister_etab_domain');
 const companies = JSON.parse(data.split(";")[0])
-const etablissements = companies.map((company) => ({ value: company.SIREN, label: company.nom }))
+const etablissements = companies.map((company) => ({ value: company.SIREN, label: company.nom, isEntreprise : company.entreprise }))
+console.log(companies)
+const etablissementsAffiches = ref(etablissements.filter((company) => company.isEntreprise === false))
+
+watch(etu, (value) => {
+  if (value) {
+    etablissementsAffiches.value = etablissements.filter((company) => company.isEntreprise === false)
+  } else {
+    etablissementsAffiches.value = etablissements.filter((company) => company.isEntreprise === true)
+  }
+})
+
 </script>
 
 <template>
@@ -41,12 +56,19 @@ const etablissements = companies.map((company) => ({ value: company.SIREN, label
             id="email"
             type="email"
             placeholder="m@example.com"
+            :v-model="email"
             required
           />
         </div>
         <div class="grid gap-2">
           <Label for="password">Mot de passe</Label>
-          <Input id="password" type="password" />
+          <Input :v-model="password" id="password" type="password" />
+        </div>
+
+        <div class="gap-2 flex flex-row">
+        <Switch v-model:checked="etu" />
+        <div class="flex" v-if="etu">Etudiant</div>
+        <div class="flex" v-else>Membre d'un établissement</div>
         </div>
 
 
@@ -73,14 +95,13 @@ const etablissements = companies.map((company) => ({ value: company.SIREN, label
                 <CommandList>
                   <CommandGroup>
                     <CommandItem
-                      v-for="framework in etablissements"
+                      v-for="framework in etablissementsAffiches"
                       :key="framework.value"
                       :value="framework.value"
                       @select="(ev) => {
                         if (typeof ev.detail.value === 'number') {
                           value = ev.detail.value.toString()
                           label = framework.label
-                          console.log(label)
                         }
                         open = false
                       }"
@@ -98,12 +119,6 @@ const etablissements = companies.map((company) => ({ value: company.SIREN, label
               </Command>
             </PopoverContent>
           </Popover>
-        </div>
-
-        <div class="gap-2 flex flex-row">
-        <Switch v-model:checked="etu" />
-        <div class="flex" v-if="etu">Etudiant</div>
-        <div class="flex" v-else>Membre d'un établissement</div>
         </div>
 
         <Button type="submit" class="w-full">
