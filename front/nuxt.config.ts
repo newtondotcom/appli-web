@@ -28,5 +28,5 @@ export default defineNuxtConfig({
       viewport: 'width=device-width, initial-scale=1',
       title: 'Trouve un mini-stage',
     }
-  }
+  },
 })
