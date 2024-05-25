@@ -17,6 +17,9 @@ async function seConnecter(){
   }
   );
   console.log(data)
+  const token = data;
+  const token_cookie = useCookie('token', { path: '/' });
+  token_cookie.value = token;
   } catch (error) {
     console.error(error)
   }
