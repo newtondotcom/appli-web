@@ -1,51 +1,61 @@
 <script setup lang="ts">
 const route = useRoute();
 
-const id = 0;
-const nom = "Découverte IA";
-const description =
-  "Venez découvrir l'intelligence artificielle avec nos collaborateurs durant ce stage de 3 heures.";
-const creneau: Date = new Date();
-const nom_etablissement = "Airbus";
-const id_etablissement = 0;
-const note_etablissement = 4.5;
-const tags = ["IA", "Stage", "Airbus"];
-const evenement: EvenementEtablissement = {
-  id,
-  nom,
-  description,
-  creneau,
-  nom_etablissement,
-  id_etablissement,
-  note_etablissement,
-  tags,
-};
-let creneau2: Date = new Date();
-creneau2.setDate(creneau2.getDate() - 1);
-const evenement2: EvenementEtablissement = {
-  id: 1,
-  nom: "Découverte IA",
-  description:
-    "Venez découvrir l'intelligence artificielle avec nos collaborateurs durant ce stage de 3 heures.",
-  creneau: creneau2,
-  nom_etablissement: "Airbus",
-  id_etablissement: 0,
-  note_etablissement: 4.5,
-  tags: ["IA", "Stage", "Airbus"],
-};
+const id = 1;
+
+/* Récupérer les evenement */
+const data = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_uid&id=${id}`
+);
+const evenementsStart = data;
+
+let events = [];
+
+for (let i = 0; i < evenementsStart.length; i++) {
+  const etab = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_eventid&id=${evenementsStart[i].id}`
+  );
+  const domains = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${evenementsStart[i].id}`
+  );
+  const stats = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=lister_stat_event&id=${evenementsStart[i].id}`
+  );
+  const doma = domains.map((d) => d.nom);
+  const event = {
+    id: evenementsStart[i].id,
+    titre: evenementsStart[i].titre,
+    description: evenementsStart[i].description,
+    creneau: new Date(evenementsStart[i].creneau),
+    nom_etablissement: etab.nom,
+    id_etablissement: etab.SIREN,
+    note_etablissement: stats[3],
+    tags: doma,
+  };
+  events.push(event);
+}
 </script>
 
 <template>
   <div>
-    <Titre
-      title="Evènements"
-      subtitle="Voici les évènements auquel vous avez postulé"
-    />
-    <a :href="'/evenement/' + evenement.id">
-      <EvenementCarte class="my-4" :evenement="evenement" :key="evenement.id" />
-    </a>
-    <a href="/etablissement/evenements/0">
-      <EvenementCarte :evenement="evenement2" :key="evenement2.id" />
-    </a>
+    <div class="flex flex-col justify-center">
+      <div class="flex flex-row w-full align-center justify-center">
+        <Titre
+          title="Evènements"
+          subtitle="Voici les évènements auquel vous avez postulé"
+        />
+      </div>
+      <div class="flex flex-wrap justify-center">
+        <div
+          v-for="evenement in events"
+          :key="evenement.id"
+          class="w-[40%] mx-4"
+        >
+          <a :href="'./evenement/' + evenement.id" class="">
+            <EtudiantEvenementCarte class="my-4 mx-4" :evenement="evenement" />
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
