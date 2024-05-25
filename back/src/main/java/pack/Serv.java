@@ -8,11 +8,15 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import vue.Facade;
 import modele.*;
 import java.util.Collection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import java.time.LocalDateTime;
 
 @WebServlet("/Serv")
@@ -48,6 +52,23 @@ public class Serv extends HttpServlet {
       return "mauvais";
     }
     return "mauvais";
+  }
+
+  public JsonObject getBodyJson(HttpServletRequest request) {
+    StringBuilder requestBody = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                requestBody.append(line);
+            }
+    } catch (IOException e) {
+            // Handle IO exception
+            e.printStackTrace();
+    }
+    Gson gson = new Gson();
+    String jsonArrayString = requestBody.toString();
+    JsonObject body = gson.fromJson(jsonArrayString, JsonObject.class);
+    return body;
   }
 
   @Override
@@ -236,15 +257,15 @@ public class Serv extends HttpServlet {
     // Information_Utilisateur -> Si l'enregistemenent a était fait
     if (op.equals("enregistrer_util")) {
       String nom = request.getParameter("nom");
+      String prenom = request.getParameter("prenom");
       String mdp = request.getParameter("mdp");
-      String INE = request.getParameter("ine");
-      String mdp_admin = request.getParameter("mdp_admin");
       String email = request.getParameter("email");
-      String telephone = request.getParameter("telephone");
-      String classe = request.getParameter("classe");
       String siren = request.getParameter("siren");
-      String msg = facade.Enregistrer(nom, mdp, INE, mdp_admin, email, telephone, classe, siren);
-      String json = gson.toJson(msg);
+      /// A MODIFIER
+      //String msg = facade.Enregistrer(nom, mdp, INE, mdp_admin, email, telephone, classe, siren);
+      //String json = gson.toJson(msg);
+    // + RENVOYER LE TOKEN COMME A LA CONNEXION
+      String json = gson.toJson("OK");
       response.getWriter().write(json);
       fct_sans_token = true;
     }
