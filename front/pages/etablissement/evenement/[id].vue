@@ -100,6 +100,33 @@ const statistiques = [
         sous_titre: "+20.1% from last month"
     },
 ];
+
+async function mettreElevePresent(id: number) {
+  const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=presentdemande', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: id,
+    }),
+  });
+  console.log(data);
+}
+
+async function mettreEleveAbsent(id: number) {  
+  const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=absentdemande', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: id,
+    }),
+  });
+  console.log(data);
+}
+
 </script>
 
 <template>
