@@ -295,14 +295,14 @@ public class Serv extends HttpServlet {
         response.getWriter().write(json);
       }
 
-      // NULL -> Success si validé ou Error sinon
+      // Id -> Success si validé ou Error sinon
       if (op.equals("validerdemande")) {
         int id = Integer.parseInt(body.get("id").getAsString());
         String msg = facade.accepterDemande(id);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
-      // NULL -> Success si refusé ou Error sinon
+      // Id -> Success si refusé ou Error sinon
       if (op.equals("refuserdemande")) {
         int id = Integer.parseInt(body.get("id").getAsString());
         String msg = facade.refuserDemande(id);
