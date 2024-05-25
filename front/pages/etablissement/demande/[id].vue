@@ -6,53 +6,64 @@ const identite = "Jean Dupont";
 const email = "jean.dupont@gmail.com";
 const numero = "06 12 34 56 78";
 const classe = "5 ème";
-const motivation = "Je suis très intéressé par l'intelligence artificielle et je souhaite en apprendre plus sur le sujet.";
-const creneau: string = new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
+const motivation =
+  "Je suis très intéressé par l'intelligence artificielle et je souhaite en apprendre plus sur le sujet.";
+const creneau: string =
+  new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
 const demandeRepondue = ref(false);
 
-
-
 async function accepterDemande(id: number) {
-  const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=validerdemande', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      id: id,
-    }),
-  });
+  const data = await $fetch(
+    "http://localhost:8080/PasserellePro/Serv?op=validerdemande",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+      }),
+    }
+  );
   console.log(data);
 }
 
 async function refuserDemande(id: number) {
-  const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=refuserdemande', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      id: id,
-    }),
-  });
+  const data = await $fetch(
+    "http://localhost:8080/PasserellePro/Serv?op=refuserdemande",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+      }),
+    }
+  );
   console.log(data);
 }
-
 </script>
 
 <template>
-  <div class="flex space-y-4 justify-center align-middle content-center mx-auto mb-2">
+  <div
+    class="flex space-y-4 justify-center align-middle content-center mx-auto mb-2"
+  >
     <Card class="w-[70vw]">
-      <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardHeader
+        class="flex flex-row items-center justify-between space-y-0 pb-2"
+      >
         <CardTitle class="text-2xl font-medium">
           {{ nom_evenement }}
         </CardTitle>
         <div class="flex flex-row">{{ creneau }}</div>
       </CardHeader>
-      <CardContent class="flex space-y-4 justify-center align-middle content-center">
-    <a :href="'/etablissement/evenement/' + id_evenement" >
-        <Button>Voir l'évenement</Button>
-    </a>
+      <CardContent
+        class="flex space-y-4 justify-center align-middle content-center"
+      >
+        <a :href="'/etablissement/evenement/' + id_evenement">
+          <Button>Voir l'évenement</Button>
+        </a>
       </CardContent>
     </Card>
   </div>
@@ -62,14 +73,22 @@ async function refuserDemande(id: number) {
     <Badge variant="secondary">{{ numero }}</Badge>
     <Badge class="ml-2" variant="outline">{{ classe }}</Badge>
   </div>
-  <div class="flex space-y-4 justify-center align-middle content-center mx-auto">
+  <div
+    class="flex space-y-4 justify-center align-middle content-center mx-auto"
+  >
     <Textarea class="w-[60vw] h-[20vh]" :placeholder="motivation" disabled />
   </div>
-  <div v-if="!demandeRepondue" class="flex flex-row space-x-4 justify-center align-middle content-center mx-auto mt-8">
+  <div
+    v-if="!demandeRepondue"
+    class="flex flex-row space-x-4 justify-center align-middle content-center mx-auto mt-8"
+  >
     <Button>Accepter</Button>
     <Button variant="secondary">Refuser</Button>
   </div>
-  <div v-else class="flex flex-row space-x-4 justify-center align-middle content-center mx-auto mt-8">
+  <div
+    v-else
+    class="flex flex-row space-x-4 justify-center align-middle content-center mx-auto mt-8"
+  >
     <Badge variant="primary">Demande traitée</Badge>
   </div>
 </template>

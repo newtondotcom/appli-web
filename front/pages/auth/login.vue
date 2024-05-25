@@ -1,39 +1,38 @@
 <script setup lang="ts">
-const email = ref('f@test.com')
-const password = ref('1234')
-const loading = ref(false)
+const email = ref("f@test.com");
+const password = ref("1234");
+const loading = ref(false);
 
-async function seConnecter(){
-  loading.value = true
+async function seConnecter() {
+  loading.value = true;
   try {
-  const data = await $fetch(`http://localhost:8080/PasserellePro/Serv?op=seconnecter`,
-  {
-    method: 'POST',
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    }),
-    server : false
-  }
-  );
-  console.log(data)
-  const token = data;
-  const token_cookie = useCookie('token', { path: '/' });
-  token_cookie.value = token;
-  //navigateTo("/")
+    const data = await $fetch(
+      `http://localhost:8080/PasserellePro/Serv?op=seconnecter`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          email: email.value,
+          password: password.value,
+        }),
+        server: false,
+      }
+    );
+    console.log(data);
+    const token = data;
+    const token_cookie = useCookie("token", { path: "/" });
+    token_cookie.value = token;
+    //navigateTo("/")
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-  loading.value = false
+  loading.value = false;
 }
 </script>
 
 <template>
   <Card class="mx-auto max-w-sm mt-[100px]">
     <CardHeader>
-      <CardTitle class="text-2xl">
-        Se connecter
-      </CardTitle>
+      <CardTitle class="text-2xl"> Se connecter </CardTitle>
       <CardDescription>
         Entrez vos informations pour vous connecter
       </CardDescription>
@@ -60,15 +59,13 @@ async function seConnecter(){
           <Input v-model="password" id="password" type="password" required />
         </div>
         <Button @click="seConnecter" type="submit" class="w-full">
-          <div v-if="loading" ><Loading/></div>
+          <div v-if="loading"><Loading /></div>
           <div v-else>Se connecter</div>
         </Button>
       </div>
       <div class="mt-4 text-center text-sm">
         Vous n'avez pas de compte ?&nbsp;
-        <a href="#" class="underline">
-          Créer un compte
-        </a>
+        <a href="#" class="underline"> Créer un compte </a>
       </div>
     </CardContent>
   </Card>

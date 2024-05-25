@@ -65,24 +65,30 @@ async function saveEvent() {
   loading.value = false;
 }
 
-const data = await $fetch("http://localhost:8080/PasserellePro/Serv?op=lister_etab_domain");
+const data = await $fetch(
+  "http://localhost:8080/PasserellePro/Serv?op=lister_etab_domain"
+);
 const domains = JSON.parse(data.split(";")[1]);
 const domainsPrinted = domains.map((domain) => {
   return { value: domain.id, label: domain.nom };
 });
 
-const filtereddomaines = computed(() => 
-  domainsPrinted.filter((domain) => !idChampsSelectionnes.value.includes(domain.value))
+const filtereddomaines = computed(() =>
+  domainsPrinted.filter(
+    (domain) => !idChampsSelectionnes.value.includes(domain.value)
+  )
 );
 
 async function removeDomain(domain: string) {
   const idDomain = domainsPrinted.find((d) => d.label === domain).value;
-  idChampsSelectionnes.value = idChampsSelectionnes.value.filter((id) => id !== idDomain);
+  idChampsSelectionnes.value = idChampsSelectionnes.value.filter(
+    (id) => id !== idDomain
+  );
 }
 </script>
 
 <template>
-  <div @keydown.esc="open=false">
+  <div @keydown.esc="open = false">
     <div v-if="id === -1">
       <Titre
         title="Création d'un évènement"
@@ -235,7 +241,11 @@ async function removeDomain(domain: string) {
                                   console.log(ev.detail);
                                   searchTerm = '';
                                   champsSelectionnes.push(ev.detail.value);
-                                  idChampsSelectionnes.push(domainsPrinted.find((d) => d.label === ev.detail.value).value);
+                                  idChampsSelectionnes.push(
+                                    domainsPrinted.find(
+                                      (d) => d.label === ev.detail.value
+                                    ).value
+                                  );
                                 }
 
                                 if (filtereddomaines.length === 0) {
