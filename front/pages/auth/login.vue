@@ -1,5 +1,27 @@
 <script setup lang="ts">
+const email = ref('f@test.com')
+const password = ref('1234')
+const loading = ref(false)
 
+async function seConnecter(){
+  loading.value = true
+  try {
+  const data = await $fetch(`http://localhost:8080/PasserellePro/Serv?op=seconnecter`,
+  {
+    method: 'POST',
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    }),
+    server : false
+  }
+  );
+  console.log(data)
+  } catch (error) {
+    console.error(error)
+  }
+  loading.value = false
+}
 </script>
 
 <template>
@@ -21,6 +43,7 @@
             type="email"
             placeholder="m@example.com"
             required
+            v-model="email"
           />
         </div>
         <div class="grid gap-2">
@@ -30,10 +53,11 @@
               Oubli de votre mot de passe ?
             </a>
           </div>
-          <Input id="password" type="password" required />
+          <Input v-model="password" id="password" type="password" required />
         </div>
-        <Button type="submit" class="w-full">
-          Se connecter
+        <Button @click="seConnecter" type="submit" class="w-full">
+          <div v-if="loading" ><Loading/></div>
+          <div v-else>Se connecter</div>
         </Button>
       </div>
       <div class="mt-4 text-center text-sm">
