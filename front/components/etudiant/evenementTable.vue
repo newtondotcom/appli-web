@@ -77,7 +77,7 @@ const handleEntrepriseFilter = (filter: string) => {
         class="w-[40%] mx-4"
       >
         <a :href="'./evenement/' + evenement.id" class="">
-          <EvenementCarte class="my-4 mx-4" :evenement="evenement" />
+          <EtudiantEvenementCarte class="my-4 mx-4" :evenement="evenement" />
         </a>
       </div>
     </div>
