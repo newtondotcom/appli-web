@@ -253,6 +253,14 @@ public class Serv extends HttpServlet {
 
     boolean fct_sans_token = false;
 
+    // MODELE POUR RECUPERER LES PARAMETRES D'UN BODY ET NON de l'url
+    if (op.equals("body")) {
+      JsonObject body = getBodyJson(request);
+      String email = body.get("email").getAsString();
+      System.out.println("Email: " + email);
+      fct_sans_token = true;
+    }
+
     String op = request.getParameter("op");
     // Information_Utilisateur -> Si l'enregistemenent a était fait
     if (op.equals("enregistrer_util")) {
