@@ -172,9 +172,7 @@ async function enregistrer() {
         </div>
 
         <Button @click="enregistrer" type="submit" class="w-full">
-          <div v-if="loading" class="flex items-center justify-center">
-            <Spinner class="mr-2" />
-          </div>
+          <div v-if="loading" ><Loading/></div>
           <div v-else>
             Créer un compte
           </div>
