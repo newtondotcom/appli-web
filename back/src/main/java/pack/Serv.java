@@ -29,6 +29,14 @@ public class Serv extends HttpServlet {
       .excludeFieldsWithoutExposeAnnotation()
       .create();
 
+  private void setCorsHeaders(HttpServletResponse response) {
+      response.setHeader("Access-Control-Allow-Credentials", "true");
+      response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
+      response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+      response.setHeader("Allow", "*");
+      response.setHeader("Access-Control-Allow-Headers","Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+  }
+
   public String getToken(Cookie[] cookies) {
     if (cookies != null) {
       for (Cookie cookie : cookies) {
@@ -42,14 +50,16 @@ public class Serv extends HttpServlet {
     return "mauvais";
   }
 
+  @Override
+  protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+      setCorsHeaders(response);
+      response.setStatus(HttpServletResponse.SC_OK);
+  }
+
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    response.setHeader("Access-Control-Allow-Origin", "*");
-    response.setHeader("Access-Control-Allow-Credentials", "true");
-    response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
-    response.setHeader("Access-Control-Allow-Headers",
-        "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+    setCorsHeaders(response);
 
     Cookie[] cookies = request.getCookies();
     String token = getToken(cookies);
@@ -216,13 +226,7 @@ public class Serv extends HttpServlet {
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
-    response.setHeader("Access-Control-Allow-Origin", "*");
-    response.setHeader("Access-Control-Allow-Credentials", "true");
-    response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
-    response.setHeader("Access-Control-Allow-Headers",
-        "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-
+    
     Cookie[] cookies = request.getCookies();
     String token = getToken(cookies);
 
@@ -341,6 +345,7 @@ public class Serv extends HttpServlet {
         response.getWriter().write(json);
       }
     }
+    setCorsHeaders(response);
   }
 
 }
