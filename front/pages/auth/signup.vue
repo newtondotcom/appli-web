@@ -64,6 +64,7 @@ async function enregistrer() {
     const token = data;
     const token_cookie = useCookie('token', { path: '/' });
     token_cookie.value = token;
+    //navigateTo("/")
   } catch (error) {
     console.error(error);
     toast({
