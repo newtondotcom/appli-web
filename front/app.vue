@@ -110,7 +110,7 @@ import { CircleUser } from "lucide-vue-next";
         <ul class="mt-12 flex justify-center gap-6 md:gap-8">
           <li>
             <a
-              href="https://github.com/newtondotcom/appli-web"
+              href="https://github.com/newtondotcom/passerelle-pro"
               rel="noreferrer"
               target="_blank"
               class="text-gray-700 transition hover:text-gray-700/75"
