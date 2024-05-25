@@ -37,7 +37,7 @@ public class Facade {
   public void initialisation() {
     Etablissement new_etab1 = new Etablissement("4 rue test1", 1, "IKEA", true, "chat");
     em.persist(new_etab1);
-    Utilisateur util = new Utilisateur("Fredo", "1234", "20", true, "@test.com", "06", "2A", new_etab1, "1");
+    Utilisateur util = new Utilisateur("Fredo", "1234", "20", true, "f@test.com", "06", "2A", new_etab1, "1");
     em.persist(util);
     Domain dom1 = new Domain("IA");
     em.persist(dom1);
