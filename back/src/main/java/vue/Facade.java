@@ -37,7 +37,9 @@ public class Facade {
   public void initialisation() {
     Etablissement new_etab1 = new Etablissement("4 rue test1", 1, "IKEA", true, "chat");
     em.persist(new_etab1);
-    Utilisateur util = new Utilisateur("Fredo", "1234", "20", true, "f@test.com", "06", "2A", new_etab1, "1");
+    String sel = BCrypt.gensalt(12);
+    String mdpHacher = BCrypt.hashpw("1234", sel);
+    Utilisateur util = new Utilisateur("Fredo", mdpHacher, "20", true, "f@test.com", "06", "2A", new_etab1, "1");
     em.persist(util);
     Domain dom1 = new Domain("IA");
     em.persist(dom1);
@@ -87,7 +89,7 @@ public class Facade {
     // Recherche l'établissement dont le nom à était rentré
     Etablissement etablissement_util = null;
     try {
-      etablissement_util = em.find(Etablissement.class, siren);
+      etablissement_util = em.find(Etablissement.class, Integer.parseInt(siren));
       String token = new BigInteger(32 * 5, random).toString(32);
       String sel = BCrypt.gensalt(12);
       String mdpHacher = BCrypt.hashpw(mdp, sel);
