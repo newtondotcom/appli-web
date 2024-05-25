@@ -9,6 +9,35 @@ const classe = "5 ème";
 const motivation = "Je suis très intéressé par l'intelligence artificielle et je souhaite en apprendre plus sur le sujet.";
 const creneau: string = new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
 const demandeRepondue = ref(false);
+
+
+
+async function accepterDemande(id: number) {
+  const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=validerdemande', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: id,
+    }),
+  });
+  console.log(data);
+}
+
+async function refuserDemande(id: number) {
+  const data = await $fetch('http://localhost:8080/PasserellePro/Serv?op=refuserdemande', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: id,
+    }),
+  });
+  console.log(data);
+}
+
 </script>
 
 <template>
