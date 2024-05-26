@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const route = useRoute();
-
 const id = 0;
 const nom = "Découverte IA";
 const description =
@@ -36,6 +35,7 @@ const evenement2: EvenementEtablissement = {
 </script>
 
 <template>
+<div>
   <Titre
     title="Evènements"
     subtitle="Voici les évènements proposés par votre établissement"
@@ -46,4 +46,5 @@ const evenement2: EvenementEtablissement = {
   <a href="/etablissement/evenement/1">
     <EvenementCarte :evenement="evenement2" :key="evenement2.id" />
   </a>
+</div>  
 </template>
