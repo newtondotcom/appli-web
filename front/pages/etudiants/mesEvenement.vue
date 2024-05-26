@@ -1,11 +1,19 @@
 <script setup lang="ts">
 const route = useRoute();
 
-const id = 2;
+/* Récupérer l'id de l'utilisateur */
+
+const uid = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_uid_from_token`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
+);
 
 /* Récupérer les evenement */
 const data = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_uid&id=${id}`,
+  `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_uid&id=${uid}`,
   {
     method: "GET",
     credentials: "include",
