@@ -14,16 +14,24 @@ const props = defineProps({
   },
 });
 /* Traitement de la demande */
-const id = 1;
+const uid = 1;
 const demandeValide = ref(false);
 const demandeEnAttente = ref(true);
 const demandeRefuse = ref(false);
 const demandeEffectue = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_bool_demande_from_eventid_utilid&id_util=${id}&id_event=${props.evenement.id}`
+  `http://localhost:8080/PasserellePro/Serv?op=get_bool_demande_from_eventid_utilid&id_util=${uid}&id_event=${props.evenement.id}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
 );
 if (demandeEffectue) {
   const demande = await $fetch(
-    `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_eventid_utilid&id_util=${id}&id_event=${props.evenement.id}`
+    `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_eventid_utilid&id_util=${uid}&id_event=${props.evenement.id}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
   );
   console.log(demande);
   demandeValide.value = demande.valide;

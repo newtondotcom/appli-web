@@ -1,4 +1,12 @@
 <script setup lang="ts">
+const id = useRoute().params.id;
+console.log(id);
+const postulants = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_id&id=${id}`,
+  {
+    credentials : "include",
+  }
+);
 const id_demande = 1;
 const nom_evenement = "Découverte IA";
 const id_evenement = 1;
@@ -6,39 +14,35 @@ const identite = "Jean Dupont";
 const email = "jean.dupont@gmail.com";
 const numero = "06 12 34 56 78";
 const classe = "5 ème";
-const motivation =
-  "Je suis très intéressé par l'intelligence artificielle et je souhaite en apprendre plus sur le sujet.";
+const motivation = postulants.motivation;
 const creneau: string =
   new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
-const demandeRepondue = ref(false);
+const demandeRepondue = ref(postulants.refuse || postulants.valide);
 
-async function accepterDemande(id: number) {
+async function accepterDemande() {
+  console.log(id);
   const data = await $fetch(
     "http://localhost:8080/PasserellePro/Serv?op=validerdemande",
     {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({
-        id: id,
+        id: id
       }),
+      credentials : "include",
     }
   );
   console.log(data);
 }
 
-async function refuserDemande(id: number) {
+async function refuserDemande() {
   const data = await $fetch(
     "http://localhost:8080/PasserellePro/Serv?op=refuserdemande",
     {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({
         id: id,
       }),
+      credentials : "include",
     }
   );
   console.log(data);
@@ -46,6 +50,7 @@ async function refuserDemande(id: number) {
 </script>
 
 <template>
+<div>
   <div
     class="flex space-y-4 justify-center align-middle content-center mx-auto mb-2"
   >
@@ -82,8 +87,8 @@ async function refuserDemande(id: number) {
     v-if="!demandeRepondue"
     class="flex flex-row space-x-4 justify-center align-middle content-center mx-auto mt-8"
   >
-    <Button>Accepter</Button>
-    <Button variant="secondary">Refuser</Button>
+    <Button @click="accepterDemande">Accepter</Button>
+    <Button @click="refuserDemande" variant="secondary">Refuser</Button>
   </div>
   <div
     v-else
@@ -91,4 +96,5 @@ async function refuserDemande(id: number) {
   >
     <Badge variant="primary">Demande traitée</Badge>
   </div>
+</div>
 </template>

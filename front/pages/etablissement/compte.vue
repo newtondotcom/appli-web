@@ -2,53 +2,56 @@
 import { useToast } from "@/components/ui/toast/use-toast";
 const { toast } = useToast();
 
-const establishmentAddress = ref("");
-const establishmentSIREN = ref("");
-const establishmentName = ref("");
-const establishmentDescription = ref("");
-const establishmentImage = ref<File | null>(null);
-const loading = ref(false);
-const estEntreprise = ref(false);
+const data2 = await $fetch(
+  "http://localhost:8080/PasserellePro/Serv?op=get_etab_from_token",
+  {
+    credentials: "include",
+  }
+);
+const establishmentAddress = ref(data2.adresse);
+const establishmentSIREN = ref(data2.SIREN);
+const establishmentName = ref(data2.nom);
+const establishmentDescription = ref(data2.description);
+//data2.image : url
+const establishmentImage = ref(data2.image);
+const estEntreprise = ref(data2.entreprise);
 
+const loading = ref(false);
 const route = useRoute();
-let id = -1;
-if (route.query.id) {
-  id = route.query.id as number;
-}
 
 async function saveChanges() {
   loading.value = true;
   const data = await $fetch(
-    "http://localhost:8080/PasserellePro/Serv?op=ajouter_etab",
+    "http://localhost:8080/PasserellePro/Serv?op=modifier_etablissement",
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        SIREN: establishmentSIREN.value,
         nom: establishmentName.value,
         adresse: establishmentAddress.value,
-        SIREN: establishmentSIREN.value,
-        image: establishmentImage.value,
         entreprise: estEntreprise.value,
         description: establishmentDescription.value,
+        image: establishmentImage.value,
       }),
+      credentials: "include",
     }
   );
   console.log(data);
+  if (data ==  "Modifier"){
   toast({
     title: "Succès",
     description: "Les modifications ont été enregistrées avec succès",
   });
-  loading.value = false;
-}
-
-function handleImageChange(event: Event) {
-  const inputElement = event.target as HTMLInputElement;
-  const file = inputElement.files?.[0];
-  if (file) {
-    establishmentImage.value = file;
+  } else {
+    toast({
+      title: "Erreur",
+      description: "Une erreur est survenue lors de l'enregistrement des modifications",
+    });
   }
+  loading.value = false;
 }
 </script>
 
@@ -73,11 +76,12 @@ function handleImageChange(event: Event) {
       </div>
       <div class="grid gap-3">
         <Label for="establishmentSIREN"
-          >SIREN de l'établissement (optionnel)</Label
+          >SIREN de l'établissement</Label
         >
         <Input
           id="establishmentSIREN"
           type="text"
+          disabled
           v-model="establishmentSIREN"
         />
       </div>
@@ -94,15 +98,8 @@ function handleImageChange(event: Event) {
         <Label for="establishmentImage">Image de l'établissement</Label>
         <Input
           id="establishmentImage"
-          type="file"
-          accept="image/*"
-          @change="handleImageChange"
-        />
-        <img
-          v-if="establishmentImage"
-          :src="URL.createObjectURL(establishmentImage)"
-          alt="Établissement"
-          class="mt-2 w-40 h-40 object-cover rounded"
+          type="text"
+          v-model="establishmentImage"
         />
       </div>
       <div class="gap-3 mb-2 flex flex-row">

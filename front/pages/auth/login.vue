@@ -2,6 +2,8 @@
 const email = ref("f@test.com");
 const password = ref("1234");
 const loading = ref(false);
+import { useToast } from "@/components/ui/toast/use-toast";
+const { toast } = useToast();
 
 async function seConnecter() {
   loading.value = true;
@@ -12,16 +14,32 @@ async function seConnecter() {
         method: "POST",
         body: JSON.stringify({
           email: email.value,
-          password: password.value,
+          mdp: password.value,
         }),
         server: false,
       }
     );
-    console.log(data);
+    if (data == "Le mot de passe est incorrect.") {
+      toast({
+        title: "Erreur",
+        description: "Le mot de passe est incorrect",
+      });
+    } else if (data == "Error"){
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la connexion",
+      });
+    } 
+    else {
     const token = data;
-    const token_cookie = useCookie("token", { path: "/" });
+    const token_cookie = useCookie("token",
+    {
+      httpOnly  : false,
+      SameSite : "lax",
+    });
     token_cookie.value = token;
-    //navigateTo("/")
+    navigateTo("/");
+    }
   } catch (error) {
     console.error(error);
   }

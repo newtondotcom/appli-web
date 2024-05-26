@@ -1,5 +1,18 @@
 <script setup lang="ts">
 import { CircleUser } from "lucide-vue-next";
+import { computed } from "vue";
+
+const token = useCookie("token",
+{
+  httpOnly  : false,
+  SameSite : "lax",
+});
+const userAuth = computed(() => token.value);  
+
+function deconnexion() {
+  token.value = null;
+  console.log(token.value);
+}
 </script>
 
 <template>
@@ -31,19 +44,19 @@ import { CircleUser } from "lucide-vue-next";
           </div>
 
           <div class="flex items-center gap-4">
-            <div class="sm:flex sm:gap-4">
+            <div v-if="!userAuth" class="sm:flex sm:gap-4">
               <a href="/auth/login">
-                <Button> Login </Button>
+                <Button> Se connecter</Button>
               </a>
 
               <a href="/auth/signup">
                 <div class="hidden sm:flex">
-                  <Button variant="secondary"> Register </Button>
+                  <Button variant="secondary">Créer un compte </Button>
                 </div>
               </a>
             </div>
 
-            <DropdownMenu>
+            <DropdownMenu v-else>
               <DropdownMenuTrigger><CircleUser /></DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
@@ -54,6 +67,7 @@ import { CircleUser } from "lucide-vue-next";
                 <a href="#">
                   <DropdownMenuItem>Mes évènements</DropdownMenuItem>
                 </a>
+                  <DropdownMenuItem @click="deconnexion">Se déconnecter</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 

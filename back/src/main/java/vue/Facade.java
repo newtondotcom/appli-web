@@ -35,12 +35,17 @@ public class Facade {
   private SecureRandom random = new SecureRandom();
 
   public void initialisation() {
+    // Utilisateur 1 Entreprise
     Etablissement new_etab1 = new Etablissement("4 rue test1", 1, "IKEA", "meuble", true, "chat");
     em.persist(new_etab1);
     String sel = BCrypt.gensalt(12);
     String mdpHacher = BCrypt.hashpw("1234", sel);
     Utilisateur util = new Utilisateur("Fredo", mdpHacher, "f@test.com", new_etab1, "1");
     em.persist(util);
+    // Création d'une école
+    Etablissement new_etab2 = new Etablissement("4 rue test2", 2, "ENSEEIHT", "Ecole", false, "ecole");
+    em.persist(new_etab2);
+    // Création d'un évenement
     Domain dom1 = new Domain("IA");
     Domain dom2 = new Domain("tech");
     em.persist(dom1);
@@ -50,7 +55,7 @@ public class Facade {
     em.persist(event);
     event.getDomains_event().add(dom1);
     Avis avis = new Avis("Super", 5, "Génial", util, event);
-    em.persist(avis);
+    em.persist(avis);    
     Demande dem = new Demande("oui", util, event);
     em.persist(dem);
     Document doc = new Document(util, dem);
@@ -65,11 +70,13 @@ public class Facade {
   }
 
   public boolean verifierToken(String token) {
+    System.out.println("Vérification du token : " + token);
     try {
       TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",
           Utilisateur.class);
       query.setParameter("token", token);
       Utilisateur utilisateur = query.getSingleResult();
+      System.out.println("Token valide");
       return true;
     } catch (IllegalArgumentException | PersistenceException e) {
       return false;
@@ -286,7 +293,11 @@ public class Facade {
   }
 
   // Lister stat event
-
+  // Renvoie
+  // 0 : Nombre de demandes
+  // 1 : Nombre de demandes acceptées
+  // 2 : Nombre de demandes présentes
+  // 3 : Moyenne des notes laisées
   public float[] liste_stat_event(int id) {
     Evenement event = em.find(Evenement.class, id);
     float[] stats = new float[4];
@@ -337,6 +348,8 @@ public class Facade {
     Evenement event = em.find(Evenement.class, id_event);
     return event.getEtablissement_event();
   }
+
+  // note moyenne d'un établissement
 
   // Donne les domains d'un évenement
   public Collection<Domain> get_domains_from_eventid(int id_event) {
@@ -390,6 +403,21 @@ public class Facade {
     }
   }
 
+  public Collection<Demande> get_demandes_from_eventid(int id_event) {
+    Evenement event = em.find(Evenement.class, id_event);
+    return event.getDemandes_event();
+  }
+
+  public Collection<Utilisateur> get_liste_postulants_from_eventid(int id_event) {
+    Evenement event = em.find(Evenement.class, id_event);
+    Collection<Demande> demandes = event.getDemandes_event();
+    Collection<Utilisateur> utilisateurs = new HashSet<Utilisateur>();
+    for (Demande dem : demandes) {
+      utilisateurs.add(dem.getUtilisateur_dem());
+    }
+    return utilisateurs;
+  }
+
   // Donne les attributs d'un utilisateurs
   public Utilisateur get_util_from_uid(int id_util) {
     return em.find(Utilisateur.class, id_util);
@@ -399,6 +427,14 @@ public class Facade {
   public Etablissement get_etab_from_uid(int id_util) {
     Utilisateur util = em.find(Utilisateur.class, id_util);
     return util.getEtablissement_util();
+  }
+
+  public Etablissement get_etab_from_token(String token) {
+      TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",
+          Utilisateur.class);
+      query.setParameter("token", token);
+      Utilisateur utilisateur = query.getSingleResult();
+    return utilisateur.getEtablissement_util();
   }
 
   // Donne les Demandes d'un utilisateurs

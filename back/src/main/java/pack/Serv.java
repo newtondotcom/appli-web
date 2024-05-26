@@ -50,7 +50,7 @@ public class Serv extends HttpServlet {
         }
       }
     } else {
-      return "mauvais";
+      return "la requete ne contient pas de cookies";
     }
     return "mauvais";
   }
@@ -143,8 +143,9 @@ public class Serv extends HttpServlet {
       }
       // id Evenement -> Evenement
       if (op.equals("get_evenement_from_id")) {
+        System.out.println("get_evenement_from_id");
         int id = Integer.parseInt(request.getParameter("id"));
-
+        System.out.println("Id trouve : " + id);
         Evenement event = facade.get_evenement_from_id(id);
         String json = gson.toJson(event);
         response.getWriter().write(json);
@@ -170,6 +171,12 @@ public class Serv extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
 
         Etablissement etab = facade.get_etab_from_uid(id);
+        String json = gson.toJson(etab);
+        response.getWriter().write(json);
+      }
+      // token user-> etab
+      if (op.equals("get_etab_from_token")) {
+        Etablissement etab = facade.get_etab_from_token(token);
         String json = gson.toJson(etab);
         response.getWriter().write(json);
       }
@@ -244,6 +251,22 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(id);
         response.getWriter().write(json);
       }
+
+      // event_id -> Liste des demandes
+      if (op.equals("get_demandes_from_eventid")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Collection<Demande> demandes = facade.get_demandes_from_eventid(id);
+        String json = gson.toJson(demandes);
+        response.getWriter().write(json);
+      }
+
+      if (op.equals("get_liste_postulants_from_eventid")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Collection<Utilisateur> postulants = facade.get_liste_postulants_from_eventid(id);
+        String json = gson.toJson(postulants);
+        response.getWriter().write(json);
+      }
     } else {
       if (!fct_sans_token) {
         String json = gson.toJson("Mauvais_Token");
@@ -255,12 +278,12 @@ public class Serv extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
+    JsonObject body = getBodyJson(request);
+
     Cookie[] cookies = request.getCookies();
     String token = getToken(cookies);
 
     boolean fct_sans_token = false;
-
-    JsonObject body = getBodyJson(request);
     String op = request.getParameter("op");
     // Information_Utilisateur -> Si l'enregistemenent a était fait
     if (op.equals("enregistrer_util")) {
@@ -362,7 +385,6 @@ public class Serv extends HttpServlet {
         String description = body.get("description").getAsString();
         boolean estEntreprise = Boolean.parseBoolean(body.get("entreprise").getAsString());
         String image = body.get("image").getAsString();
-
         String msg = facade.modifier_etablissement_attribut(adresse, SIREN, nom, description, estEntreprise, image);
         String json = gson.toJson(msg);
         response.getWriter().write(json);

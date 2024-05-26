@@ -5,11 +5,13 @@ import { Settings } from "lucide-vue-next";
 import { useRoute } from "vue-router";
 const { toast } = useToast();
 
-const studentFirstName = ref("");
-const studentLastName = ref("");
-const studentClass = ref("");
-const studentEtablissement = ref("");
-const studentDescription = ref("");
+const nomEtudiant = ref("");
+const ineEtudiant = ref("");
+const emailEtudiant = ref("");
+const telephoneEtudiant = ref("");
+const classeEtudiant = ref("");
+const etablissementEtudiant = ref("");
+
 const loading = ref(false);
 const isModifying = ref(false);
 
@@ -18,7 +20,33 @@ let id = -1;
 if (route.params.id) {
   id = route.params.id as number;
 }
-
+/* Récupere les infos de l'utilisateur */
+const infos = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_util_from_uid&id=${id}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
+);
+const etab = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_uid&id=${id}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
+);
+console.log(infos);
+nomEtudiant.value = infos.nom;
+ineEtudiant.value = infos.INE;
+emailEtudiant.value = infos.email;
+telephoneEtudiant.value = infos.telephone;
+classeEtudiant.value = infos.classe;
+etablissementEtudiant.value = etab.nom;
+/* Fonction qui permet de changer de mode en edit et non-edit */
+async function Modifyprofil() {
+  isModifying.value = !isModifying.value;
+}
+/* Fonction qui permet de sauvegarder les modifications */
 async function saveChanges() {
   loading.value = true;
   toast({
@@ -26,10 +54,6 @@ async function saveChanges() {
     description: "Les modifications ont été enregistrées avec succès",
   });
   loading.value = false;
-}
-
-async function Modifyprofil() {
-  isModifying.value = !isModifying.value;
 }
 </script>
 
@@ -51,57 +75,67 @@ async function Modifyprofil() {
     />
     <div class="grid gap-4 px-4">
       <div class="grid gap-3">
-        <Label for="studentLastName">Nom</Label>
+        <Label for="nomEtudiant">Nom</Label>
         <Input
-          id="studentLastName"
+          id="nomEtudiant"
           type="text"
-          v-model="studentLastName"
+          v-model="nomEtudiant"
           :disabled="!isModifying"
         />
       </div>
       <div class="grid gap-3">
-        <Label for="studentFirstName">Prénom</Label>
+        <Label for="ineEtudiant">INE</Label>
         <Input
-          id="studentFirstName"
+          id="ineEtudiant"
           type="text"
-          v-model="studentFirstName"
+          v-model="ineEtudiant"
           :disabled="!isModifying"
         />
       </div>
       <div class="grid gap-3">
-        <Label for="studentClass">Classe</Label>
+        <Label for="emailEtudiant">Email</Label>
         <Input
-          id="studentClass"
+          id="emailEtudiant"
           type="text"
-          v-model="studentClass"
+          v-model="emailEtudiant"
           :disabled="!isModifying"
         />
       </div>
       <div class="grid gap-3">
-        <Label for="studentEstalishment">Établissement</Label>
+        <Label for="telephoneEtudiant">Téléphone</Label>
         <Input
-          id="studentEstalishment"
+          id="telephoneEtudiant"
           type="text"
-          v-model="studentEtablissement"
+          v-model="telephoneEtudiant"
           :disabled="!isModifying"
         />
       </div>
       <div class="grid gap-3">
-        <Label for="studentDescription">Établissement</Label>
-        <Textarea
-          id="studentDescription"
-          v-model="studentDescription"
+        <Label for="classeEtudiant">Classe</Label>
+        <Input
+          id="classeEtudiant"
+          type="text"
+          v-model="classeEtudiant"
           :disabled="!isModifying"
         />
-        <Button
-          @click="saveChanges"
-          :disabled="isModifying ? undefined : 'secondary'"
-        >
-          <div v-if="!loading" class="flex items-center space-x-2">
-            Enregistrer les modifications
-          </div>
-        </Button>
       </div>
+      <div class="grid gap-3">
+        <Label for="etablissementEtudiant">Établissement</Label>
+        <Input
+          id="etablissementEtudiant"
+          type="text"
+          v-model="etablissementEtudiant"
+          :disabled="!isModifying"
+        />
+      </div>
+      <Button
+        @click="saveChanges"
+        :disabled="isModifying ? undefined : 'secondary'"
+      >
+        <div v-if="!loading" class="flex items-center space-x-2">
+          Enregistrer les modifications
+        </div>
+      </Button>
     </div>
   </div>
 </template>
