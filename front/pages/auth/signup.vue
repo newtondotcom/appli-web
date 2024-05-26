@@ -53,7 +53,7 @@ async function enregistrer() {
         prenom: prenom.value,
         email: email.value,
         mdp: password.value,
-        siren: etu ? 0 : idEtab.value,
+        siren: idEtab.value,
       }),
     });
 
@@ -76,10 +76,17 @@ async function enregistrer() {
         }),
       }
     );
+    console.log(data);
+    if (data !="Error"){
     const token = data;
-    const token_cookie = useCookie("token", { path: "/" });
+    const token_cookie = useCookie("token",
+    {
+      httpOnly  : false,
+      SameSite : "lax",
+    });
     token_cookie.value = token;
-    //navigateTo("/")
+    navigateTo("/");
+    }
   } catch (error) {
     console.error(error);
     toast({
