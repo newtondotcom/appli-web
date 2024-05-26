@@ -50,7 +50,7 @@ public class Serv extends HttpServlet {
         }
       }
     } else {
-      return "mauvais";
+      return "les cookies sont null";
     }
     return "mauvais";
   }
@@ -107,7 +107,7 @@ public class Serv extends HttpServlet {
       fct_sans_token = true;
     }
     if (facade.verifierToken(token)) {
-      // NULL -> Lister tout les évenemtents et domaines
+      // NULL -> Lister tout les évenemtents
       if (op.equals("lister_event")) {
         Collection<Evenement> listEvent = facade.listEvent();
         String json = gson.toJson(listEvent);
@@ -259,13 +259,15 @@ public class Serv extends HttpServlet {
     String op = request.getParameter("op");
     // Information_Utilisateur -> Si l'enregistemenent a était fait
     if (op.equals("enregistrer_util")) {
-      String nom = body.get("nom").getAsString();
-      String prenom = body.get("prenom").getAsString();
-      String nomComplet = nom + " " + prenom;
+     String nom = body.get("nom").getAsString();
       String mdp = body.get("mdp").getAsString();
+      String INE = body.get("INE").getAsString();
+      String mdp_admin = body.get("mdp_admin").getAsString();
       String email = body.get("email").getAsString();
+      String telephone = body.get("telephone").getAsString();
+      String classe = body.get("classe").getAsString();
       String siren = body.get("siren").getAsString();
-      String msg = facade.Enregistrer(nomComplet, mdp, email, siren);
+      String msg = facade.Enregistrer(nom, mdp, INE, mdp_admin, email, telephone, classe, siren);
       String json = gson.toJson(msg);
       response.getWriter().write(json);
       fct_sans_token = true;
