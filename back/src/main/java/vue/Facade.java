@@ -39,7 +39,7 @@ public class Facade {
     em.persist(new_etab1);
     String sel = BCrypt.gensalt(12);
     String mdpHacher = BCrypt.hashpw("1234", sel);
-    Utilisateur util = new Utilisateur("Fredo", mdpHacher, "20", true, "f@test.com", "06", "2A", new_etab1, "1");
+    Utilisateur util = new Utilisateur("Fredo", mdpHacher, "f@test.com", new_etab1, "1");
     em.persist(util);
     Domain dom1 = new Domain("IA");
     em.persist(dom1);
@@ -77,24 +77,15 @@ public class Facade {
   // Partie Eleves
   // Cette fonction revoie un boolean qui dit si l'enregistrement s'est bien passé
   // ou pas
-  public String Enregistrer(String nom, String mdp, String INE, String mdp_admin, String email, String telephone,
-      String classe,
-      String siren) {
-    // Le mec ne va pas cocher admin ou pas en s'inscrivant il doit rentré le bon
-    // mot de passe pour s'inscrire en temps que admin d'ou les lignes suivante
-    boolean admin = false;
-    if (mdp_admin.equals("je_suis_admin")) {
-      admin = true;
-    }
-    // Recherche l'établissement dont le nom à était rentré
+  public String Enregistrer(String nomComplet, String mdp, String email, String siren) {
+    // Recherche l'établissement suivant le siren
     Etablissement etablissement_util = null;
     try {
       etablissement_util = em.find(Etablissement.class, Integer.parseInt(siren));
       String token = new BigInteger(32 * 5, random).toString(32);
       String sel = BCrypt.gensalt(12);
       String mdpHacher = BCrypt.hashpw(mdp, sel);
-      Utilisateur user = new Utilisateur(nom, mdpHacher, INE, admin, email,
-          telephone, classe, etablissement_util, token);
+      Utilisateur user = new Utilisateur(nomComplet, mdpHacher, email, etablissement_util, token);
       em.persist(user);
       user.setEtablissement_util(etablissement_util);
       return token;

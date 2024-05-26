@@ -68,15 +68,10 @@ public class Utilisateur {
     public Utilisateur() {
     }
 
-    public Utilisateur(String nom, String mdp, String INE, boolean admin, String email, String telephone, String classe,
-            Etablissement etablissement_util, String token) {
+    public Utilisateur(String nom, String mdp, String email, Etablissement etablissement_util, String token) {
         this.nom = nom;
         this.mdp = mdp;
-        this.INE = INE;
-        this.admin = admin;
         this.email = email;
-        this.telephone = telephone;
-        this.classe = classe;
         this.etablissement_util = etablissement_util;
         this.evenements_util = new HashSet<>();
         this.token = token;
