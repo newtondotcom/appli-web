@@ -35,7 +35,7 @@ public class Facade {
   private SecureRandom random = new SecureRandom();
 
   public void initialisation() {
-    Etablissement new_etab1 = new Etablissement("4 rue test1", 1, "IKEA", true, "chat");
+    Etablissement new_etab1 = new Etablissement("4 rue test1", 1, "IKEA", "meuble", true, "chat");
     em.persist(new_etab1);
     String sel = BCrypt.gensalt(12);
     String mdpHacher = BCrypt.hashpw("1234", sel);
@@ -118,10 +118,11 @@ public class Facade {
   }
 
   // Rajouter un etablissement
-  public String ajouterEtablissement(String adresse, int SIREN, String nom, boolean entreprise, String image) {
+  public String ajouterEtablissement(String adresse, int SIREN, String nom, String description, boolean entreprise,
+      String image) {
     Etablissement etablissement = em.find(Etablissement.class, SIREN);
     if (etablissement == null) {
-      Etablissement new_etab = new Etablissement(adresse, SIREN, nom, entreprise, image);
+      Etablissement new_etab = new Etablissement(adresse, SIREN, nom, description, entreprise, image);
       em.persist(new_etab);
       return "Success";
     } else {
@@ -257,28 +258,20 @@ public class Facade {
 
   }
 
-  public String modifier_etablissement_attribut(int id, String type_champs, String champs) {
+  public String modifier_etablissement_attribut(String adresse, int SIREN, String nom, String description,
+      boolean entreprise,
+      String image) {
     try {
-      Etablissement etablissement = em.find(Etablissement.class, id);
-      switch (type_champs) {
-        case "adresse":
-          etablissement.setAdresse(champs);
-          break;
-        case "nom":
-          etablissement.setNom(champs);
-          break;
-        case "entreprise":
-          etablissement.setEntreprise(Boolean.parseBoolean(champs));
-          break;
-        case "image":
-          etablissement.setImage(champs);
-          break;
-        default:
-          return "Invalid field type";
-      }
-      return "Success";
+      Etablissement etablissement = em.find(Etablissement.class, SIREN);
+      etablissement.setAdresse(adresse);
+      etablissement.setDescription(description);
+      etablissement.setEntreprise(entreprise);
+      etablissement.setImage(image);
+      etablissement.setNom(nom);
+      return "Modifier";
     } catch (IllegalArgumentException | PersistenceException e) {
-      return "Error: " + e.getMessage();
+      ajouterEtablissement(adresse, SIREN, nom, description, entreprise, image);
+      return "Ajouter";
     }
   }
 

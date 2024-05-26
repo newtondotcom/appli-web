@@ -27,6 +27,9 @@ public class Etablissement {
     private boolean entreprise; // true si c'est une entreprise et false si c'est un étudiant
 
     @Expose
+    private String description;
+
+    @Expose
     private String image;
 
     // // Les utilisateurs relié
@@ -45,10 +48,11 @@ public class Etablissement {
         // Constructeur par défaut
     }
 
-    public Etablissement(String adresse, int SIREN, String nom, boolean entreprise, String image) {
+    public Etablissement(String adresse, int SIREN, String nom, String description, boolean entreprise, String image) {
         this.adresse = adresse;
         this.SIREN = SIREN;
         this.nom = nom;
+        this.description = description;
         this.entreprise = entreprise;
         this.image = image;
     }
@@ -59,6 +63,14 @@ public class Etablissement {
 
     public void setAdresse(String adresse) {
         this.adresse = adresse;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getSIREN() {

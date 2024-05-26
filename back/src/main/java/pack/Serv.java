@@ -285,9 +285,10 @@ public class Serv extends HttpServlet {
         String adresse = body.get("adresse").getAsString();
         int SIREN = Integer.parseInt(body.get("SIREN").getAsString());
         String nom = body.get("nom").getAsString();
+        String description = body.get("description").getAsString();
         boolean estEntreprise = Boolean.parseBoolean(body.get("entreprise").getAsString());
         String image = body.get("image").getAsString();
-        String msg = facade.ajouterEtablissement(adresse, SIREN, nom, estEntreprise, image);
+        String msg = facade.ajouterEtablissement(adresse, SIREN, nom, description, estEntreprise, image);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
@@ -345,14 +346,16 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
-      // Modification d'un evenement
+      // Modification d'un etab
       if (op.equals("modifier_etablissement")) {
-        int id = Integer.parseInt(body.get("id").getAsString());
-        String type_champs = body.get("type_champs").getAsString();
-        // Si le champs et une établissement on indiquera son id (SIREN)
-        String champs = body.get("champs").getAsString();
+        String adresse = body.get("adresse").getAsString();
+        int SIREN = Integer.parseInt(body.get("SIREN").getAsString());
+        String nom = body.get("nom").getAsString();
+        String description = body.get("description").getAsString();
+        boolean estEntreprise = Boolean.parseBoolean(body.get("entreprise").getAsString());
+        String image = body.get("image").getAsString();
 
-        String msg = facade.modifier_etablissement_attribut(id, type_champs, champs);
+        String msg = facade.modifier_etablissement_attribut(adresse, SIREN, nom, description, estEntreprise, image);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
