@@ -46,8 +46,7 @@ const event = {
   tags: doma,
 };
 
-const dateActuelle = new Date();
-dateActuelle.setDate(dateActuelle.getDate() - 20);
+const dateActuelle = new Date(creneau.getTime() + (duree * 60000) / 2);
 
 const evenementPassed = computed(() => {
   return new Date(evenement.creneau).getTime() + duree * 60000 < dateActuelle.getTime()
@@ -55,7 +54,7 @@ const evenementPassed = computed(() => {
 
 const evenementEnCours = computed(() => {
   return (
-    new Date(evenement.creneau) < dateActuelle &&
+    new Date(evenement.creneau).getTime()< dateActuelle.getTime() &&
     new Date(evenement.creneau).getTime() + duree * 60000 > dateActuelle.getTime()
   );
 });
