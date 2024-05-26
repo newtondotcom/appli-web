@@ -1,23 +1,30 @@
 <script setup lang="ts">
 const id = useRoute().params.id;
-console.log(id);
 const postulants = await $fetch(
   `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_id&id=${id}`,
   {
     credentials : "include",
   }
 );
+  const postulants3 = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_util_from_id_dem&id_dem=${id}`,
+    {
+      credentials: "include",
+    }
+  );
 const id_demande = 1;
 const nom_evenement = "Découverte IA";
+
 const id_evenement = 1;
-const identite = "Jean Dupont";
-const email = "jean.dupont@gmail.com";
-const numero = "06 12 34 56 78";
-const classe = "5 ème";
+const identite = postulants3.nom.replace("#", " ");
+const email = postulants3.email;
+const numero = postulants3.numero;
+const classe =  postulants3.classe;
 const motivation = postulants.motivation;
 const creneau: string =
   new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
 const demandeRepondue = ref(postulants.refuse || postulants.valide);
+
 
 async function accepterDemande() {
   console.log(id);
@@ -31,6 +38,7 @@ async function accepterDemande() {
       credentials : "include",
     }
   );
+  postulants.valide = true;
   console.log(data);
 }
 
@@ -45,6 +53,7 @@ async function refuserDemande() {
       credentials : "include",
     }
   );
+  postulants.refuse = true;
   console.log(data);
 }
 </script>
