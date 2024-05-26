@@ -5,7 +5,6 @@ import {
   ComboboxPortal,
   ComboboxRoot,
 } from "radix-vue";
-import { cn } from "@/lib/utils";
 import {
   DateFormatter,
   type DateValue,
@@ -14,7 +13,7 @@ import {
 } from "@internationalized/date";
 import { Calendar as CalendarIcon } from "lucide-vue-next";
 import { useToast } from "@/components/ui/toast/use-toast";
-import { ref } from "vue";
+import { cn } from "@/lib/utils";
 
 const df = new DateFormatter("fr-FR", {
   dateStyle: "long",
@@ -25,31 +24,49 @@ const open = ref(false);
 const loading = ref(false);
 const description = ref("Description de l'événement");
 const searchTerm = ref("");
+let id = 0;
 const route = useRoute();
-let id = -1;
 if (route.query.id) {
   id = route.query.id as number;
 }
 
-const data2 = await $fetch(`http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id&id=${id}`,{
-  credentials: 'include'
-});
-const eventName = ref(data2.titre);
-const eventDescription = ref(data2.description);
-const eventDuration = ref(data2.duree);
-const date = new Date(data2.creneau);
-const eventDate = ref<DateValue>(new CalendarDate(date.getFullYear(), date.getMonth(), date.getDate()));
-const eventHour = ref<number>(date.getHours());
-const eventMinute = ref<number>(date.getMinutes());
+const eventName = ref("");
+const eventDescription = ref("");
+const eventDuration = ref(0);
+const eventDate = ref<DateValue>();
+const eventHour = ref(0);
+const eventMinute = ref(0);
 const nbEleves = ref(0);
+const champsSelectionnes = ref<string[]>([]);
+const idChampsSelectionnes = ref<number[]>([]);
 
-const data3 = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${id}`,{
-    credentials: 'include',
-  }
-);
-const champsSelectionnes = ref<string[]>(data3.map((d) => d.nom));
-const idChampsSelectionnes = ref<number[]>(data3.map((d) => d.id));
+if (id !== 0) {
+  const data2 = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id&id=${id}`,
+    {
+      credentials: "include",
+    }
+  );
+  eventName.value = data2.titre;
+  eventDescription.value = data2.description;
+  eventDuration.value = data2.duree;
+  eventDate.value = new CalendarDate(
+    new Date(data2.creneau).getFullYear(),
+    new Date(data2.creneau).getMonth(),
+    new Date(data2.creneau).getDate()
+  );
+  eventHour.value = new Date(data2.creneau).getHours();
+  eventMinute.value = new Date(data2.creneau).getMinutes();
+  nbEleves.value = data2.nbEleves;
+  const data3 = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${id}`,
+    {
+      credentials: "include",
+    }
+  );
+  champsSelectionnes.value = data3.map((d) => d.nom);
+  idChampsSelectionnes.value = data3.map((d) => d.id);
+}
 
 async function saveEvent() {
   console.log(idChampsSelectionnes.value);
@@ -73,18 +90,20 @@ async function saveEvent() {
   }
   const data4 = await $fetch(
     `http://localhost:8080/PasserellePro/Serv?op=modifier_event`,
-    { 
-      method: 'POST',
-      credentials: 'include',
-      body : JSON.stringify({
+    {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify({
         id: id,
         titre: eventName.value,
         description: eventDescription.value,
         duree: eventDuration.value,
-        creneau: eventDate.value.toDate(getLocalTimeZone()).setHours(eventHour.value, eventMinute.value),
+        creneau: eventDate.value
+          .toDate(getLocalTimeZone())
+          .setHours(eventHour.value, eventMinute.value),
         nbEleves: nbEleves.value,
         domaines: idChampsSelectionnes.value,
-      })
+      }),
     }
   );
   if (id === -1) {
