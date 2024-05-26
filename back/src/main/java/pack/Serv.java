@@ -143,9 +143,7 @@ public class Serv extends HttpServlet {
       }
       // id Evenement -> Evenement
       if (op.equals("get_evenement_from_id")) {
-        System.out.println("get_evenement_from_id");
         int id = Integer.parseInt(request.getParameter("id"));
-        System.out.println("Id trouve : " + id);
         Evenement event = facade.get_evenement_from_id(id);
         String json = gson.toJson(event);
         response.getWriter().write(json);
@@ -267,6 +265,23 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(postulants);
         response.getWriter().write(json);
       }
+      if (op.equals("lister_ecole")) {
+        Collection<Etablissement> etabs = facade.lister_ecole();
+        String json = gson.toJson(etabs);
+        response.getWriter().write(json);
+      }
+      if (op.equals("lister_entreprise")) {
+        Collection<Etablissement> etabs = facade.lister_entreprise();
+        String json = gson.toJson(etabs);
+        response.getWriter().write(json);
+      }
+      if (op.equals("get_util_from_id_dem")) {
+        String id_dem = request.getParameter("id_dem");
+        Utilisateur util = facade.get_util_from_id_dem(id_dem);
+        String json = gson.toJson(util);
+        response.getWriter().write(json);
+      }
+
     } else {
       if (!fct_sans_token) {
         String json = gson.toJson("Mauvais_Token");

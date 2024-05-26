@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.print.Doc;
 import javax.print.DocFlavor;
@@ -55,7 +56,7 @@ public class Facade {
     em.persist(event);
     event.getDomains_event().add(dom1);
     Avis avis = new Avis("Super", 5, "Génial", util, event);
-    em.persist(avis);    
+    em.persist(avis);
     Demande dem = new Demande("oui", util, event);
     em.persist(dem);
     Document doc = new Document(util, dem);
@@ -430,10 +431,10 @@ public class Facade {
   }
 
   public Etablissement get_etab_from_token(String token) {
-      TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",
-          Utilisateur.class);
-      query.setParameter("token", token);
-      Utilisateur utilisateur = query.getSingleResult();
+    TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",
+        Utilisateur.class);
+    query.setParameter("token", token);
+    Utilisateur utilisateur = query.getSingleResult();
     return utilisateur.getEtablissement_util();
   }
 
@@ -469,4 +470,26 @@ public class Facade {
     Utilisateur user = query.getSingleResult();
     return user.getId();
   }
+
+  public Collection<Etablissement> lister_ecole() {
+    TypedQuery<Etablissement> query = em.createQuery("SELECT e FROM Etablissement e WHERE e.entreprise = :entreprise",
+        Etablissement.class);
+    query.setParameter("entreprise", false);
+    List<Etablissement> etabs = query.getResultList();
+    return etabs;
+  }
+
+  public Collection<Etablissement> lister_entreprise() {
+    TypedQuery<Etablissement> query = em.createQuery("SELECT e FROM Etablissement e WHERE e.entreprise = :entreprise",
+        Etablissement.class);
+    query.setParameter("entreprise", true);
+    List<Etablissement> etabs = query.getResultList();
+    return etabs;
+  }
+
+  public Utilisateur get_util_from_id_dem(String idem) {
+    Demande dem = em.find(Demande.class, Integer.parseInt(idem));
+    return dem.getUtilisateur_dem();
+  }
+
 }
