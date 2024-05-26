@@ -1,14 +1,8 @@
 <script setup lang="ts">
-
-const token = useCookie("token", { path: "/" });
-token.value = "1";
 const data = await $fetch(
   `http://localhost:8080/PasserellePro/Serv?op=lister_event_etab`,
   {
     method: "POST",
-    body: JSON.stringify({
-      id,
-    }),
     credentials: 'include'
   }
 );
