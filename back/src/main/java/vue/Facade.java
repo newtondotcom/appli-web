@@ -161,6 +161,17 @@ public class Facade {
     }
   }
 
+  // Mettre absent une demande
+  public String absentDemande(int id_demande) {
+    Demande demande_en_cours = em.find(Demande.class, id_demande);
+    if (demande_en_cours.isPresent()) {
+      return "Error";
+    } else {
+      demande_en_cours.setPresent(false);
+      return "demande_noté_présent";
+    }
+  }
+
   // Refuser une demande
   public String refuserDemande(int id_demande) {
     Demande demande_en_cours = em.find(Demande.class, id_demande);
