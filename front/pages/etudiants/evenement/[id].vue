@@ -51,7 +51,6 @@ if (demandeEffectue) {
   const demande = await $fetch(
     `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_eventid_utilid&id_util=${id}&id_event=${event.id}`
   );
-  console.log(demande);
   demandeValide.value = demande.valide;
   demandeRefuse.value = demande.refuse;
   if (!demande.valide && !demande.refuse) {
@@ -60,10 +59,23 @@ if (demandeEffectue) {
   lettreDeMotiv.value = demande.motivation;
 }
 
+/* Création de la demande */
+
 async function sendDemand() {
-  console.log("sendDemand");
+  const response = await $fetch("/api/PasserellePro/Serv?op=creer_demande", {
+    method: "POST",
+    credentials: "include",
+    body: {
+      id_util: id,
+      id_event: event.id,
+      motivation: lettreDeMotiv.value,
+    },
+  });
+  console.log(response);
+
+  /*
   loading.value = true;
-  if (lettreDeMotiv.value === "" || !fileSelected.value) {
+  if (lettreDeMotiv.value === "") {
     requeteFausse.value = true;
     loading.value = false;
     return;
@@ -71,6 +83,7 @@ async function sendDemand() {
   requeteFausse.value = false;
   loading.value = false;
   demandeEnvoyee.value = true;
+  */
 }
 
 const handleFileChange = (event: Event) => {
@@ -90,7 +103,7 @@ const handleFileChange = (event: Event) => {
     <EvenementCarte :key="event.id" :evenement="event" />
     <div class="grid w-full max-w-sm items-center gap-14 content-center">
       <div v-if="demandeEffectue" class="flex justify-center grid">
-        <h1 class="w-full">Demade Effectué</h1>
+        <h1 class="w-full">Demande Effectué</h1>
         <TicketCheck
           color="#3e9392"
           class="w-20 h-20 justify-self-center"
