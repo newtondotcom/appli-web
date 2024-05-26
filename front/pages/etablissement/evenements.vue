@@ -14,7 +14,7 @@ const data = await $fetch(
 );
 console.log(data);
 
-
+const id = 0;
 const nom = "Découverte IA";
 const description =
   "Venez découvrir l'intelligence artificielle avec nos collaborateurs durant ce stage de 3 heures.";
