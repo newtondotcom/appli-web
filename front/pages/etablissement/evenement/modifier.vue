@@ -70,7 +70,6 @@ if (id !== 0) {
 
 async function saveEvent() {
   console.log(idChampsSelectionnes.value);
-  console.log(eventDate.value);
   loading.value = true;
   if (
     eventName.value === "" ||
@@ -88,30 +87,60 @@ async function saveEvent() {
     loading.value = false;
     return;
   }
+  const year = eventDate.value.toDate(getLocalTimeZone()).getFullYear();
+  const month = (eventDate.value.toDate(getLocalTimeZone()).getMonth() + 1)
+    .toString()
+    .padStart(2, "0");
+  const day = eventDate.value
+    .toDate(getLocalTimeZone())
+    .getDate()
+    .toString()
+    .padStart(2, "0");
+  const hour = eventHour.value.toString().padStart(2, "0");
+  const minute = eventMinute.value.toString().padStart(2, "0");
+  const second = "00";
+  const millisecond = "000";
+  const timezoneOffset = "Z"; // Assuming UTC
+
+  const dateToSend = `${year}-${month}-${day}T${hour}:${minute}:${second}.${millisecond}${timezoneOffset}`;
+
+  let idToSend = "";
+  for (let i = 0; i < idChampsSelectionnes.value.length; i++) {
+    idToSend += idChampsSelectionnes.value[i];
+    if (i !== idChampsSelectionnes.value.length - 1) {
+      idToSend += ",";
+    }
+  }
   const data4 = await $fetch(
     `http://localhost:8080/PasserellePro/Serv?op=modifier_event`,
     {
       method: "POST",
       credentials: "include",
       body: JSON.stringify({
-        id: id,
+        id_event: id,
         titre: eventName.value,
         description: eventDescription.value,
         duree: eventDuration.value,
-        creneau: eventDate.value
-          .toDate(getLocalTimeZone())
-          .setHours(eventHour.value, eventMinute.value),
+        creneau: dateToSend,
         nbEleves: nbEleves.value,
-        domaines: idChampsSelectionnes.value,
+        id_domain_event: idToSend,
       }),
     }
   );
-  if (id === -1) {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-  } else {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+  if (id == 0 && data4 == "Success") {
+    loading.value = false;
+    toast({
+      title: "Succès",
+      description: "L'événement a bien été créé",
+    });
   }
-  loading.value = false;
+  if (id != 0 && data4 === "Modifier") {
+    loading.value = false;
+    toast({
+      title: "Succès",
+      description: "L'événement a bien été modifié",
+    });
+  }
 }
 
 const data = await $fetch(
@@ -138,7 +167,7 @@ async function removeDomain(domain: string) {
 
 <template>
   <div @keydown.esc="open = false">
-    <div v-if="id === -1">
+    <div v-if="id === 0">
       <Titre
         title="Création d'un évènement"
         subtitle="Ici, vous pouvez créer un évènement pour votre établissement"

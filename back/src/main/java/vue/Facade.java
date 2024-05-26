@@ -216,7 +216,13 @@ public class Facade {
   public String ajouterEvenement(String titre, String description, String duree, String creneau,
       String id_etablissement, String id_domain) {
     try {
-      Evenement new_event = new Evenement(description, StringToTime(creneau),
+      int year = Integer.parseInt(creneau.substring(0, 4));
+      int month = Integer.parseInt(creneau.substring(5, 7));
+      int day = Integer.parseInt(creneau.substring(8, 10));
+      int hour = Integer.parseInt(creneau.substring(11, 13));
+      int minute = Integer.parseInt(creneau.substring(14, 16));
+      LocalDateTime date = LocalDateTime.of(year, month, day, hour, minute);
+      Evenement new_event = new Evenement(description, date,
           em.find(Etablissement.class, Integer.parseInt(id_etablissement)), Integer.parseInt(duree),
           titre);
       em.persist(new_event);
@@ -229,7 +235,7 @@ public class Facade {
       }
       return "Success";
     } catch (IllegalArgumentException | PersistenceException | DateTimeParseException e) {
-      return "Error";
+      return e.toString();
     }
   }
 
@@ -246,11 +252,17 @@ public class Facade {
   public String modifer_event_attribut(String titre, String description, String creneau,
       String duree, String id_domain_event, String id_event, String id_etablissement_event) {
     try {
+      int year = Integer.parseInt(creneau.substring(0, 4));
+      int month = Integer.parseInt(creneau.substring(5, 7));
+      int day = Integer.parseInt(creneau.substring(8, 10));
+      int hour = Integer.parseInt(creneau.substring(11, 13));
+      int minute = Integer.parseInt(creneau.substring(14, 16));
+      LocalDateTime date = LocalDateTime.of(year, month, day, hour, minute);
       Evenement event = em.find(Evenement.class, Integer.parseInt(id_event));
       if (event != null) {
         event.setTitre(titre);
         event.setDescription(description);
-        event.setCreneau(StringToTime(creneau));
+        event.setCreneau(date);
         event.setDuree(Integer.parseInt(duree));
         Etablissement etab = em.find(Etablissement.class,
             Integer.parseInt(id_etablissement_event));
