@@ -10,24 +10,17 @@ import {
   DateFormatter,
   type DateValue,
   getLocalTimeZone,
+  CalendarDate,
 } from "@internationalized/date";
 import { Calendar as CalendarIcon } from "lucide-vue-next";
 import { useToast } from "@/components/ui/toast/use-toast";
+import { ref } from "vue";
 
 const df = new DateFormatter("fr-FR", {
   dateStyle: "long",
 });
 
 const { toast } = useToast();
-const eventDate = ref<DateValue>();
-const eventName = ref("");
-const eventDescription = ref("");
-const eventDuration = ref(0);
-const eventHour = ref(0);
-const eventMinute = ref(0);
-const champsSelectionnes = ref<string[]>([]);
-const idChampsSelectionnes = ref<number[]>([]);
-const nbEleves = ref(0);
 const open = ref(false);
 const loading = ref(false);
 const description = ref("Description de l'événement");
@@ -38,8 +31,29 @@ if (route.query.id) {
   id = route.query.id as number;
 }
 
+const data2 = await $fetch(`http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id&id=${id}`,{
+  credentials: 'include'
+});
+const eventName = ref(data2.titre);
+const eventDescription = ref(data2.description);
+const eventDuration = ref(data2.duree);
+const date = new Date(data2.creneau);
+const eventDate = ref<DateValue>(new CalendarDate(date.getFullYear(), date.getMonth(), date.getDate()));
+const eventHour = ref<number>(date.getHours());
+const eventMinute = ref<number>(date.getMinutes());
+const nbEleves = ref(0);
+
+const data3 = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${id}`,{
+    credentials: 'include',
+  }
+);
+const champsSelectionnes = ref<string[]>(data3.map((d) => d.nom));
+const idChampsSelectionnes = ref<number[]>(data3.map((d) => d.id));
+
 async function saveEvent() {
   console.log(idChampsSelectionnes.value);
+  console.log(eventDate.value);
   loading.value = true;
   if (
     eventName.value === "" ||
@@ -57,6 +71,22 @@ async function saveEvent() {
     loading.value = false;
     return;
   }
+  const data4 = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=modifier_event`,
+    { 
+      method: 'POST',
+      credentials: 'include',
+      body : JSON.stringify({
+        id: id,
+        titre: eventName.value,
+        description: eventDescription.value,
+        duree: eventDuration.value,
+        creneau: eventDate.value.toDate(getLocalTimeZone()).setHours(eventHour.value, eventMinute.value),
+        nbEleves: nbEleves.value,
+        domaines: idChampsSelectionnes.value,
+      })
+    }
+  );
   if (id === -1) {
     await new Promise((resolve) => setTimeout(resolve, 2000));
   } else {

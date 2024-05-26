@@ -50,7 +50,7 @@ public class Serv extends HttpServlet {
         }
       }
     } else {
-      return "mauvais";
+      return "la requete ne contient pas de cookies";
     }
     return "mauvais";
   }
@@ -143,8 +143,9 @@ public class Serv extends HttpServlet {
       }
       // id Evenement -> Evenement
       if (op.equals("get_evenement_from_id")) {
+        System.out.println("get_evenement_from_id");
         int id = Integer.parseInt(request.getParameter("id"));
-
+        System.out.println("Id trouve : " + id);
         Evenement event = facade.get_evenement_from_id(id);
         String json = gson.toJson(event);
         response.getWriter().write(json);
@@ -249,12 +250,13 @@ public class Serv extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
+
+    JsonObject body = getBodyJson(request);
+
     Cookie[] cookies = request.getCookies();
     String token = getToken(cookies);
 
     boolean fct_sans_token = false;
-
-    JsonObject body = getBodyJson(request);
     String op = request.getParameter("op");
     // Information_Utilisateur -> Si l'enregistemenent a était fait
     if (op.equals("enregistrer_util")) {

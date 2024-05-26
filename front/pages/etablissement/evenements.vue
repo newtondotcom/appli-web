@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const token = useCookie("token");
+token.value = 1;
 const data = await $fetch(
   `http://localhost:8080/PasserellePro/Serv?op=lister_event_etab`,
   {
