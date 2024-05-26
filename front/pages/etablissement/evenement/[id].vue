@@ -76,10 +76,10 @@ const evenementEnCours = computed(() => {
     </div>
 
     <div v-if="!evenementPassed && !evenementEnCours">
-      <EvenementAVenir />
+      <EvenementAVenir :id="id"/>
     </div>
     <div v-if="evenementEnCours">
-      <EvenementEnCours />
+      <EvenementEnCours :id="id" />
     </div>
     <div v-if="evenementPassed">
       <EvenementPasse :stats="stats" />
