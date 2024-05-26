@@ -174,6 +174,12 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(etab);
         response.getWriter().write(json);
       }
+      // token user-> etab
+      if (op.equals("get_etab_from_token")) {
+        Etablissement etab = facade.get_etab_from_token(token);
+        String json = gson.toJson(etab);
+        response.getWriter().write(json);
+      }
       // Utilisateur id -> Demandes
       if (op.equals("get_demande_from_uid")) {
         int id = Integer.parseInt(request.getParameter("id"));
@@ -356,7 +362,6 @@ public class Serv extends HttpServlet {
         String description = body.get("description").getAsString();
         boolean estEntreprise = Boolean.parseBoolean(body.get("entreprise").getAsString());
         String image = body.get("image").getAsString();
-
         String msg = facade.modifier_etablissement_attribut(adresse, SIREN, nom, description, estEntreprise, image);
         String json = gson.toJson(msg);
         response.getWriter().write(json);

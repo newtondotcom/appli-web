@@ -398,6 +398,14 @@ public class Facade {
     return util.getEtablissement_util();
   }
 
+  public Etablissement get_etab_from_token(String token) {
+      TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",
+          Utilisateur.class);
+      query.setParameter("token", token);
+      Utilisateur utilisateur = query.getSingleResult();
+    return utilisateur.getEtablissement_util();
+  }
+
   // Donne les Demandes d'un utilisateurs
   public Collection<Demande> get_demande_from_uid(int id_util) {
     Utilisateur util = em.find(Utilisateur.class, id_util);
