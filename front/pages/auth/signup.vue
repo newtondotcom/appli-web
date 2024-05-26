@@ -72,7 +72,7 @@ async function enregistrer() {
           prenom: prenom.value,
           email: email.value,
           mdp: password.value,
-          siren: etu ? 0 : idEtab.value,
+          siren: idEtab.value,
         }),
       }
     );
