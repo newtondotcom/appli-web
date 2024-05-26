@@ -46,15 +46,118 @@ etablissementEtudiant.value = etab.nom;
 async function Modifyprofil() {
   isModifying.value = !isModifying.value;
 }
-/* Fonction qui permet de sauvegarder les modifications */
+/* Réfrence pour les valeurs de validation */
+const isNomValid = ref(true);
+const isINEValid = ref(false);
+const isEmailValid = ref(true);
+const isTelephoneValid = ref(false);
+const isClassValid = ref(false);
+/* Expression Régulière pour analyser les valeur rentrer */
+const nomRegex = /^[a-zA-ZàâäéèêëëïîîööôùûûüçÀÂÄÉÈÊËËÏÎÎÖÖÔÙÛÛÜÇç\s-]{2,}$/;
+const ineRegex = /^[a-zA-Z0-9]{11}$/;
+const addressRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+const telephoneRegex = /^\d{10}$/;
+
+/* Référence pour le texte d'erreur */
+const errorText = ref("");
+
+const validateNom = () => {
+  if (!nomRegex.test(nomEtudiant.value)) {
+    errorText.value += "Nom, ";
+    isNomValid.value = false;
+  } else {
+    isNomValid.value = true;
+  }
+};
+const validateINE = () => {
+  if (!ineRegex.test(ineEtudiant.value)) {
+    errorText.value += "INE, ";
+    isINEValid.value = false;
+  } else {
+    isINEValid.value = true;
+  }
+};
+const validateEmail = () => {
+  if (!addressRegex.test(emailEtudiant.value)) {
+    errorText.value += "Email, ";
+    isEmailValid.value = false;
+  } else {
+    isEmailValid.value = true;
+  }
+};
+const validateTelephone = () => {
+  if (!telephoneRegex.test(telephoneEtudiant.value)) {
+    errorText.value += "Téléphone, ";
+    isTelephoneValid.value = false;
+  } else {
+    isTelephoneValid.value = true;
+  }
+};
+const validateClass = () => {
+  if (classeEtudiant.value === "") {
+    errorText.value += "Classe, ";
+    isClassValid.value = false;
+  } else {
+    isClassValid.value = true;
+  }
+};
 async function saveChanges() {
   loading.value = true;
-  toast({
-    title: "Succès",
-    description: "Les modifications ont été enregistrées avec succès",
-  });
+  validateNom();
+  validateINE();
+  validateEmail();
+  validateTelephone();
+  validateClass();
+  if (
+    !isNomValid.value ||
+    !isINEValid.value ||
+    !isEmailValid.value ||
+    !isTelephoneValid.value ||
+    !isClassValid.value
+  ) {
+    toast({
+      title: "Erreur",
+      description: "Veuillez vérifier les champs suivants: " + errorText.value,
+    });
+
+    return;
+  } else {
+    try {
+      const data = await $fetch(
+        `http://localhost:8080/PasserellePro/Serv?op=modifier_util`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nom: nomEtudiant.value,
+            email: emailEtudiant.value,
+            telephone: telephoneEtudiant.value,
+            classe: classeEtudiant.value,
+            id_util: id,
+          }),
+        }
+      );
+      navigateTo(`/etudiant/${id}`);
+    } catch (error) {
+      console.error(error);
+    }
+    toast({
+      title: "Valider",
+      description: "Vos informations ont bien été enregistrées",
+    });
+  }
+  errorText.value = "";
   loading.value = false;
 }
+const handleClasse = (classe: string) => {
+  classeEtudiant.value = classe;
+};
+const handleEcole = (ecole: string) => {
+  etablissementEtudiant.value = ecole;
+};
 </script>
 
 <template>
@@ -112,20 +215,18 @@ async function saveChanges() {
       </div>
       <div class="grid gap-3">
         <Label for="classeEtudiant">Classe</Label>
-        <Input
-          id="classeEtudiant"
-          type="text"
-          v-model="classeEtudiant"
-          :disabled="!isModifying"
+        <EtudiantClassSelect
+          @classe="handleClasse"
+          :class="classeEtudiant"
+          :isModifying="isModifying"
         />
       </div>
       <div class="grid gap-3">
         <Label for="etablissementEtudiant">Établissement</Label>
-        <Input
-          id="etablissementEtudiant"
-          type="text"
-          v-model="etablissementEtudiant"
-          :disabled="!isModifying"
+        <EtudiantEtablissementComboBox
+          @ecole="handleEcole"
+          :etab="etablissementEtudiant"
+          :isModifying="isModifying"
         />
       </div>
       <Button
