@@ -150,7 +150,7 @@ Accéder aux informations rentrées par les utilisateurs (retrouver un mot de pa
 - Implémentation d'un builderJson pour envoyer les réponses de la facade sous format JSON pour le front.
 - Création des conditions pour que le champ opérateur des requêtes utilise les bonnes fonctions de la facade.
 
-## BD
+## BDD
 
 - Modification des entités pour que le builderJson ne sélectionne que les champs voulus et ne boucle pas.
 
