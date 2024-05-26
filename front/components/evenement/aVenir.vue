@@ -1,6 +1,11 @@
 <script setup lang="ts">
-
-const id = 1;
+const props = defineProps({
+    id : {
+        type : String,
+        required : true
+    }
+});
+const id = props.id;
 const postulants2 = [
   {
     id: 0,

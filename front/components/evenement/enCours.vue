@@ -1,5 +1,11 @@
 <script setup lang="ts">
-
+const props = defineProps({
+    id : {
+        type : String,
+        required : true
+    }
+});
+const id = props.id;
 const listeAppels = [
   {
     id: 0,
