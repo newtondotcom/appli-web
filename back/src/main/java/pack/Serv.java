@@ -245,6 +245,23 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(dem);
         response.getWriter().write(json);
       }
+
+      // event_id -> Liste des demandes
+      if (op.equals("get_demandes_from_eventid")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Collection<Demande> demandes = facade.get_demandes_from_eventid(id);
+        String json = gson.toJson(demandes);
+        response.getWriter().write(json);
+      }
+
+
+      if (op.equals("get_liste_postulants_from_eventid")){
+        int id = Integer.parseInt(request.getParameter("id"));
+        Collection<Utilisateur> postulants = facade.get_liste_postulants_from_eventid(id);
+        String json = gson.toJson(postulants);
+        response.getWriter().write(json);
+      }
     } else {
       if (!fct_sans_token) {
         String json = gson.toJson("Mauvais_Token");
