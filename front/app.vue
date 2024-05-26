@@ -13,8 +13,6 @@ function deconnexion() {
   token.value = null;
   console.log(token.value);
 }
-
-  console.log(token.value);
 </script>
 
 <template>
