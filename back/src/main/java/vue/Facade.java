@@ -283,7 +283,11 @@ public class Facade {
   }
 
   // Lister stat event
-
+  // Renvoie
+  // 0 : Nombre de demandes
+  // 1 : Nombre de demandes acceptées
+  // 2 : Nombre de demandes présentes
+  // 3 : Moyenne des notes laisées
   public float[] liste_stat_event(int id) {
     Evenement event = em.find(Evenement.class, id);
     float[] stats = new float[4];
@@ -335,6 +339,8 @@ public class Facade {
     return event.getEtablissement_event();
   }
 
+  // note moyenne d'un établissement
+
   // Donne les domains d'un évenement
   public Collection<Domain> get_domains_from_eventid(int id_event) {
     Evenement event = em.find(Evenement.class, id_event);
@@ -385,6 +391,21 @@ public class Facade {
     } catch (IllegalArgumentException | PersistenceException e) {
       return null;
     }
+  }
+
+  public Collection<Demande> get_demandes_from_eventid(int id_event) {
+    Evenement event = em.find(Evenement.class, id_event);
+    return event.getDemandes_event();
+  }
+
+  public Collection<Utilisateur> get_liste_postulants_from_eventid(int id_event) {
+    Evenement event = em.find(Evenement.class, id_event);
+    Collection<Demande> demandes = event.getDemandes_event();
+    Collection<Utilisateur> utilisateurs = new HashSet<Utilisateur>();
+    for (Demande dem : demandes) {
+      utilisateurs.add(dem.getUtilisateur_dem());
+    }
+    return utilisateurs;
   }
 
   // Donne les attributs d'un utilisateurs
