@@ -1,6 +1,20 @@
 <script setup lang="ts">
-const route = useRoute();
-const id = 0;
+
+const token = useCookie("token", { path: "/" });
+token.value = "1";
+const data = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=lister_event_etab`,
+  {
+    method: "POST",
+    body: JSON.stringify({
+      id,
+    }),
+    credentials: 'include'
+  }
+);
+console.log(data);
+
+
 const nom = "Découverte IA";
 const description =
   "Venez découvrir l'intelligence artificielle avec nos collaborateurs durant ce stage de 3 heures.";
@@ -19,19 +33,6 @@ const evenement: EvenementEtablissement = {
   note_etablissement,
   tags,
 };
-let creneau2: Date = new Date();
-creneau2.setDate(creneau2.getDate() - 1);
-const evenement2: EvenementEtablissement = {
-  id: 1,
-  nom: "Découverte IA",
-  description:
-    "Venez découvrir l'intelligence artificielle avec nos collaborateurs durant ce stage de 3 heures.",
-  creneau: creneau2,
-  nom_etablissement: "Airbus",
-  id_etablissement: 0,
-  note_etablissement: 4.5,
-  tags: ["IA", "Stage", "Airbus"],
-};
 </script>
 
 <template>
@@ -42,9 +43,6 @@ const evenement2: EvenementEtablissement = {
   />
   <a :href="'/etablissement/evenement/' + evenement.id">
     <EvenementCarte class="my-4" :evenement="evenement" :key="evenement.id" />
-  </a>
-  <a href="/etablissement/evenement/1">
-    <EvenementCarte :evenement="evenement2" :key="evenement2.id" />
   </a>
 </div>  
 </template>
