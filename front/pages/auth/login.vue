@@ -12,16 +12,18 @@ async function seConnecter() {
         method: "POST",
         body: JSON.stringify({
           email: email.value,
-          password: password.value,
+          mdp: password.value,
         }),
         server: false,
       }
     );
     console.log(data);
+    if (data != "Le mot de passe est incorrect.") {
     const token = data;
     const token_cookie = useCookie("token", { path: "/" });
     token_cookie.value = token;
-    //navigateTo("/")
+    navigateTo("/");
+    }
   } catch (error) {
     console.error(error);
   }
