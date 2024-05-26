@@ -260,14 +260,12 @@ public class Serv extends HttpServlet {
     // Information_Utilisateur -> Si l'enregistemenent a était fait
     if (op.equals("enregistrer_util")) {
       String nom = body.get("nom").getAsString();
+      String prenom = body.get("prenom").getAsString();
+      String nomComplet = nom + " " + prenom;
       String mdp = body.get("mdp").getAsString();
-      String INE = body.get("INE").getAsString();
-      String mdp_admin = body.get("mdp_admin").getAsString();
       String email = body.get("email").getAsString();
-      String telephone = body.get("telephone").getAsString();
-      String classe = body.get("classe").getAsString();
       String siren = body.get("siren").getAsString();
-      String msg = facade.Enregistrer(nom, mdp, INE, mdp_admin, email, telephone, classe, siren);
+      String msg = facade.Enregistrer(nomComplet, mdp, email, siren);
       String json = gson.toJson(msg);
       response.getWriter().write(json);
       fct_sans_token = true;
@@ -313,6 +311,13 @@ public class Serv extends HttpServlet {
       if (op.equals("presentdemande")) {
         int id = Integer.parseInt(body.get("id").getAsString());
         String msg = facade.presentDemande(id);
+        String json = gson.toJson(msg);
+        response.getWriter().write(json);
+      }
+      // Mettre absent
+      if (op.equals("absentdemande")) {
+        int id = Integer.parseInt(body.get("id").getAsString());
+        String msg = facade.absentDemande(id);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
