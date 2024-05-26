@@ -310,7 +310,7 @@ public class Serv extends HttpServlet {
     if (op.equals("enregistrer_util")) {
       String nom = body.get("nom").getAsString();
       String prenom = body.get("prenom").getAsString();
-      String nomComplet = nom + " " + prenom;
+      String nomComplet = nom + "#" + prenom;
       String mdp = body.get("mdp").getAsString();
       String email = body.get("email").getAsString();
       String siren = body.get("siren").getAsString();
