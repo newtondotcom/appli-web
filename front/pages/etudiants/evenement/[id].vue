@@ -11,14 +11,20 @@ const demandeEnvoyee = ref(false);
 
 const route = useRoute();
 
-const id = route.params.id;
+const eid = route.params.id;
 const bool = route.query.bool === "true";
 
-const uid = 2;
+const uid = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_uid_from_token`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
+);
 
 /* Récupération de l'Evenement */
 const data = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id&id=${id}`,
+  `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id&id=${eid}`,
   {
     method: "GET",
     credentials: "include",
@@ -27,21 +33,21 @@ const data = await $fetch(
 const evenement = data;
 
 const etab = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_eventid&id=${id}`,
+  `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_eventid&id=${eid}`,
   {
     method: "GET",
     credentials: "include",
   }
 );
 const domains = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${id}`,
+  `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${eid}`,
   {
     method: "GET",
     credentials: "include",
   }
 );
 const stats = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=lister_stat_event&id=${id}`,
+  `http://localhost:8080/PasserellePro/Serv?op=lister_stat_event&id=${eid}`,
   {
     method: "GET",
     credentials: "include",
@@ -63,7 +69,7 @@ const demandeValide = ref(false);
 const demandeEnAttente = ref(true);
 const demandeRefuse = ref(false);
 const demandeEffectue = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_bool_demande_from_eventid_utilid&id_util=${id}&id_event=${event.id}`,
+  `http://localhost:8080/PasserellePro/Serv?op=get_bool_demande_from_eventid_utilid&id_util=${uid}&id_event=${event.id}`,
   {
     method: "GET",
     credentials: "include",
@@ -71,7 +77,7 @@ const demandeEffectue = await $fetch(
 );
 if (demandeEffectue) {
   const demande = await $fetch(
-    `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_eventid_utilid&id_util=${id}&id_event=${event.id}`,
+    `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_eventid_utilid&id_util=${uid}&id_event=${event.id}`,
     {
       method: "GET",
       credentials: "include",
@@ -99,12 +105,12 @@ async function sendDemand() {
         },
         body: JSON.stringify({
           id_etudiant: uid,
-          id_evenement: id,
+          id_evenement: eid,
           motivation: lettreDeMotiv.value,
         }),
       }
     );
-    console.log(data);
+    navigateTo(`/etudiant/evenements/${eid}`);
   } catch (error) {
     console.error(error);
   }
@@ -136,26 +142,8 @@ const handleFileChange = (event: Event) => {
 
 <template>
   <div class="flex flex-wrap justify-center gap-10">
-    <EvenementCarte :key="event.id" :evenement="event" />
+    <EtudiantEvenementCarte :key="event.id" :evenement="event" />
     <div class="grid w-full max-w-sm items-center gap-14 content-center">
-      <div v-if="demandeEffectue" class="flex justify-center grid">
-        <h1 class="w-full">Demande Effectué</h1>
-        <TicketCheck
-          color="#3e9392"
-          class="w-20 h-20 justify-self-center"
-          v-if="demandeValide"
-        />
-        <TicketSlash
-          color="#c4bc00"
-          class="w-20 h-20 justify-self-center"
-          v-if="demandeEnAttente"
-        />
-        <TicketX
-          color="#b51a00"
-          class="w-20 h-20 justify-self-center"
-          v-if="demandeRefuse"
-        />
-      </div>
       <div>
         <Label for="lettreDeMotiv" class="place-self-center"
           >Lettre de Motivation</Label
