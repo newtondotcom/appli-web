@@ -14,7 +14,13 @@ const props = defineProps({
   },
 });
 /* Traitement de la demande */
-const uid = 1;
+const uid = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_uid_from_token`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
+);
 const demandeValide = ref(false);
 const demandeEnAttente = ref(true);
 const demandeRefuse = ref(false);
