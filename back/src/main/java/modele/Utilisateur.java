@@ -133,6 +133,14 @@ public class Utilisateur {
         this.telephone = telephone;
     }
 
+    public String getClasse() {
+        return classe;
+    }
+
+    public void setClasse(String classe) {
+        this.classe = classe;
+    }
+
     public Etablissement getEtablissement_util() {
         return etablissement_util;
     }

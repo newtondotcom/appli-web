@@ -420,6 +420,20 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
+      // Modifier Utilisateur
+      if (op.equals("modifier_util")) {
+        String nom = body.get("nom").getAsString();
+        String prenom = body.get("prenom").getAsString();
+        String nomComplet = nom + " " + prenom;
+        String email = body.get("email").getAsString();
+        String telephone = body.get("telephone").getAsString();
+        String classe = body.get("classe").getAsString();
+        String id_util = body.get("id_util").getAsString();
+        String msg = facade.modifier_utilisateur(nomComplet, email, telephone, classe, id_util);
+        String json = gson.toJson(msg);
+        response.getWriter().write(json);
+        fct_sans_token = true;
+      }
     } else {
       if (!fct_sans_token) {
         String json = gson.toJson("Mauvais_Token");

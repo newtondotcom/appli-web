@@ -293,6 +293,20 @@ public class Facade {
     }
   }
 
+  public String modifier_utilisateur(String nomComplet, String email, String telephone,
+      String classe, String id_util) {
+    Utilisateur util = em.find(Utilisateur.class, Integer.parseInt(id_util));
+    if (util != null) {
+      util.setEmail(email);
+      util.setNom(nomComplet);
+      util.setTelephone(telephone);
+      util.setClasse(classe);
+      return "Modifier";
+    } else {
+      return "Erreur";
+    }
+  }
+
   // Lister stat event
   // Renvoie
   // 0 : Nombre de demandes
