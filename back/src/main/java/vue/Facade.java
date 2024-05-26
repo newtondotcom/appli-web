@@ -218,8 +218,12 @@ public class Facade {
   }
 
   // Donne la liste des évenements d'un établissement
-  public Collection<Evenement> lister_event_etab(int id_etab) {
-    Etablissement etab = em.find(Etablissement.class, id_etab);
+  public Collection<Evenement> lister_event_etab(String token) {
+    TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",
+        Utilisateur.class);
+    query.setParameter("token", token);
+    Utilisateur user = query.getSingleResult();
+    Etablissement etab = user.getEtablissement_util();
     return etab.getEvenements_etab();
   }
 

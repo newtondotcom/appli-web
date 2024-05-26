@@ -127,10 +127,9 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(dem);
         response.getWriter().write(json);
       }
-      // id établissement -> La liste évenement de l'établissement
+      // token -> La liste évenement de l'établissement
       if (op.equals("lister_event_etab")) {
-        int id = Integer.parseInt(request.getParameter("id"));
-        Collection<Evenement> coll_event = facade.lister_event_etab(id);
+        Collection<Evenement> coll_event = facade.lister_event_etab(token);
         String json = gson.toJson(coll_event);
         response.getWriter().write(json);
       }
