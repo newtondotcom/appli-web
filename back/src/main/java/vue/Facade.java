@@ -35,9 +35,11 @@ public class Facade {
   private SecureRandom random = new SecureRandom();
 
   public void initialisation() {
-    Etablissement new_etab1 = new Etablissement("4 rue test1", 1, "IKEA", true, "chat");
+    Etablissement new_etab1 = new Etablissement("4 rue test1", 1, "IKEA", "meuble", true, "chat");
     em.persist(new_etab1);
-    Utilisateur util = new Utilisateur("Fredo", "1234", "20", true, "@test.com", "06", "2A", new_etab1, "1");
+    String sel = BCrypt.gensalt(12);
+    String mdpHacher = BCrypt.hashpw("1234", sel);
+    Utilisateur util = new Utilisateur("Fredo", mdpHacher, "f@test.com", new_etab1, "1");
     em.persist(util);
     Domain dom1 = new Domain("IA");
     em.persist(dom1);
@@ -75,24 +77,15 @@ public class Facade {
   // Partie Eleves
   // Cette fonction revoie un boolean qui dit si l'enregistrement s'est bien passé
   // ou pas
-  public String Enregistrer(String nom, String mdp, String INE, String mdp_admin, String email, String telephone,
-      String classe,
-      String siren) {
-    // Le mec ne va pas cocher admin ou pas en s'inscrivant il doit rentré le bon
-    // mot de passe pour s'inscrire en temps que admin d'ou les lignes suivante
-    boolean admin = false;
-    if (mdp_admin.equals("je_suis_admin")) {
-      admin = true;
-    }
-    // Recherche l'établissement dont le nom à était rentré
+  public String Enregistrer(String nomComplet, String mdp, String email, String siren) {
+    // Recherche l'établissement suivant le siren
     Etablissement etablissement_util = null;
     try {
-      etablissement_util = em.find(Etablissement.class, siren);
+      etablissement_util = em.find(Etablissement.class, Integer.parseInt(siren));
       String token = new BigInteger(32 * 5, random).toString(32);
       String sel = BCrypt.gensalt(12);
       String mdpHacher = BCrypt.hashpw(mdp, sel);
-      Utilisateur user = new Utilisateur(nom, mdpHacher, INE, admin, email,
-          telephone, classe, etablissement_util, token);
+      Utilisateur user = new Utilisateur(nomComplet, mdpHacher, email, etablissement_util, token);
       em.persist(user);
       user.setEtablissement_util(etablissement_util);
       return token;
@@ -125,10 +118,11 @@ public class Facade {
   }
 
   // Rajouter un etablissement
-  public String ajouterEtablissement(String adresse, int SIREN, String nom, boolean entreprise, String image) {
+  public String ajouterEtablissement(String adresse, int SIREN, String nom, String description, boolean entreprise,
+      String image) {
     Etablissement etablissement = em.find(Etablissement.class, SIREN);
     if (etablissement == null) {
-      Etablissement new_etab = new Etablissement(adresse, SIREN, nom, entreprise, image);
+      Etablissement new_etab = new Etablissement(adresse, SIREN, nom, description, entreprise, image);
       em.persist(new_etab);
       return "Success";
     } else {
@@ -155,6 +149,17 @@ public class Facade {
       return "Error";
     } else {
       demande_en_cours.setPresent(true);
+      return "demande_noté_présent";
+    }
+  }
+
+  // Mettre absent une demande
+  public String absentDemande(int id_demande) {
+    Demande demande_en_cours = em.find(Demande.class, id_demande);
+    if (demande_en_cours.isPresent()) {
+      return "Error";
+    } else {
+      demande_en_cours.setPresent(false);
       return "demande_noté_présent";
     }
   }
@@ -214,8 +219,12 @@ public class Facade {
   }
 
   // Donne la liste des évenements d'un établissement
-  public Collection<Evenement> lister_event_etab(int id_etab) {
-    Etablissement etab = em.find(Etablissement.class, id_etab);
+  public Collection<Evenement> lister_event_etab(String token) {
+    TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",
+        Utilisateur.class);
+    query.setParameter("token", token);
+    Utilisateur user = query.getSingleResult();
+    Etablissement etab = user.getEtablissement_util();
     return etab.getEvenements_etab();
   }
 
@@ -249,28 +258,20 @@ public class Facade {
 
   }
 
-  public String modifier_etablissement_attribut(int id, String type_champs, String champs) {
+  public String modifier_etablissement_attribut(String adresse, int SIREN, String nom, String description,
+      boolean entreprise,
+      String image) {
     try {
-      Etablissement etablissement = em.find(Etablissement.class, id);
-      switch (type_champs) {
-        case "adresse":
-          etablissement.setAdresse(champs);
-          break;
-        case "nom":
-          etablissement.setNom(champs);
-          break;
-        case "entreprise":
-          etablissement.setEntreprise(Boolean.parseBoolean(champs));
-          break;
-        case "image":
-          etablissement.setImage(champs);
-          break;
-        default:
-          return "Invalid field type";
-      }
-      return "Success";
+      Etablissement etablissement = em.find(Etablissement.class, SIREN);
+      etablissement.setAdresse(adresse);
+      etablissement.setDescription(description);
+      etablissement.setEntreprise(entreprise);
+      etablissement.setImage(image);
+      etablissement.setNom(nom);
+      return "Modifier";
     } catch (IllegalArgumentException | PersistenceException e) {
-      return "Error: " + e.getMessage();
+      ajouterEtablissement(adresse, SIREN, nom, description, entreprise, image);
+      return "Ajouter";
     }
   }
 

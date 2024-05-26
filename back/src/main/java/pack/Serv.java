@@ -8,11 +8,15 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import vue.Facade;
 import modele.*;
 import java.util.Collection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import java.time.LocalDateTime;
 
 @WebServlet("/Serv")
@@ -29,6 +33,15 @@ public class Serv extends HttpServlet {
       .excludeFieldsWithoutExposeAnnotation()
       .create();
 
+  private void setCorsHeaders(HttpServletResponse response) {
+    response.setHeader("Access-Control-Allow-Credentials", "true");
+    response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
+    response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    response.setHeader("Allow", "*");
+    response.setHeader("Access-Control-Allow-Headers",
+        "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+  }
+
   public String getToken(Cookie[] cookies) {
     if (cookies != null) {
       for (Cookie cookie : cookies) {
@@ -42,14 +55,34 @@ public class Serv extends HttpServlet {
     return "mauvais";
   }
 
+  public JsonObject getBodyJson(HttpServletRequest request) {
+    StringBuilder requestBody = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        requestBody.append(line);
+      }
+    } catch (IOException e) {
+      // Handle IO exception
+      e.printStackTrace();
+    }
+    Gson gson = new Gson();
+    String jsonArrayString = requestBody.toString();
+    JsonObject body = gson.fromJson(jsonArrayString, JsonObject.class);
+    return body;
+  }
+
+  @Override
+  protected void doOptions(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    setCorsHeaders(response);
+    response.setStatus(HttpServletResponse.SC_OK);
+  }
+
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    response.setHeader("Access-Control-Allow-Origin", "*");
-    response.setHeader("Access-Control-Allow-Credentials", "true");
-    response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
-    response.setHeader("Access-Control-Allow-Headers",
-        "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+    setCorsHeaders(response);
 
     Cookie[] cookies = request.getCookies();
     String token = getToken(cookies);
@@ -94,10 +127,9 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(dem);
         response.getWriter().write(json);
       }
-      // id établissement -> La liste évenement de l'établissement
+      // token -> La liste évenement de l'établissement
       if (op.equals("lister_event_etab")) {
-        int id = Integer.parseInt(request.getParameter("id"));
-        Collection<Evenement> coll_event = facade.lister_event_etab(id);
+        Collection<Evenement> coll_event = facade.lister_event_etab(token);
         String json = gson.toJson(coll_event);
         response.getWriter().write(json);
       }
@@ -217,37 +249,30 @@ public class Serv extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    response.setHeader("Access-Control-Allow-Origin", "*");
-    response.setHeader("Access-Control-Allow-Credentials", "true");
-    response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT");
-    response.setHeader("Access-Control-Allow-Headers",
-        "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-
     Cookie[] cookies = request.getCookies();
     String token = getToken(cookies);
 
     boolean fct_sans_token = false;
 
+    JsonObject body = getBodyJson(request);
     String op = request.getParameter("op");
     // Information_Utilisateur -> Si l'enregistemenent a était fait
     if (op.equals("enregistrer_util")) {
-      String nom = request.getParameter("nom");
-      String mdp = request.getParameter("mdp");
-      String INE = request.getParameter("ine");
-      String mdp_admin = request.getParameter("mdp_admin");
-      String email = request.getParameter("email");
-      String telephone = request.getParameter("telephone");
-      String classe = request.getParameter("classe");
-      String siren = request.getParameter("siren");
-      String msg = facade.Enregistrer(nom, mdp, INE, mdp_admin, email, telephone, classe, siren);
+      String nom = body.get("nom").getAsString();
+      String prenom = body.get("prenom").getAsString();
+      String nomComplet = nom + " " + prenom;
+      String mdp = body.get("mdp").getAsString();
+      String email = body.get("email").getAsString();
+      String siren = body.get("siren").getAsString();
+      String msg = facade.Enregistrer(nomComplet, mdp, email, siren);
       String json = gson.toJson(msg);
       response.getWriter().write(json);
       fct_sans_token = true;
     }
     // Mail et Mdp -> Tokken si ok ou Error sinon
     if (op.equals("seconnecter")) {
-      String email = request.getParameter("email");
-      String mdp = request.getParameter("mdp");
+      String email = body.get("email").getAsString();
+      String mdp = body.get("mdp").getAsString();
       String msg = facade.seConnecter(email, mdp);
       String json = gson.toJson(msg);
       response.getWriter().write(json);
@@ -257,46 +282,53 @@ public class Serv extends HttpServlet {
     if (facade.verifierToken(token)) {
       // Information_etablissement -> Si l'enregistemenent a était fait
       if (op.equals("ajouter_etab")) {
-        String adresse = request.getParameter("adresse");
-        int SIREN = Integer.parseInt(request.getParameter("SIREN"));
-        String nom = request.getParameter("nom");
-        String entrepriseParam = request.getParameter("entreprise");
-        boolean estEntreprise = Boolean.parseBoolean(entrepriseParam);
-        String image = request.getParameter("image");
-        String msg = facade.ajouterEtablissement(adresse, SIREN, nom, estEntreprise, image);
+        String adresse = body.get("adresse").getAsString();
+        int SIREN = Integer.parseInt(body.get("SIREN").getAsString());
+        String nom = body.get("nom").getAsString();
+        String description = body.get("description").getAsString();
+        boolean estEntreprise = Boolean.parseBoolean(body.get("entreprise").getAsString());
+        String image = body.get("image").getAsString();
+        String msg = facade.ajouterEtablissement(adresse, SIREN, nom, description, estEntreprise, image);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
 
-      // NULL -> Success si validé ou Error sinon
+      // Id -> Success si validé ou Error sinon
       if (op.equals("validerdemande")) {
-        int id = Integer.parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(body.get("id").getAsString());
         String msg = facade.accepterDemande(id);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
-      // NULL -> Success si refusé ou Error sinon
+      // Id -> Success si refusé ou Error sinon
       if (op.equals("refuserdemande")) {
-        int id = Integer.parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(body.get("id").getAsString());
         String msg = facade.refuserDemande(id);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
       // Mettre présent
       if (op.equals("presentdemande")) {
-        int id = Integer.parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(body.get("id").getAsString());
         String msg = facade.presentDemande(id);
+        String json = gson.toJson(msg);
+        response.getWriter().write(json);
+      }
+      // Mettre absent
+      if (op.equals("absentdemande")) {
+        int id = Integer.parseInt(body.get("id").getAsString());
+        String msg = facade.absentDemande(id);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
       // token -> Création d'un évenement
       if (op.equals("créerEvent")) {
-        String titre = request.getParameter("titre");
-        String description = request.getParameter("description");
-        String creneau = request.getParameter("creneau");
-        String duree = request.getParameter("duree");
-        String id_etablissement_event = request.getParameter("id_etablissement_event");
-        String id_domain_event = request.getParameter("id_domain_event");
+        String titre = body.get("titre").getAsString();
+        String description = body.get("description").getAsString();
+        String creneau = body.get("creneau").getAsString();
+        String duree = body.get("duree").getAsString();
+        String id_etablissement_event = body.get("id_etablissement_event").getAsString();
+        String id_domain_event = body.get("id_domain_event").getAsString();
         String msg = facade.ajouterEvenement(titre, description, duree, creneau, id_etablissement_event,
             id_domain_event);
         String json = gson.toJson(msg);
@@ -304,32 +336,34 @@ public class Serv extends HttpServlet {
       }
       // Modification champs evenement
       if (op.equals("modifier_event")) {
-        int id = Integer.parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(body.get("id").getAsString());
         // Le type du champs de l'entité à modfier
-        String type_champs = request.getParameter("type_champs");
+        String type_champs = body.get("type_champs").getAsString();
         // Le champs de l'entité à modfier
-        String champs = request.getParameter("champs");
+        String champs = body.get("champs").getAsString();
 
         String msg = facade.modifer_event_attribut(id, type_champs, champs);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
-      // Modification d'un evenement
+      // Modification d'un etab
       if (op.equals("modifier_etablissement")) {
-        int id = Integer.parseInt(request.getParameter("id"));
-        String type_champs = request.getParameter("type_champs");
-        // Si le champs et une établissement on indiquera son id (SIREN)
-        String champs = request.getParameter("champs");
+        String adresse = body.get("adresse").getAsString();
+        int SIREN = Integer.parseInt(body.get("SIREN").getAsString());
+        String nom = body.get("nom").getAsString();
+        String description = body.get("description").getAsString();
+        boolean estEntreprise = Boolean.parseBoolean(body.get("entreprise").getAsString());
+        String image = body.get("image").getAsString();
 
-        String msg = facade.modifier_etablissement_attribut(id, type_champs, champs);
+        String msg = facade.modifier_etablissement_attribut(adresse, SIREN, nom, description, estEntreprise, image);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
       // Création d'une demande
       if (op.equals("creer_demande")) {
-        String motivation = request.getParameter("motivation");
-        int id_etudiant = Integer.parseInt(request.getParameter("id_etudiant"));
-        int id_evenement = Integer.parseInt(request.getParameter("id_evenement"));
+        String motivation = body.get("motivation").getAsString();
+        int id_etudiant = Integer.parseInt(body.get("id_etudiant").getAsString());
+        int id_evenement = Integer.parseInt(body.get("id_evenement").getAsString());
 
         String msg = facade.creer_demande(motivation, id_etudiant, id_evenement);
         String json = gson.toJson(msg);
@@ -341,6 +375,7 @@ public class Serv extends HttpServlet {
         response.getWriter().write(json);
       }
     }
+    setCorsHeaders(response);
   }
 
 }
