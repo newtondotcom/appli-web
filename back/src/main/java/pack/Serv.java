@@ -238,6 +238,12 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(dem);
         response.getWriter().write(json);
       }
+      // util id, event id -> demande
+      if (op.equals("get_uid_from_token")) {
+        int id = facade.get_uid_from_token(token);
+        String json = gson.toJson(id);
+        response.getWriter().write(json);
+      }
     } else {
       if (!fct_sans_token) {
         String json = gson.toJson("Mauvais_Token");
@@ -336,13 +342,15 @@ public class Serv extends HttpServlet {
       }
       // Modification champs evenement
       if (op.equals("modifier_event")) {
-        int id = Integer.parseInt(body.get("id").getAsString());
-        // Le type du champs de l'entité à modfier
-        String type_champs = body.get("type_champs").getAsString();
-        // Le champs de l'entité à modfier
-        String champs = body.get("champs").getAsString();
-
-        String msg = facade.modifer_event_attribut(id, type_champs, champs);
+        String titre = body.get("titre").getAsString();
+        String description = body.get("description").getAsString();
+        String creneau = body.get("creneau").getAsString();
+        String duree = body.get("duree").getAsString();
+        String id_event = body.get("id_event").getAsString();
+        String id_etablissement_event = body.get("id_etablissement_event").getAsString();
+        String id_domain_event = body.get("id_domain_event").getAsString();
+        String msg = facade.modifer_event_attribut(titre, description, creneau,
+            duree, id_domain_event, id_event, id_etablissement_event);
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }

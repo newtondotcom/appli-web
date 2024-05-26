@@ -42,7 +42,9 @@ public class Facade {
     Utilisateur util = new Utilisateur("Fredo", mdpHacher, "f@test.com", new_etab1, "1");
     em.persist(util);
     Domain dom1 = new Domain("IA");
+    Domain dom2 = new Domain("tech");
     em.persist(dom1);
+    em.persist(dom2);
     Evenement event = new Evenement("cool", LocalDateTime.of(2024, Month.MAY, 15, 14, 30, 0), new_etab1, 60,
         "Super");
     em.persist(event);
@@ -210,8 +212,13 @@ public class Facade {
           em.find(Etablissement.class, Integer.parseInt(id_etablissement)), Integer.parseInt(duree),
           titre);
       em.persist(new_event);
-      Domain domain_event = em.find(Domain.class, Integer.parseInt(id_domain));
-      new_event.getDomains_event().add(domain_event);
+      String[] doms = id_domain.split(",");
+      // Convertir chaque nombre en entier et les parcourir
+      for (String numberAsString : doms) {
+        int id_dom = Integer.parseInt(numberAsString);
+        Domain domain_event = em.find(Domain.class, id_dom);
+        new_event.getDomains_event().add(domain_event);
+      }
       return "Success";
     } catch (IllegalArgumentException | PersistenceException | DateTimeParseException e) {
       return "Error";
@@ -228,32 +235,35 @@ public class Facade {
     return etab.getEvenements_etab();
   }
 
-  public String modifer_event_attribut(int id, String type_champs, String champs) {
+  public String modifer_event_attribut(String titre, String description, String creneau,
+      String duree, String id_domain_event, String id_event, String id_etablissement_event) {
     try {
-      Evenement event = em.find(Evenement.class, id);
-      switch (type_champs) {
-        case "titre":
-          event.setTitre(champs);
-          break;
-        case "description":
-          event.setDescription(champs);
-          break;
-        case "creneau":
-          event.setCreneau(StringToTime(champs));
-          break;
-        case "duree":
-          event.setDuree(Integer.parseInt(champs));
-          break;
-        case "etablissement":
-          Etablissement etab = em.find(Etablissement.class, Integer.parseInt(champs));
-          event.setEtablissement_event(etab);
-          break;
-        default:
-          return "Invalid field type";
+      Evenement event = em.find(Evenement.class, Integer.parseInt(id_event));
+      if (event != null) {
+        event.setTitre(titre);
+        event.setDescription(description);
+        event.setCreneau(StringToTime(creneau));
+        event.setDuree(Integer.parseInt(duree));
+        Etablissement etab = em.find(Etablissement.class,
+            Integer.parseInt(id_etablissement_event));
+        event.setEtablissement_event(etab);
+        String[] doms = id_domain_event.split(",");
+        // Convertir chaque nombre en entier et les parcourir
+        Collection<Domain> domains_event = new HashSet<>();
+        for (String dom : doms) {
+          int id_dom = Integer.parseInt(dom);
+          Domain domain_event = em.find(Domain.class, id_dom);
+          domains_event.add(domain_event);
+        }
+        event.setDomains_event(domains_event);
+        return "Modifier";
+      } else {
+        ajouterEvenement(titre, description, duree, creneau, id_etablissement_event, id_domain_event);
+        return "Créer";
       }
-      return "Success";
     } catch (IllegalArgumentException | PersistenceException e) {
-      return "Error";
+      ajouterEvenement(titre, description, duree, creneau, id_etablissement_event, id_domain_event);
+      return "Créer";
     }
 
   }
@@ -413,5 +423,14 @@ public class Facade {
   public Collection<Evenement> get_evenement_from_uid(int id_util) {
     Utilisateur util = em.find(Utilisateur.class, id_util);
     return util.getEvenements_util();
+  }
+
+  // Donne l'id de l'utilisateur avec le token
+  public int get_uid_from_token(String token) {
+    TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",
+        Utilisateur.class);
+    query.setParameter("token", token);
+    Utilisateur user = query.getSingleResult();
+    return user.getId();
   }
 }
