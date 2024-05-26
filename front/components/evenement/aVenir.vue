@@ -33,6 +33,7 @@ const postulants = await $fetch(
     credentials : "include",
   }
 );
+console.log(postulants);
 
 const postulants3 = await $fetch(
   `http://localhost:8080/PasserellePro/Serv?op=get_liste_postulants_from_eventid&id=${id}`,
