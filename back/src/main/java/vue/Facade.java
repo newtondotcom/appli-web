@@ -63,11 +63,13 @@ public class Facade {
   }
 
   public boolean verifierToken(String token) {
+    System.out.println("Vérification du token : " + token);
     try {
       TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",
           Utilisateur.class);
       query.setParameter("token", token);
       Utilisateur utilisateur = query.getSingleResult();
+      System.out.println("Token valide");
       return true;
     } catch (IllegalArgumentException | PersistenceException e) {
       return false;

@@ -71,6 +71,22 @@ async function saveEvent() {
     loading.value = false;
     return;
   }
+  const data4 = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=modifier_event`,
+    { 
+      method: 'POST',
+      credentials: 'include',
+      body : JSON.stringify({
+        id: id,
+        titre: eventName.value,
+        description: eventDescription.value,
+        duree: eventDuration.value,
+        creneau: eventDate.value.toDate(getLocalTimeZone()).setHours(eventHour.value, eventMinute.value),
+        nbEleves: nbEleves.value,
+        domaines: idChampsSelectionnes.value,
+      })
+    }
+  );
   if (id === -1) {
     await new Promise((resolve) => setTimeout(resolve, 2000));
   } else {

@@ -46,6 +46,7 @@ async function refuserDemande(id: number) {
 </script>
 
 <template>
+<div>
   <div
     class="flex space-y-4 justify-center align-middle content-center mx-auto mb-2"
   >
@@ -91,4 +92,5 @@ async function refuserDemande(id: number) {
   >
     <Badge variant="primary">Demande traitée</Badge>
   </div>
+</div>
 </template>
