@@ -2,19 +2,46 @@
 import { CircleUser } from "lucide-vue-next";
 import { computed } from "vue";
 
-const token = useCookie("token",
-{
-  httpOnly  : false,
-  SameSite : "lax",
+const token = useCookie("token", {
+  httpOnly: false,
+  SameSite: "lax",
 });
-const userAuth = computed(() => token.value);  
-
+const userAuth = computed(() => token.value);
+console.log("userAuth", userAuth.value);
+const isConnected = computed(() => userAuth.value !== undefined);
+console.log("isConnected", isConnected.value);
 function deconnexion() {
   token.value = null;
   console.log(token.value);
 }
+/* On récupère l'id de l'utilisateur */
+const isEntreprise = ref(false);
+const lienCompte = ref("");
+const lienEvenements = ref("");
+if (isConnected.value) {
+  const uid = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_uid_from_token`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  const isEntreprise = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_bool_type_util_from_uid&uid=${uid}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  if (isEntreprise == "true") {
+    lienCompte.value = "/etablissement/compte";
+    lienEvenements.value = "/etablissement/evenements";
+  } else {
+    lienCompte.value = `/etudiants/${uid}`;
+    lienEvenements.value = "/etudiants/mesEvenement";
+  }
+}
 </script>
-
 <template>
   <div>
     <Toaster />
@@ -28,7 +55,7 @@ function deconnexion() {
             </a>
           </div>
 
-          <div class="md:block">
+          <div class="md:block" v-if="isConnected && !isEntreprise">
             <nav aria-label="Global">
               <ul class="flex items-center gap-6 text-sm">
                 <li>
@@ -61,13 +88,15 @@ function deconnexion() {
               <DropdownMenuContent>
                 <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <a href="#">
+                <a :href="lienCompte">
                   <DropdownMenuItem>Paramètres</DropdownMenuItem>
                 </a>
-                <a href="#">
+                <a :href="lienEvenements">
                   <DropdownMenuItem>Mes évènements</DropdownMenuItem>
                 </a>
-                  <DropdownMenuItem @click="deconnexion">Se déconnecter</DropdownMenuItem>
+                <DropdownMenuItem @click="deconnexion"
+                  >Se déconnecter</DropdownMenuItem
+                >
               </DropdownMenuContent>
             </DropdownMenu>
 
