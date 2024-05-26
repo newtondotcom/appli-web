@@ -22,10 +22,18 @@ if (route.params.id) {
 }
 /* Récupere les infos de l'utilisateur */
 const infos = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_util_from_uid&id=${id}`
+  `http://localhost:8080/PasserellePro/Serv?op=get_util_from_uid&id=${id}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
 );
 const etab = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_uid&id=${id}`
+  `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_uid&id=${id}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
 );
 console.log(infos);
 nomEtudiant.value = infos.nom;

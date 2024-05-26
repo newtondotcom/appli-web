@@ -19,14 +19,13 @@ async function seConnecter() {
     );
     console.log(data);
     if (data != "Le mot de passe est incorrect.") {
-    const token = data;
-    const token_cookie = useCookie("token",
-    {
-      httpOnly  : false,
-      SameSite : "lax",
-    });
-    token_cookie.value = token;
-    navigateTo("/");
+      const token = data;
+      const token_cookie = useCookie("token", {
+        httpOnly: false,
+        SameSite: "lax",
+      });
+      token_cookie.value = token;
+      navigateTo("/");
     }
   } catch (error) {
     console.error(error);

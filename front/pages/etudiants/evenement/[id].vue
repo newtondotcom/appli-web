@@ -14,20 +14,38 @@ const route = useRoute();
 const id = route.params.id;
 const bool = route.query.bool === "true";
 
+const uid = 2;
+
 /* Récupération de l'Evenement */
 const data = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id&id=${id}`
+  `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id&id=${id}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
 );
 const evenement = data;
 
 const etab = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_eventid&id=${id}`
+  `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_eventid&id=${id}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
 );
 const domains = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${id}`
+  `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${id}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
 );
 const stats = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=lister_stat_event&id=${id}`
+  `http://localhost:8080/PasserellePro/Serv?op=lister_stat_event&id=${id}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
 );
 const doma = domains.map((d) => d.nom);
 const event = {
@@ -45,11 +63,19 @@ const demandeValide = ref(false);
 const demandeEnAttente = ref(true);
 const demandeRefuse = ref(false);
 const demandeEffectue = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_bool_demande_from_eventid_utilid&id_util=${id}&id_event=${event.id}`
+  `http://localhost:8080/PasserellePro/Serv?op=get_bool_demande_from_eventid_utilid&id_util=${id}&id_event=${event.id}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
 );
 if (demandeEffectue) {
   const demande = await $fetch(
-    `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_eventid_utilid&id_util=${id}&id_event=${event.id}`
+    `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_eventid_utilid&id_util=${id}&id_event=${event.id}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
   );
   demandeValide.value = demande.valide;
   demandeRefuse.value = demande.refuse;
@@ -62,16 +88,26 @@ if (demandeEffectue) {
 /* Création de la demande */
 
 async function sendDemand() {
-  const response = await $fetch("/api/PasserellePro/Serv?op=creer_demande", {
-    method: "POST",
-    credentials: "include",
-    body: {
-      id_util: id,
-      id_event: event.id,
-      motivation: lettreDeMotiv.value,
-    },
-  });
-  console.log(response);
+  try {
+    const data = await $fetch(
+      `http://localhost:8080/PasserellePro/Serv?op=creer_demande`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id_etudiant: uid,
+          id_evenement: id,
+          motivation: lettreDeMotiv.value,
+        }),
+      }
+    );
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
 
   /*
   loading.value = true;

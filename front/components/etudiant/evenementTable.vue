@@ -2,9 +2,20 @@
 import { Search, Tag } from "lucide-vue-next";
 import { ref, watch, onMounted, computed } from "vue";
 
+/* Récupérer le token */
+const token_cookie = useCookie("token", {
+  httpOnly: false,
+  SameSite: "lax",
+});
+console.log(token_cookie.value);
 /* Récupérer les Evenements */
+
 const data = await $fetch(
-  "http://localhost:8080/PasserellePro/Serv?op=lister_event"
+  `http://localhost:8080/PasserellePro/Serv?op=lister_event`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
 );
 const evenementsStart = data;
 
@@ -12,13 +23,25 @@ let events = [];
 
 for (let i = 0; i < evenementsStart.length; i++) {
   const etab = await $fetch(
-    `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_eventid&id=${evenementsStart[i].id}`
+    `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_eventid&id=${evenementsStart[i].id}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
   );
   const domains = await $fetch(
-    `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${evenementsStart[i].id}`
+    `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${evenementsStart[i].id}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
   );
   const stats = await $fetch(
-    `http://localhost:8080/PasserellePro/Serv?op=lister_stat_event&id=${evenementsStart[i].id}`
+    `http://localhost:8080/PasserellePro/Serv?op=lister_stat_event&id=${evenementsStart[i].id}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
   );
   const doma = domains.map((d) => d.nom);
   const event = {
@@ -36,7 +59,6 @@ for (let i = 0; i < evenementsStart.length; i++) {
 
 /* Gestion des filtres */
 const searchFilter = ref("");
-const domaineFilter = ref("");
 const entreprisesFilter = ref("");
 
 const filteredEvenements = computed(() => {

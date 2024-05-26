@@ -1,25 +1,42 @@
 <script setup lang="ts">
 const route = useRoute();
 
-const id = 1;
+const id = 2;
 
 /* Récupérer les evenement */
 const data = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_uid&id=${id}`
+  `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_uid&id=${id}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
 );
+console.log(data);
 const evenementsStart = data;
 
 let events = [];
 
 for (let i = 0; i < evenementsStart.length; i++) {
   const etab = await $fetch(
-    `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_eventid&id=${evenementsStart[i].id}`
+    `http://localhost:8080/PasserellePro/Serv?op=get_etab_from_eventid&id=${evenementsStart[i].id}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
   );
   const domains = await $fetch(
-    `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${evenementsStart[i].id}`
+    `http://localhost:8080/PasserellePro/Serv?op=get_domains_from_eventid&id=${evenementsStart[i].id}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
   );
   const stats = await $fetch(
-    `http://localhost:8080/PasserellePro/Serv?op=lister_stat_event&id=${evenementsStart[i].id}`
+    `http://localhost:8080/PasserellePro/Serv?op=lister_stat_event&id=${evenementsStart[i].id}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
   );
   const doma = domains.map((d) => d.nom);
   const event = {
