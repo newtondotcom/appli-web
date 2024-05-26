@@ -371,30 +371,24 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
-      // token -> Création d'un évenement
-      if (op.equals("créerEvent")) {
-        String titre = body.get("titre").getAsString();
-        String description = body.get("description").getAsString();
-        String creneau = body.get("creneau").getAsString();
-        String duree = body.get("duree").getAsString();
-        String id_etablissement_event = body.get("id_etablissement_event").getAsString();
-        String id_domain_event = body.get("id_domain_event").getAsString();
-        String msg = facade.ajouterEvenement(titre, description, duree, creneau, id_etablissement_event,
-            id_domain_event);
-        String json = gson.toJson(msg);
-        response.getWriter().write(json);
-      }
       // Modification champs evenement
       if (op.equals("modifier_event")) {
         String titre = body.get("titre").getAsString();
         String description = body.get("description").getAsString();
         String creneau = body.get("creneau").getAsString();
         String duree = body.get("duree").getAsString();
+        //String nbEleves = body.get("nbEleves").getAsString();
         String id_event = body.get("id_event").getAsString();
-        String id_etablissement_event = body.get("id_etablissement_event").getAsString();
         String id_domain_event = body.get("id_domain_event").getAsString();
-        String msg = facade.modifer_event_attribut(titre, description, creneau,
-            duree, id_domain_event, id_event, id_etablissement_event);
+        Etablissement etab = facade.get_etab_from_token(token);
+        int id_etab = etab.getSIREN();
+        String msg;
+        if (id_event.equals("0")) {
+          System.out.println("id_event = 0");
+            msg = facade.ajouterEvenement(titre, description, duree, creneau, String.valueOf(id_etab), id_domain_event);
+        } else {
+            msg = facade.modifer_event_attribut(titre, description, creneau, duree, id_domain_event, id_event, String.valueOf(id_etab));
+        }
         String json = gson.toJson(msg);
         response.getWriter().write(json);
       }
