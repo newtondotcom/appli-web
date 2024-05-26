@@ -492,4 +492,9 @@ public class Facade {
     return dem.getUtilisateur_dem();
   }
 
+  public boolean get_bool_type_util_from_uid(String uid) {
+    Utilisateur util = em.find(Utilisateur.class, Integer.parseInt(uid));
+    return util.getEtablissement_util().isEntreprise();
+  }
+
 }

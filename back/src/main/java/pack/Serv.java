@@ -281,6 +281,12 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(util);
         response.getWriter().write(json);
       }
+      if (op.equals("get_bool_type_util_from_uid")) {
+        String uid = request.getParameter("uid");
+        boolean is = facade.get_bool_type_util_from_uid(uid);
+        String json = gson.toJson(is);
+        response.getWriter().write(json);
+      }
 
     } else {
       if (!fct_sans_token) {
