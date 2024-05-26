@@ -20,7 +20,7 @@ async function seConnecter() {
     console.log(data);
     if (data != "Le mot de passe est incorrect.") {
     const token = data;
-    const token_cookie = useCookie("token", { path: "/" });
+    const token_cookie = useCookie("token");
     token_cookie.value = token;
     navigateTo("/");
     }
