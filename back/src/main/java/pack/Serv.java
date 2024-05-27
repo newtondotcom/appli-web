@@ -437,6 +437,15 @@ public class Serv extends HttpServlet {
         response.getWriter().write(json);
         fct_sans_token = true;
       }
+      // Modifier INE Utilisateur 
+      if (op.equals("modifier_ine_util")) {
+        String ine = body.get("ine").getAsString();
+        String id_util = body.get("id_util").getAsString();
+        String msg = facade.modifier_ine(ine, id_util);
+        String json = gson.toJson(msg);
+        response.getWriter().write(json);
+        fct_sans_token = true;
+      }
     } else {
       if (!fct_sans_token) {
         String json = gson.toJson("Mauvais_Token");

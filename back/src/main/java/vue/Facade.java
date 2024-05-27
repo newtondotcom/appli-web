@@ -319,6 +319,16 @@ public class Facade {
     }
   }
 
+  public String modifier_ine(String INE, String id_util) {
+    Utilisateur util = em.find(Utilisateur.class, Integer.parseInt(id_util));
+    if (util != null) {
+      util.setINE(INE);
+      return "Modifier";
+    } else {
+      return "Erreur";
+    }
+  }
+
   // Lister stat event
   // Renvoie
   // 0 : Nombre de demandes
