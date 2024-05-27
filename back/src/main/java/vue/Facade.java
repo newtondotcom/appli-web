@@ -69,9 +69,9 @@ public class Facade {
     Demande dem = new Demande("oui", util, event);
     em.persist(dem);
     util.getEvenements_util().add(event);
-    String name = new BigInteger(32 * 5, random).toString(32);
-    Document doc = new Document(util, name);
-    em.persist(doc);
+    //String name = new BigInteger(32 * 5, random).toString(32);
+    //Document doc = new Document(util, name);
+    //em.persist(doc);
   }
 
   public LocalDateTime StringToTime(String date) {
