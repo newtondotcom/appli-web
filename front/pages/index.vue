@@ -4,23 +4,44 @@ import { MoveRight } from "lucide-vue-next";
 const companies = ref([]);
 const domains = ref([]);
 
-const defaultValue = "item-1";
 const accordionItems = [
   {
     value: "item-1",
-    title: "Is it accessible?",
-    content: "Yes. It adheres to the WAI-ARIA design pattern.",
+    title: "Qu'est-ce que PasserellePro ?",
+    content:
+      "PasserellePro est une plateforme qui met en relation des élèves et des établissements (écoles et entreprises) pour des immersions de courte durée, facilitant ainsi la découverte de nouvelles carrières et spécialisations.",
   },
   {
     value: "item-2",
-    title: "Is it unstyled?",
+    title: "Comment fonctionne PasserellePro ?",
     content:
-      "Yes. It's unstyled by default, giving you freedom over the look and feel.",
+      "Les élèves peuvent rechercher et postuler à des opportunités d'immersion proposées par divers établissements. Les établissements peuvent accepter et refuser les élèves pour des immersions spécifiques, facilitant ainsi une connexion bénéfique pour les deux parties.",
   },
   {
     value: "item-3",
-    title: "Can it be animated?",
-    content: "Yes! You can use the transition prop to configure the animation.",
+    title:
+      "Quels types d'établissements peuvent s'inscrire sur PasserellePro ?",
+    content:
+      "PasserellePro est ouvert aux écoles, universités, entreprises et tout autre type d'établissement offrant des opportunités d'immersion pour les élèves.",
+  },
+  {
+    value: "item-4",
+    title: "Quels sont les avantages pour les élèves utilisant PasserellePro ?",
+    content:
+      "Les élèves peuvent découvrir différentes carrières et spécialisations, acquérir une expérience précieuse dans un environnement réel et établir des contacts professionnels qui pourraient être bénéfiques pour leur future carrière.",
+  },
+  {
+    value: "item-5",
+    title:
+      "Quels sont les avantages pour les établissements utilisant PasserellePro ?",
+    content:
+      "Les établissements peuvent attirer des talents prometteurs, contribuer à l'éducation et au développement professionnel des élèves, et éventuellement découvrir de futurs employés potentiels.",
+  },
+  {
+    value: "item-6",
+    title: "Comment postuler à une opportunité d'immersion ?",
+    content:
+      "Une fois connecté à votre compte, vous pouvez parcourir les opportunités disponibles, cliquer sur celles qui vous intéressent et suivre les instructions pour postuler.",
   },
 ];
 
@@ -111,7 +132,6 @@ function type() {
       type="single"
       class="w-[60vw] border-2 rounded-lg border-dotted px-8 py-4"
       collapsible
-      :default-value="defaultValue"
     >
       <AccordionItem
         v-for="item in accordionItems"
