@@ -39,12 +39,9 @@ const etab = await $fetch(
 console.log("infos : ", infos);
 console.log(infos.nom);
 let nomPrenom = infos.nom.split("#");
-console.log("nomPrenom : ", nomPrenom.length);
-if (nomPrenom.length === 1) {
-  const nP = nomPrenom.split(" ");
-}
-nomEtudiant.value = nP[0];
-prenomEtudiant.value = nP[1];
+
+nomEtudiant.value = nomPrenom[0];
+prenomEtudiant.value = nomPrenom[1];
 ineEtudiant.value = infos.INE;
 emailEtudiant.value = infos.email;
 telephoneEtudiant.value = infos.telephone;
@@ -153,7 +150,23 @@ async function saveChanges() {
           }),
         }
       );
+      const data2 = await $fetch(
+        `http://localhost:8080/PasserellePro/Serv?op=modifier_ine_util`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ine: ineEtudiant.value,
+            id_util: id,
+          }),
+        }
+      );
       console.log(data);
+      console.log(data2);
+      await Modifyprofil();
     } catch (error) {
       console.error(error);
     }
