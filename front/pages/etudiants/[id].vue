@@ -185,6 +185,54 @@ const handleClasse = (classe: string) => {
 const handleEcole = (ecole: string) => {
   etablissementEtudiant.value = ecole;
 };
+
+const handleFileChange = async (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    const file = target.files?.[0];
+    if (!file) {
+        return;
+    }
+    try {
+        const url = await $fetch(
+          `http://localhost:8080/PasserellePro/Serv?op=ajouter_doc`,
+          {
+            method: "POST",
+            credentials: "include",
+          }
+        );
+        await uploadFile(url, file);
+        toast({
+          title: "C'est tout bon !",
+          description: "Votre photo de profil a bien été enregistrée",
+        });
+    } catch (error) {
+        console.error('Error uploading file:', error);
+    }
+};
+
+async function uploadFile(presignedUrl: string, file: File) {
+    try {
+        const response = await fetch(presignedUrl, {
+            method: 'PUT',
+            body: file,
+            headers: {
+                'Content-Type': file.type,
+            },
+        });
+
+        if (response.ok) {
+            toast({
+                title: 'File upload succeeded',
+                description: 'Your video has been uploaded successfully.'
+            });
+        } else {
+            console.error('File upload failed', response);
+        }
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        throw error;
+    }
+}
 </script>
 
 <template>
