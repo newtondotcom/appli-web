@@ -19,7 +19,7 @@ FROM jboss/wildfly:latest
 ENV WILDFLY_HOME /opt/jboss/wildfly
 
 # Copy the WAR file from the builder stage
-COPY --from=builder /app/target/*.war $WILDFLY_HOME/standalone/deployments/
+COPY --from=builder /app/target/ $WILDFLY_HOME/standalone/deployments/
 
 # Expose the default WildFly port
 EXPOSE 8080
