@@ -111,24 +111,20 @@ async function sendDemand() {
         }),
       }
     );
-    console.log(data);
-    navigateTo("/etudiants/evenements");
+    location.reload();
   } catch (error) {
     console.error(error);
   }
-
-  /*
-  loading.value = true;
-  if (lettreDeMotiv.value === "") {
-    requeteFausse.value = true;
-    loading.value = false;
-    return;
-  }
-  requeteFausse.value = false;
-  loading.value = false;
-  demandeEnvoyee.value = true;
-  */
 }
+/* Gestion des avis */
+const avis = await $fetch(
+  `http://localhost:8080/PasserellePro/Serv?op=get_avis_from_eventid&id=${eid}`,
+  {
+    method: "GET",
+    credentials: "include",
+  }
+);
+const av = avis[0];
 
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -143,34 +139,57 @@ const handleFileChange = (event: Event) => {
 </script>
 
 <template>
-  <div class="flex flex-wrap justify-center gap-10">
-    <EtudiantEvenementCarte :key="event.id" :evenement="event" />
-    <div class="grid w-full max-w-sm items-center gap-14 content-center">
-      <div>
-        <Label for="lettreDeMotiv" class="place-self-center"
-          >Lettre de Motivation</Label
-        >
-        <Input
-          id="lettreDeMotiv"
-          type="text"
-          placeholder="Cette visite m'intéresse car …"
-          class="h-48"
-          v-model="lettreDeMotiv"
+  <div>
+    <div class="flex flex-wrap justify-center gap-10">
+      <EtudiantEvenementCarte :key="event.id" :evenement="event" />
+      <div class="grid w-full max-w-sm items-center gap-14 content-center">
+        <div>
+          <Label for="lettreDeMotiv" class="place-self-center"
+            >Lettre de Motivation</Label
+          >
+          <Input
+            id="lettreDeMotiv"
+            type="text"
+            placeholder="Cette visite m'intéresse car …"
+            class="h-48"
+            v-model="lettreDeMotiv"
+            :disabled="demandeEffectue"
+          />
+        </div>
+        <Button
+          @click="sendDemand"
+          variant="secondary"
+          class="w-[20%] place-self-center"
           :disabled="demandeEffectue"
-        />
+        >
+          Postuler
+        </Button>
       </div>
-      <Button
-        @click="sendDemand"
-        variant="secondary"
-        class="w-[20%] place-self-center"
-        :disabled="demandeEffectue"
-      >
-        Postuler
-      </Button>
+      <Alert v-if="requeteFausse" variant="destructive" class="w-[70%]">
+        <AlertTitle>Erreur</AlertTitle>
+        <AlertDescription>
+          Vous devez remplir tous les champs
+        </AlertDescription>
+      </Alert>
     </div>
-    <Alert v-if="requeteFausse" variant="destructive" class="w-[70%]">
-      <AlertTitle>Erreur</AlertTitle>
-      <AlertDescription> Vous devez remplir tous les champs </AlertDescription>
-    </Alert>
+    <Separator class="my-4" />
+    <div class="flex justify-center">
+      <Titre title="Avis sur l'évènement" subtitle="" />
+    </div>
+    <ScrollArea class="h-96 w-100 rounded-md border">
+      <div class="mt-20 flex flex-wrap justify-center">
+        <div v-for="a in avis" :key="a.id" class="w-[40%] mx-4">
+          <EtudiantAvisCard :avis="a" />
+        </div>
+      </div>
+    </ScrollArea>
+    <div class="mt-20">
+      <div class="flex justify-center">
+        <Titre title="Partager votre avis" subtitle="" />
+      </div>
+      <div class="flex justify-center">
+        <EtudiantCreerAvis :id_util="uid" :id_event="eid" />
+      </div>
+    </div>
   </div>
 </template>
