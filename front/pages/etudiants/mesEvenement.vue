@@ -13,14 +13,26 @@ const uid = await $fetch(
 
 /* Récupérer les evenement */
 const data = await $fetch(
-  `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_uid&id=${uid}`,
+  `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_uid&id=${uid}`,
   {
     method: "GET",
     credentials: "include",
   }
 );
 console.log(data);
-const evenementsStart = data;
+const demandes = data;
+let evenementsStart = [];
+
+for (let j = 0; j < demandes.length; j++) {
+  const evenement = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id_demande&id=${demandes[j].id}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  evenementsStart.push(evenement);
+}
 
 let events = [];
 
