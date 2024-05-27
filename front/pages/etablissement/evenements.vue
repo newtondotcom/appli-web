@@ -53,6 +53,15 @@ for (let i = 0; i < evenemnents.length; i++) {
 
 <template>
 <div>
+    <div
+      class="flex space-y-4 justify-center align-middle content-center mx-auto my-4"
+    >
+      <a
+        href="/etablissement/evenement/modifier"
+      >
+        <Button>Créer un évènement</Button>
+      </a>
+    </div>
   <Titre
     title="Evènements"
     subtitle="Voici les évènements proposés par votre établissement"
