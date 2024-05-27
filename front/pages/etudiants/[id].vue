@@ -6,6 +6,7 @@ import { useRoute } from "vue-router";
 const { toast } = useToast();
 
 const nomEtudiant = ref("");
+const prenomEtudiant = ref("");
 const ineEtudiant = ref("");
 const emailEtudiant = ref("");
 const telephoneEtudiant = ref("");
@@ -35,8 +36,15 @@ const etab = await $fetch(
     credentials: "include",
   }
 );
-console.log(infos);
-nomEtudiant.value = infos.nom;
+console.log("infos : ", infos);
+console.log(infos.nom);
+let nomPrenom = infos.nom.split("#");
+console.log("nomPrenom : ", nomPrenom.length);
+if (nomPrenom.length === 1) {
+  const nP = nomPrenom.split(" ");
+}
+nomEtudiant.value = nP[0];
+prenomEtudiant.value = nP[1];
 ineEtudiant.value = infos.INE;
 emailEtudiant.value = infos.email;
 telephoneEtudiant.value = infos.telephone;
@@ -48,6 +56,7 @@ async function Modifyprofil() {
 }
 /* Réfrence pour les valeurs de validation */
 const isNomValid = ref(true);
+const isPrenomValid = ref(true);
 const isINEValid = ref(false);
 const isEmailValid = ref(true);
 const isTelephoneValid = ref(false);
@@ -67,6 +76,14 @@ const validateNom = () => {
     isNomValid.value = false;
   } else {
     isNomValid.value = true;
+  }
+};
+const validatePrenom = () => {
+  if (!nomRegex.test(prenomEtudiant.value)) {
+    errorText.value += "Prénom, ";
+    isPrenomValid.value = false;
+  } else {
+    isPrenomValid.value = true;
   }
 };
 const validateINE = () => {
@@ -108,20 +125,15 @@ async function saveChanges() {
   validateEmail();
   validateTelephone();
   validateClass();
+  validatePrenom;
   if (
-    !isNomValid.value ||
-    !isINEValid.value ||
-    !isEmailValid.value ||
-    !isTelephoneValid.value ||
-    !isClassValid.value
+    isNomValid.value &&
+    isINEValid.value &&
+    isEmailValid.value &&
+    isTelephoneValid.value &&
+    isClassValid.value &&
+    isPrenomValid.value
   ) {
-    toast({
-      title: "Erreur",
-      description: "Veuillez vérifier les champs suivants: " + errorText.value,
-    });
-
-    return;
-  } else {
     try {
       const data = await $fetch(
         `http://localhost:8080/PasserellePro/Serv?op=modifier_util`,
@@ -133,6 +145,7 @@ async function saveChanges() {
           },
           body: JSON.stringify({
             nom: nomEtudiant.value,
+            prenom: prenomEtudiant.value,
             email: emailEtudiant.value,
             telephone: telephoneEtudiant.value,
             classe: classeEtudiant.value,
@@ -140,13 +153,14 @@ async function saveChanges() {
           }),
         }
       );
-      navigateTo(`/etudiant/${id}`);
+      console.log(data);
     } catch (error) {
       console.error(error);
     }
+  } else {
     toast({
-      title: "Valider",
-      description: "Vos informations ont bien été enregistrées",
+      title: "Erreur",
+      description: "Veuillez vérifier les champs suivants: " + errorText.value,
     });
   }
   errorText.value = "";
@@ -183,6 +197,15 @@ const handleEcole = (ecole: string) => {
           id="nomEtudiant"
           type="text"
           v-model="nomEtudiant"
+          :disabled="!isModifying"
+        />
+      </div>
+      <div class="grid gap-3">
+        <Label for="prenomEtudiant">Prénom</Label>
+        <Input
+          id="prenomEtudiant"
+          type="text"
+          v-model="prenomEtudiant"
           :disabled="!isModifying"
         />
       </div>

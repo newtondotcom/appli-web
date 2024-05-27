@@ -427,7 +427,7 @@ public class Serv extends HttpServlet {
       if (op.equals("modifier_util")) {
         String nom = body.get("nom").getAsString();
         String prenom = body.get("prenom").getAsString();
-        String nomComplet = nom + " " + prenom;
+        String nomComplet = nom + "#" + prenom;
         String email = body.get("email").getAsString();
         String telephone = body.get("telephone").getAsString();
         String classe = body.get("classe").getAsString();
