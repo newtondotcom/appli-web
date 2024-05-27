@@ -13,6 +13,7 @@ console.log("isConnected", isConnected.value);
 function deconnexion() {
   token.value = null;
   console.log(token.value);
+  navigateTo("/");
 }
 /* On récupère l'id de l'utilisateur */
 const isEntreprise = ref(false);
