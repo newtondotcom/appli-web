@@ -95,6 +95,7 @@ if (demandeEffectue) {
 
 async function sendDemand() {
   try {
+    console.log("sendDemand");
     const data = await $fetch(
       `http://localhost:8080/PasserellePro/Serv?op=creer_demande`,
       {
@@ -110,7 +111,8 @@ async function sendDemand() {
         }),
       }
     );
-    navigateTo(`/etudiant/evenements/${eid}`);
+    console.log(data);
+    navigateTo("/etudiants/evenements");
   } catch (error) {
     console.error(error);
   }
@@ -163,10 +165,6 @@ const handleFileChange = (event: Event) => {
         class="w-[20%] place-self-center"
         :disabled="demandeEffectue"
       >
-        <div v-if="loading">
-          <Loader2 class="w-4 h-4 mr-2 animate-spin" />
-          Please wait
-        </div>
         Postuler
       </Button>
     </div>
