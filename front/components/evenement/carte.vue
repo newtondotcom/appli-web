@@ -35,7 +35,7 @@ import { Calendar, Star } from "lucide-vue-next";
             <div class="flex justify-between">
               <div>
                 <Badge class="mr-2">{{ evenement.nom_etablissement }} </Badge>
-                <Badge variant="secondary"
+                <Badge variant="secondary" v-if="evenement.note_etablissement != -1"
                   >{{ evenement.note_etablissement }} / 5
                   <Star class="ml-1" :size="14" />
                 </Badge>

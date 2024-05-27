@@ -345,7 +345,11 @@ public class Facade {
     for (Avis av : avis) {
       somme_note += av.getNote();
     }
-    float moyenne = somme_note / avis.size();
+    float moyenne;
+    if (avis.size() != 0){
+      moyenne = somme_note / avis.size();
+    }
+    moyenne = -1;
     stats[1] = accepter;
     stats[2] = present;
     stats[3] = moyenne;
