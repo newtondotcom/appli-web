@@ -18,16 +18,16 @@ public class Document {
     @ManyToOne
     private Utilisateur utilisateur_doc;
 
-    @ManyToOne
-    private Demande demande_doc;
+    @Expose
+    private String name;
 
     public Document() {
-        // Constructeur par défaut
+        // Default constructor
     }
 
-    public Document(Utilisateur utilisateur_doc, Demande demande_doc) {
-        this.utilisateur_doc = utilisateur_doc;
-        this.demande_doc = demande_doc;
+    public Document(Utilisateur utilisateurDoc, String name) {
+        this.utilisateur_doc = utilisateurDoc;
+        this.name = name;
     }
 
     public int getId() {
@@ -38,19 +38,19 @@ public class Document {
         this.id = id;
     }
 
-    public Utilisateur getUtilisateur_doc() {
-        return utilisateur_doc;
+    public Utilisateur getUtilisateurDoc() {
+        return this.utilisateur_doc;
     }
 
-    public void setUtilisateur_doc(Utilisateur utilisateur_doc) {
-        this.utilisateur_doc = utilisateur_doc;
+    public void setUtilisateurDoc(Utilisateur utilisateurDoc) {
+        this.utilisateur_doc = utilisateurDoc;
     }
 
-    public Demande getDemande_doc() {
-        return demande_doc;
+    public String getName() {
+        return name;
     }
 
-    public void setDemande_doc(Demande demande_doc) {
-        this.demande_doc = demande_doc;
+    public void setName(String name) {
+        this.name = name;
     }
 }

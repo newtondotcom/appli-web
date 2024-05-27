@@ -1,22 +1,18 @@
 package modele;
 
-import java.util.Collection;
-
 import com.google.gson.annotations.Expose;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 
 @Entity
 public class Demande {
-    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Expose
     private int id;
 
     @Expose
@@ -32,27 +28,22 @@ public class Demande {
     private String motivation;
 
     @ManyToOne
-    Utilisateur utilisateur_dem;
+    private Utilisateur utilisateur_dem;
 
     @ManyToOne
-    Evenement evenement_dem;
-
-    // Les documents attaché à la demande
-    @OneToMany(mappedBy = "demande_doc", fetch = FetchType.EAGER)
-    private Collection<Document> documents_dem;
+    private Evenement evenement_dem;
 
     public Demande() {
         // Constructeur par défaut
     }
 
-    public Demande(String motivation, Utilisateur utilisateur_dem, Evenement evenement_dem) {
+    public Demande(String motivation, Utilisateur utilisateurDem, Evenement evenementDem) {
         this.valide = false;
         this.refuse = false;
         this.present = false;
         this.motivation = motivation;
-        this.utilisateur_dem = utilisateur_dem;
-        this.evenement_dem = evenement_dem;
-        this.documents_dem = null;
+        this.utilisateur_dem = utilisateurDem;
+        this.evenement_dem = evenementDem;
     }
 
     public int getId() {
@@ -88,26 +79,18 @@ public class Demande {
     }
 
     public Utilisateur getUtilisateur_dem() {
-        return utilisateur_dem;
+        return this.utilisateur_dem;
     }
 
-    public void setUtilisateur_dem(Utilisateur utilisateur_dem) {
-        this.utilisateur_dem = utilisateur_dem;
+    public void setUtilisateurDem(Utilisateur utilisateurDem) {
+        this.utilisateur_dem = utilisateurDem;
     }
 
     public Evenement getEvenement_dem() {
-        return evenement_dem;
+        return this.evenement_dem;
     }
 
-    public void setEvenement_dem(Evenement evenement_dem) {
-        this.evenement_dem = evenement_dem;
-    }
-
-    public Collection<Document> getDocuments_dem() {
-        return documents_dem;
-    }
-
-    public void setDocuments_dem(Collection<Document> documents_dem) {
-        this.documents_dem = documents_dem;
+    public void setEvenementDem(Evenement evenementDem) {
+        this.evenement_dem = evenementDem;
     }
 }

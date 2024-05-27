@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
+
 const id = useRoute().params.id;
 
 const data = await $fetch(`http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id_demande&id=${id}`,
@@ -65,6 +67,41 @@ async function refuserDemande() {
   demandeRepondue.value = true;
   console.log(data);
 }
+
+const url_piece_id = ref("");
+
+async function voirCarteIdentite() {
+  console.log(id);
+  const data = await $fetch(
+    "http://localhost:8080/PasserellePro/Serv?op=read_document_demande",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        id_dem: id,
+      }),
+      credentials : "include",
+    }
+  );
+  url_piece_id.value = data;
+}
+
+function checkId() {
+  console.log(url_piece_id.value);
+  navigateTo(url_piece_id.value, {  
+  open: {
+    target: '_blank',
+    windowFeatures: {
+      width: 500,
+      height: 500
+    }
+  }
+}
+);
+}
+
+onMounted(() => {
+  voirCarteIdentite();
+});
 </script>
 
 <template>
@@ -103,6 +140,27 @@ async function refuserDemande() {
   >
     <Textarea class="w-[60vw] h-[20vh]" :placeholder="motivation" disabled />
   </div>
+
+  <Dialog>
+    <DialogTrigger as-child>
+  <div
+    class="flex flex-row space-x-4 justify-center align-middle content-center mx-auto mt-8"
+  >
+    <Button>Voir la carte d'identité</Button>
+  </div>
+    </DialogTrigger>
+    <DialogContent class="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>Pièce d'identité</DialogTitle>
+        <DialogDescription>
+          Veuillez vérifier la pièce d'identité de l'étudiant
+        </DialogDescription>
+      </DialogHeader>
+      <div class="grid gap-4 py-4">
+        <img :src="url_piece_id" alt="Carte d'identité" />
+      </div>
+    </DialogContent>
+  </Dialog>
   <div
     v-if="!demandeRepondue"
     class="flex flex-row space-x-4 justify-center align-middle content-center mx-auto mt-8"

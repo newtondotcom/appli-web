@@ -296,7 +296,6 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(is);
         response.getWriter().write(json);
       }
-
     } else {
       if (!fct_sans_token) {
         String json = gson.toJson("Mauvais_Token");
@@ -455,6 +454,19 @@ public class Serv extends HttpServlet {
         int id_event = Integer.parseInt(body.get("id_event").getAsString());
         String msg = facade.creer_avis(titre, note, contenu, id_util, id_event);
         String json = gson.toJson(msg);
+      // Ajouter un document
+      if (op.equals("ajouter_doc")) {
+        String lien = facade.register_document(token);
+        String json = gson.toJson(lien);
+        response.getWriter().write(json);
+      }
+      // Récupérer l'url du document
+      if (op.equals("read_document_demande")) {
+        String id_dem = body.get("id_dem").getAsString();
+        int id_dem_int = Integer.parseInt(id_dem);
+        String lien = facade.read_document_demande(id_dem_int);
+        String json = gson.toJson(lien);
+
         response.getWriter().write(json);
       }
     } else {
