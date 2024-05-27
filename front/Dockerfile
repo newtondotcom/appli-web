@@ -1,5 +1,5 @@
 # Use the official Node.js image as the base image
-FROM node:16-alpine
+FROM node:20-alpine
 
 # Install pnpm
 RUN npm install -g pnpm
@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN pnpm install
+RUN pnpm i
 
 # Copy the rest of the application code
 COPY . .
@@ -23,4 +23,4 @@ RUN pnpm run build
 EXPOSE 3000
 
 # Start the Nitro server
-CMD ["pnpm", "start"]
+CMD ["node",".output/server/index.mjs"]
