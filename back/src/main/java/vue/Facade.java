@@ -42,7 +42,7 @@ public class Facade {
 
   private SecureRandom random = new SecureRandom();
 
-  private MinioClient minioClient = MinioClient.builder().endpoint("localhost", 9000, true).credentials("minioadmin", "minioadmin123").build();
+  private MinioClient minioClient = MinioClient.builder().endpoint("localhost", 9000, false).credentials("minioadmin", "minioadmin123").build();
 
   public void initialisation() {
     // Utilisateur 1 Entreprise
@@ -570,7 +570,7 @@ public class Facade {
            .expiry(1, TimeUnit.DAYS)
            .build());
     } catch (Exception e) {
-      path = "Error";
+      path = e.toString();
     }
     return path;
   }
@@ -593,7 +593,7 @@ public class Facade {
             .expiry(1, TimeUnit.DAYS)
             .build());
     } catch (Exception e) {
-      url_access = "Error";
+      url_access = e.toString();
     }
     return url_access;
   }
