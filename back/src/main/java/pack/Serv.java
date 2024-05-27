@@ -148,6 +148,15 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(event);
         response.getWriter().write(json);
       }
+
+      //id demande -> Evenement
+      if (op.equals("get_evenement_from_id_demande")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Evenement event = facade.get_evenement_from_id_demande(id);
+        String json = gson.toJson(event);
+        response.getWriter().write(json);
+      }
+
       // Utilisateur id -> Attribut
       if (op.equals("get_util_from_uid")) {
         int id = Integer.parseInt(request.getParameter("id"));

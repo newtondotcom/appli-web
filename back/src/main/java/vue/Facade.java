@@ -362,6 +362,11 @@ public class Facade {
     return em.find(Evenement.class, id);
   }
 
+  public Evenement get_evenement_from_id_demande(int id){
+    Demande dem = em.find(Demande.class,id);
+    return dem.getEvenement_dem();
+  }
+
   public String creer_demande(String motivation, int id_etudiant, int id_evenement) {
     try {
       Utilisateur util = em.find(Utilisateur.class, id_etudiant);
