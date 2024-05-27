@@ -454,6 +454,7 @@ public class Serv extends HttpServlet {
         int id_event = Integer.parseInt(body.get("id_event").getAsString());
         String msg = facade.creer_avis(titre, note, contenu, id_util, id_event);
         String json = gson.toJson(msg);
+      }
       // Ajouter un document
       if (op.equals("ajouter_doc")) {
         String lien = facade.register_document(token);
@@ -477,5 +478,4 @@ public class Serv extends HttpServlet {
     }
     setCorsHeaders(response);
   }
-
 }
