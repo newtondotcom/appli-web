@@ -389,6 +389,18 @@ public class Facade {
     }
   }
 
+  public String creer_avis(String titre, int note, String commentaire, int id_util, int id_event) {
+    try {
+      Utilisateur util = em.find(Utilisateur.class, id_util);
+      Evenement event = em.find(Evenement.class, id_event);
+      Avis avis = new Avis(titre, note, commentaire, util, event);
+      em.persist(avis);
+      return "Success";
+    } catch (IllegalArgumentException | PersistenceException e) {
+      return "Error";
+    }
+  }
+
   // Donne l'établissement d'un évenement
   public Etablissement get_etab_from_eventid(int id_event) {
     Evenement event = em.find(Evenement.class, id_event);
@@ -541,5 +553,6 @@ public class Facade {
     Utilisateur util = em.find(Utilisateur.class, Integer.parseInt(uid));
     return util.getEtablissement_util().isEntreprise();
   }
+
 
 }

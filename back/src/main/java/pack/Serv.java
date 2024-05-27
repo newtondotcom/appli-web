@@ -446,6 +446,17 @@ public class Serv extends HttpServlet {
         response.getWriter().write(json);
         fct_sans_token = true;
       }
+      // Creer un avis
+      if (op.equals("creer_avis")) {
+        String titre = body.get("titre").getAsString();
+        int note = Integer.parseInt(body.get("note").getAsString());
+        String contenu = body.get("contenu").getAsString();
+        int id_util = Integer.parseInt(body.get("id_util").getAsString());
+        int id_event = Integer.parseInt(body.get("id_event").getAsString());
+        String msg = facade.creer_avis(titre, note, contenu, id_util, id_event);
+        String json = gson.toJson(msg);
+        response.getWriter().write(json);
+      }
     } else {
       if (!fct_sans_token) {
         String json = gson.toJson("Mauvais_Token");
