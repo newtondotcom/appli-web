@@ -23,6 +23,13 @@ import javax.print.DocFlavor;
 import java.security.SecureRandom;
 import java.math.BigInteger;
 import org.mindrot.jbcrypt.BCrypt;
+import java.util.concurrent.TimeUnit;
+import io.minio.MinioClient;
+import io.minio.GetPresignedObjectUrlArgs;
+import io.minio.http.Method;
+import io.minio.MinioClient;
+
+
 
 /**
  * Facade
@@ -34,6 +41,8 @@ public class Facade {
   private EntityManager em;
 
   private SecureRandom random = new SecureRandom();
+
+  private MinioClient minioClient = MinioClient.builder().endpoint("localhost", 9000, true).credentials("minioadmin", "minioadmin123").build();
 
   public void initialisation() {
     // Utilisateur 1 Entreprise
@@ -59,9 +68,10 @@ public class Facade {
     em.persist(avis);
     Demande dem = new Demande("oui", util, event);
     em.persist(dem);
-    Document doc = new Document(util, dem);
-    em.persist(doc);
     util.getEvenements_util().add(event);
+    String name = new BigInteger(32 * 5, random).toString(32);
+    Document doc = new Document(util, name);
+    em.persist(doc);
   }
 
   public LocalDateTime StringToTime(String date) {
@@ -540,6 +550,52 @@ public class Facade {
   public boolean get_bool_type_util_from_uid(String uid) {
     Utilisateur util = em.find(Utilisateur.class, Integer.parseInt(uid));
     return util.getEtablissement_util().isEntreprise();
+  }
+
+  public String register_document(String  token){
+    TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",Utilisateur.class);
+    query.setParameter("token", token);
+    Utilisateur utilisateur = query.getSingleResult();
+    String nomAleatoire = new BigInteger(32 * 5, random).toString(32);
+    Document doc = new Document(utilisateur, nomAleatoire);
+    em.persist(doc);
+    String path = "";
+    try {
+    path =
+    minioClient.getPresignedObjectUrl(
+       GetPresignedObjectUrlArgs.builder()
+           .method(Method.PUT)
+           .bucket("docs")
+           .object(nomAleatoire)
+           .expiry(1, TimeUnit.DAYS)
+           .build());
+    } catch (Exception e) {
+      path = "Error";
+    }
+    return path;
+  }
+
+  public String read_document_demande(int id_dem){
+    Demande dem = em.find(Demande.class, id_dem);
+    Utilisateur util = dem.getUtilisateur_dem();
+    String querystring = "SELECT d FROM Document d WHERE d.utilisateur_doc = :utilisateur";
+    TypedQuery<Document> query = em.createQuery(querystring,Document.class);
+    query.setParameter("utilisateur", util);
+    Document doc  = query.getSingleResult();
+    String nameS3 = doc.getName();
+    String url_access = "";
+    try{
+    url_access = minioClient.getPresignedObjectUrl(
+        GetPresignedObjectUrlArgs.builder()
+            .method(Method.GET)
+            .bucket("docs")
+            .object(nameS3)
+            .expiry(1, TimeUnit.DAYS)
+            .build());
+    } catch (Exception e) {
+      url_access = "Error";
+    }
+    return url_access;
   }
 
 }
