@@ -1,17 +1,19 @@
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   evenement: {
     type: Object as () => EvenementEtablissement,
     required: true,
   },
 });
 import { Calendar, Star } from "lucide-vue-next";
+import { computed } from "vue";
+const evenementPassed = computed(() => new Date(props.evenement.creneau) < new Date());
 </script>
 
 <template>
   <div
     class="flex space-y-4 justify-center align-middle content-center mx-auto"
-    :class="{ 'opacity-50': new Date(evenement.creneau) < new Date() }"
+    :class="{ 'opacity-50': evenementPassed}"
   >
     <Card class="w-[70vw]">
       <CardHeader
