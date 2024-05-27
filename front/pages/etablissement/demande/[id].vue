@@ -1,29 +1,36 @@
 <script setup lang="ts">
 const id = useRoute().params.id;
+
+const data = await $fetch(`http://localhost:8080/PasserellePro/Serv?op=get_evenement_from_id_demande&id=${id}`,
+    {
+      credentials: "include",
+    }
+  );
+const nom_evenement = data.titre;
+const creneau = new Date(data.creneau);
+const id_evenement = data.id;
+
+
 const postulants = await $fetch(
   `http://localhost:8080/PasserellePro/Serv?op=get_demande_from_id&id=${id}`,
   {
     credentials : "include",
   }
 );
-  const postulants3 = await $fetch(
+const motivation = postulants.motivation;
+const demandeRepondue = ref(postulants.refuse || postulants.valide);
+
+
+const postulants3 = await $fetch(
     `http://localhost:8080/PasserellePro/Serv?op=get_util_from_id_dem&id_dem=${id}`,
     {
       credentials: "include",
     }
-  );
-const id_demande = 1;
-const nom_evenement = "Découverte IA";
-
-const id_evenement = 1;
+);
 const identite = postulants3.nom.replace("#", " ");
 const email = postulants3.email;
 const numero = postulants3.numero;
 const classe =  postulants3.classe;
-const motivation = postulants.motivation;
-const creneau: string =
-  new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
-const demandeRepondue = ref(postulants.refuse || postulants.valide);
 
 
 async function accepterDemande() {
@@ -39,6 +46,7 @@ async function accepterDemande() {
     }
   );
   postulants.valide = true;
+  demandeRepondue.value = true;
   console.log(data);
 }
 
@@ -54,6 +62,7 @@ async function refuserDemande() {
     }
   );
   postulants.refuse = true;
+  demandeRepondue.value = true;
   console.log(data);
 }
 </script>
@@ -70,7 +79,9 @@ async function refuserDemande() {
         <CardTitle class="text-2xl font-medium">
           {{ nom_evenement }}
         </CardTitle>
-        <div class="flex flex-row">{{ creneau }}</div>
+        <div class="flex flex-row">          
+          {{ creneau.toLocaleDateString() }} -
+          {{ creneau.toLocaleTimeString() }}</div>
       </CardHeader>
       <CardContent
         class="flex space-y-4 justify-center align-middle content-center"
@@ -84,8 +95,8 @@ async function refuserDemande() {
   <Titre :title="identite" subtitle="Découvrez sa demande" />
   <div class="text-xs text-muted-foreground mb-6 ml-6">
     <Badge class="mr-2">{{ email }} </Badge>
-    <Badge variant="secondary">{{ numero }}</Badge>
-    <Badge class="ml-2" variant="outline">{{ classe }}</Badge>
+    <Badge v-if="numero!=null" variant="secondary">{{ numero }}</Badge>
+    <Badge v-if="numero!=null" class="ml-2" variant="outline">{{ classe }}</Badge>
   </div>
   <div
     class="flex space-y-4 justify-center align-middle content-center mx-auto"
