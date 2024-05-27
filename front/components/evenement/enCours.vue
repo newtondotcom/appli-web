@@ -31,7 +31,7 @@ for (let i = 0; i < postulants.length; i++) {
     valide: postulants[i].valide,
     refuse: postulants[i].refuse,
     present: postulants[i].present,
-    presenceverifiee: false,
+    presenceverifiee: postulants[i].refuse || postulants[i].present
   });
 }
 
