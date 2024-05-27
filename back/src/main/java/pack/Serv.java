@@ -296,6 +296,14 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(is);
         response.getWriter().write(json);
       }
+      // Récupérer l'url du document
+      if (op.equals("read_document_demande")) {
+        String id_dem = request.getParameter("id_dem");
+        int id_dem_int = Integer.parseInt(id_dem);
+        String lien = facade.read_document_demande(id_dem_int);
+        String json = gson.toJson(lien);
+        response.getWriter().write(json);
+      }
 
     } else {
       if (!fct_sans_token) {
@@ -445,6 +453,12 @@ public class Serv extends HttpServlet {
         String json = gson.toJson(msg);
         response.getWriter().write(json);
         fct_sans_token = true;
+      }
+      // Ajouter un document
+      if (op.equals("ajouter_doc")) {
+        String lien = facade.register_document(token);
+        String json = gson.toJson(lien);
+        response.getWriter().write(json);
       }
     } else {
       if (!fct_sans_token) {
