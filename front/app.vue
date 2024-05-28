@@ -2,10 +2,7 @@
 import { CircleUser } from "lucide-vue-next";
 import { computed } from "vue";
 
-const token = useCookie("token", {
-  httpOnly: false,
-  SameSite: "lax",
-});
+const token = useCookie("token");
 const userAuth = computed(() => token.value);
 console.log("userAuth", userAuth.value);
 const isConnected = computed(() => userAuth.value !== undefined);
