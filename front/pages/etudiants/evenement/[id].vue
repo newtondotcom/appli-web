@@ -111,7 +111,7 @@ async function sendDemand() {
         }),
       }
     );
-    location.reload();
+    navigateTo(`/etudiants/evenements`);
   } catch (error) {
     console.error(error);
   }
