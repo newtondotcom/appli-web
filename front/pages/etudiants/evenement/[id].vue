@@ -178,7 +178,7 @@ const handleFileChange = (event: Event) => {
     </div>
     <ScrollArea class="h-96 w-100 rounded-md border">
       <div class="mt-20 flex flex-wrap justify-center">
-        <div v-for="a in avis" :key="a.id" class="w-[40%] mx-4">
+        <div v-for="a in tabAvis" :key="a.id" class="w-[40%] mx-4">
           <EtudiantAvisCard :avis="a" />
         </div>
       </div>
