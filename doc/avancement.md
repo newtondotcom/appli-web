@@ -155,7 +155,10 @@ Accéder aux informations rentrées par les utilisateurs (retrouver un mot de pa
 - Modification des entités pour que le builderJson ne sélectionne que les champs voulus et ne boucle pas.
 
 # Semaine du 19 mai au 24 mai
-
+## Vue Etudiant
+- Création des avis pour commenter un évènement
+- Ajout d'un Icone pour suivre l'avancé de la demande
+- Ajout de toutes les requêtes à la base de donnée
 ## Back-end
 
 - Rajout de la plupart des fonctions renvoyant les attrubuts @ManytoOne, @ManytoMany et @OnetoMany des entitys
