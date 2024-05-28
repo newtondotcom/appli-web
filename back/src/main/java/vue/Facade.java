@@ -42,7 +42,7 @@ public class Facade {
 
   private SecureRandom random = new SecureRandom();
 
-  private MinioClient minioClient = MinioClient.builder().endpoint("localhost", 9000, false).credentials("minioadmin", "minioadmin123").build();
+  private MinioClient minioClient = MinioClient.builder().endpoint("minio", 9000, false).credentials("minioadmin", "minioadmin123").build();
 
   public void initialisation() {
     // Utilisateur 1 Entreprise
@@ -582,12 +582,11 @@ public class Facade {
     return util.getEtablissement_util().isEntreprise();
   }
 
-  public String register_document(String  token){
+  public String register_document(String token, String nom){
     TypedQuery<Utilisateur> query = em.createQuery("SELECT u FROM Utilisateur u WHERE u.token = :token",Utilisateur.class);
     query.setParameter("token", token);
     Utilisateur utilisateur = query.getSingleResult();
-    String nomAleatoire = new BigInteger(32 * 5, random).toString(32);
-    Document doc = new Document(utilisateur, nomAleatoire);
+    Document doc = new Document(utilisateur, nom);
     em.persist(doc);
     String path = "";
     try {
@@ -596,7 +595,7 @@ public class Facade {
        GetPresignedObjectUrlArgs.builder()
            .method(Method.PUT)
            .bucket("docs")
-           .object(nomAleatoire)
+           .object(nom)
            .expiry(1, TimeUnit.DAYS)
            .build());
     } catch (Exception e) {

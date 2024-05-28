@@ -459,7 +459,8 @@ public class Serv extends HttpServlet {
       }
       // Ajouter un document
       if (op.equals("ajouter_doc")) {
-        String lien = facade.register_document(token);
+        String nom = body.get("nom").getAsString();
+        String lien = facade.register_document(token,nom);
         String json = gson.toJson(lien);
         response.getWriter().write(json);
       }
