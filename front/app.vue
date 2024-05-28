@@ -16,7 +16,35 @@ function deconnexion() {
 const isEntreprise = ref(false);
 const lienCompte = ref("");
 const lienEvenements = ref("");
+const uid = ref(-1);
 if (isConnected.value) {
+  const data1 = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_uid_from_token`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  uid.value = data1;
+  const data2 = await $fetch(
+    `http://localhost:8080/PasserellePro/Serv?op=get_bool_type_util_from_uid&uid=${uid.value}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  console.log(" data2 : ", data2);
+  isEntreprise.value = data2;
+  console.log("isEntreprise 1 :", isEntreprise.value);
+  if (isEntreprise.value) {
+    lienCompte.value = "/etablissement/compte";
+    lienEvenements.value = "/etablissement/evenements";
+  } else {
+    lienCompte.value = `/etudiants/${uid.value}`;
+    lienEvenements.value = "/etudiants/mesEvenement";
+  }
+}
+watch(token, async () => {
   const uid = await $fetch(
     `http://localhost:8080/PasserellePro/Serv?op=get_uid_from_token`,
     {
@@ -38,7 +66,7 @@ if (isConnected.value) {
     lienCompte.value = `/etudiants/${uid}`;
     lienEvenements.value = "/etudiants/mesEvenement";
   }
-}
+});
 </script>
 <template>
   <div>
