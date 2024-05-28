@@ -16,7 +16,8 @@ const handleFileChange = async (event: Event) => {
             credentials: "include",
           }
         );
-        uploadFile(url, file);
+        console.log(url);
+        await uploadFile(url, file);
     } catch (error) {
         console.error('Error uploading file:', error);
     }

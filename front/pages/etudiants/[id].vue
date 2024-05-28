@@ -198,13 +198,18 @@ const handleFileChange = async (event: Event) => {
           {
             method: "POST",
             credentials: "include",
+            body : JSON.stringify({
+              nom : file.name,
+            })
           }
         );
-        await uploadFile(url, file);
-        toast({
-          title: "C'est tout bon !",
-          description: "Votre photo de profil a bien été enregistrée",
-        });
+        //await uploadFile(url, file);
+        await setTimeout(() => {
+          toast({
+            title: "C'est tout bon !",
+            description: "Votre photo de profil a bien été enregistrée",
+          });
+        }, 1000);
     } catch (error) {
         console.error('Error uploading file:', error);
     }
@@ -236,21 +241,25 @@ async function uploadFile(presignedUrl: string, file: File) {
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <div class="absolute right-4">
-      <Button
-        @click="Modifyprofil"
-        :variant="isModifying ? undefined : 'secondary'"
-        size="icon"
-      >
-        <Settings class="w-4 h-4" />
-      </Button>
-    </div>
+      <div class="gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3">
+        <div class="relative hidden flex-col items-center gap-8 md:flex">
+    <div class="flex flex-row">
     <Titre
       title="Profil"
       subtitle="Voici les informations que voit les entreprises."
       class="place-self-center"
     />
+      <Button
+        @click="Modifyprofil"
+        :variant="isModifying ? undefined : 'secondary'"
+        size="icon"
+        class="ml-8 mt-4"
+      >
+        <Settings class="w-4 h-4" />
+      </Button>
+    </div>
+
+    <div class="grid w-[50%] items-start gap-6">
     <div class="grid gap-4 px-4">
       <div class="grid gap-3">
         <Label for="nomEtudiant">Nom</Label>
@@ -313,6 +322,14 @@ async function uploadFile(presignedUrl: string, file: File) {
           :isModifying="isModifying"
         />
       </div>
+      <div class="grid w-full max-w-sm items-center gap-1.5">
+        <Label for="picture">Picture</Label>
+        <Input 
+        id="picture"
+        type="file" 
+        @change="handleFileChange"
+         />
+      </div>
       <Button
         @click="saveChanges"
         :disabled="isModifying ? undefined : 'secondary'"
@@ -322,5 +339,7 @@ async function uploadFile(presignedUrl: string, file: File) {
         </div>
       </Button>
     </div>
+          </div>
+        </div>
   </div>
 </template>
