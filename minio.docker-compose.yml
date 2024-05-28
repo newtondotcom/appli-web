@@ -14,3 +14,15 @@ services:
       - ./minio/data:/data
       - ./minio/config:/root/.minio
     command: server /data --console-address ":9001"
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin123;
+      /usr/bin/mc mb myminio/docs;
+      /usr/bin/mc policy set public myminio/somebucketname;
+      exit 0;
+      "
