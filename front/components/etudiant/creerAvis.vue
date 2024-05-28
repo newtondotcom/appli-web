@@ -10,6 +10,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  tabAvis: {
+    type: Array,
+    required: true,
+  },
 });
 const isStar1 = ref(false);
 const isStar2 = ref(false);
@@ -110,7 +114,13 @@ async function sendAvis() {
           }),
         }
       );
-      location.reload();
+      const avis = {
+        titre: titre.value,
+        note: note,
+        contenu: commentaire.value,
+        id: Math.random(),
+      };
+      props.tabAvis.push(avis);
     } catch (error) {
       console.error(error);
     }

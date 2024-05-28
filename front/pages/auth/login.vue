@@ -24,21 +24,20 @@ async function seConnecter() {
         title: "Erreur",
         description: "Le mot de passe est incorrect",
       });
-    } else if (data == "Error"){
+    } else if (data == "Error") {
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la connexion",
       });
-    } 
-    else {
-    const token = data;
-    const token_cookie = useCookie("token",
-    {
-      httpOnly  : false,
-      SameSite : "lax",
-    });
-    token_cookie.value = token;
-    navigateTo("/");
+    } else {
+      const token = data;
+      const token_cookie = useCookie("token", {
+        httpOnly: false,
+        SameSite: "lax",
+      });
+      token_cookie.value = token;
+      location.reload();
+      window.location.href = "/";
     }
   } catch (error) {
     console.error(error);

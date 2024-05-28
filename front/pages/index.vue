@@ -105,7 +105,7 @@ function type() {
     <div class="flex flex-row justify-center items-center">
       <ScrollArea class="h-[450px] w-[300px] rounded-md border mr-8 my-6">
         <div class="p-4">
-          <h4 class="mb-4 text-md font-bold leading-none">Entreprises</h4>
+          <h4 class="mb-4 text-md font-bold leading-none">Domaines</h4>
 
           <div v-for="tag in domains" :key="tag">
             <div class="text-sm">
@@ -113,15 +113,12 @@ function type() {
             </div>
             <Separator class="my-2" />
           </div>
-          <a href="" class="font-medium flex"
-            >Voir plus <MoveRight class="ml-2"
-          /></a>
         </div>
       </ScrollArea>
 
       <ScrollArea class="h-[450px] w-[300px] rounded-md border ml-8">
         <div class="p-4">
-          <h4 class="mb-4 text-md font-bold leading-none">Domaines</h4>
+          <h4 class="mb-4 text-md font-bold leading-none">Entreprises</h4>
 
           <div v-for="tag in companies" :key="tag">
             <div class="text-sm">
@@ -129,7 +126,6 @@ function type() {
             </div>
             <Separator class="my-2" />
           </div>
-          <a class="font-medium flex">Voir plus <MoveRight class="ml-2" /></a>
         </div>
       </ScrollArea>
     </div>

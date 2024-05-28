@@ -20,6 +20,7 @@ const data = await $fetch(
 const evenementsStart = data;
 
 let events = [];
+const currentDate = new Date(); // date courante
 
 for (let i = 0; i < evenementsStart.length; i++) {
   const etab = await $fetch(
@@ -54,7 +55,9 @@ for (let i = 0; i < evenementsStart.length; i++) {
     note_etablissement: stats[3],
     tags: doma,
   };
-  events.push(event);
+  if (event.creneau > currentDate) {
+    events.push(event);
+  }
 }
 
 /* Gestion des filtres */

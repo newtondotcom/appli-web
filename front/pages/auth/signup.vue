@@ -77,15 +77,14 @@ async function enregistrer() {
       }
     );
     console.log(data);
-    if (data !="Error"){
-    const token = data;
-    const token_cookie = useCookie("token",
-    {
-      httpOnly  : false,
-      SameSite : "lax",
-    });
-    token_cookie.value = token;
-    navigateTo("/");
+    if (data != "Error") {
+      const token = data;
+      const token_cookie = useCookie("token", {
+        httpOnly: false,
+        SameSite: "lax",
+      });
+      token_cookie.value = token;
+      window.location.href = "/";
     }
   } catch (error) {
     console.error(error);

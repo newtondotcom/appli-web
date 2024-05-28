@@ -124,7 +124,7 @@ const avis = await $fetch(
     credentials: "include",
   }
 );
-const av = avis[0];
+const tabAvis = ref(avis);
 
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -188,7 +188,7 @@ const handleFileChange = (event: Event) => {
         <Titre title="Partager votre avis" subtitle="" />
       </div>
       <div class="flex justify-center">
-        <EtudiantCreerAvis :id_util="uid" :id_event="eid" />
+        <EtudiantCreerAvis :tabAvis="tabAvis" :id_util="uid" :id_event="eid" />
       </div>
     </div>
   </div>
