@@ -106,6 +106,18 @@ public class Serv extends HttpServlet {
       response.getWriter().write(json);
       fct_sans_token = true;
     }
+    if (op.equals("lister_ecole")) {
+      Collection<Etablissement> etabs = facade.lister_ecole();
+      String json = gson.toJson(etabs);
+      response.getWriter().write(json);
+      fct_sans_token = true;
+    }
+    if (op.equals("lister_entreprise")) {
+      Collection<Etablissement> etabs = facade.lister_entreprise();
+      String json = gson.toJson(etabs);
+      response.getWriter().write(json);
+      fct_sans_token = true;
+    }
     if (facade.verifierToken(token)) {
       // NULL -> Lister tout les évenemtents et domaines
       if (op.equals("lister_event")) {
@@ -272,16 +284,6 @@ public class Serv extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         Collection<Utilisateur> postulants = facade.get_liste_postulants_from_eventid(id);
         String json = gson.toJson(postulants);
-        response.getWriter().write(json);
-      }
-      if (op.equals("lister_ecole")) {
-        Collection<Etablissement> etabs = facade.lister_ecole();
-        String json = gson.toJson(etabs);
-        response.getWriter().write(json);
-      }
-      if (op.equals("lister_entreprise")) {
-        Collection<Etablissement> etabs = facade.lister_entreprise();
-        String json = gson.toJson(etabs);
         response.getWriter().write(json);
       }
       if (op.equals("get_util_from_id_dem")) {
