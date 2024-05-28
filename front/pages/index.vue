@@ -59,10 +59,13 @@ onMounted(async () => {
   companies.value = JSON.parse(data.split(";")[0]);
   domains.value = JSON.parse(data.split(";")[1]);
   type();
+  /*
   const data2 = await $fetch(
     "http://localhost:8080/PasserellePro/Serv?op=lister_entreprise"
   );
   companies.value = data2;
+  console.log(companies.value);
+  */
   type();
 });
 
