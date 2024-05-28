@@ -48,18 +48,36 @@ public class Facade {
     // Utilisateur 1 Entreprise
     Etablissement new_etab1 = new Etablissement("4 rue test1", 1, "IKEA", "meuble", true, "chat");
     em.persist(new_etab1);
+    Etablissement new_etab2 = new Etablissement("10 impasse de Toulouse", 2, "Airbus", "avion", true, "avion");
+    em.persist(new_etab2);
+    Etablissement new_etab3 = new Etablissement("12 trotoir de l'impasse", 3, "CMACGM", "camion", true, "camion");
+    em.persist(new_etab3);
+    Etablissement new_etab4 = new Etablissement("69 rue de l'inverse", 4, "Gemo", "vetement", true, "vetement");
+    em.persist(new_etab4);
     String sel = BCrypt.gensalt(12);
     String mdpHacher = BCrypt.hashpw("1234", sel);
     Utilisateur util = new Utilisateur("Fredo", mdpHacher, "f@test.com", new_etab1, "1");
     em.persist(util);
     // Création d'une école
-    Etablissement new_etab2 = new Etablissement("4 rue test2", 2, "ENSEEIHT", "Ecole", false, "ecole");
-    em.persist(new_etab2);
+    Etablissement new_ecole1 = new Etablissement("2 rue Charles Camichel", 5, "ENSEEIHT", "ENSEEIHT", false, "ENSEEIHT");
+    em.persist(new_ecole1);
+    Etablissement new_ecole2 = new Etablissement("10rue de Paris", 6, "INSA Toulouse", "INSA Toulouse", false, "INSA Toulouse");
+    em.persist(new_ecole2);
+    Etablissement new_ecole3 = new Etablissement("8 rue des troubadours", 7, "ISAE Supaero", "ISAE Supaero", false, "ISAE Supaero");
+    em.persist(new_ecole3);
+    Etablissement new_ecole4 = new Etablissement("45 impasse du tourisme", 8, "ENAC", "ENAC", false, "ENAC");
+    em.persist(new_ecole4);
     // Création d'un évenement
     Domain dom1 = new Domain("IA");
-    Domain dom2 = new Domain("tech");
+    Domain dom2 = new Domain("Tech");
+    Domain dom3 = new Domain("Data");
+    Domain dom4 = new Domain("Web");
+    Domain dom5 = new Domain("Dev");
     em.persist(dom1);
     em.persist(dom2);
+    em.persist(dom3);
+    em.persist(dom4);
+    em.persist(dom5);
     Evenement event = new Evenement("cool", LocalDateTime.of(2024, Month.MAY, 15, 14, 30, 0), new_etab1, 60,
         "Super");
     em.persist(event);
