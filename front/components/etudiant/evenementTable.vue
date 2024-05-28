@@ -55,7 +55,7 @@ for (let i = 0; i < evenementsStart.length; i++) {
     note_etablissement: stats[3],
     tags: doma,
   };
-  if (event.creneau > currentDate) {
+  if (new Date(event.creneau) > currentDate) {
     events.push(event);
   }
 }
