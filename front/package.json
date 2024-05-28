@@ -14,7 +14,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.372.0",
-    "minio": "^8.0.0",
     "nuxt": "^3.11.2",
     "radix-vue": "^1.7.2",
     "shadcn-nuxt": "^0.10.2",
