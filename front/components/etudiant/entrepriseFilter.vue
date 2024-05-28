@@ -34,10 +34,10 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from "vue";
 const selectedEntreprise = ref("");
-const data = await $fetch(
-  "http://localhost:8080/PasserellePro/Serv?op=lister_etab_domain"
+const data2 = await $fetch(
+  "http://localhost:8080/PasserellePro/Serv?op=lister_entreprise"
 );
-const entreprises = JSON.parse(data.split(";")[0]);
+const entreprises = data2;
 const emit = defineEmits(["filter"]);
 watchEffect(() => {
   emit("filter", selectedEntreprise.value);
