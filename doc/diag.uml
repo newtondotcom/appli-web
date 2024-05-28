@@ -1,0 +1,102 @@
+@startuml
+class Avis {
+    id: int
+    titre: String
+    note: int
+    contenu: String
+    utilisateur_avis: Utilisateur
+    evenement_avis: Evenement
+}
+
+class Demande {
+    id: int
+    valide: boolean
+    refuse: boolean
+    present: boolean
+    motivation: String
+    utilisateur_dem: Utilisateur
+    evenement_dem: Evenement
+}
+
+class Document {
+    id: int
+    name: String
+    utilisateur_doc: Utilisateur
+}
+
+class Domain {
+    id: int
+    nom: String
+    etablissements_dom: Collection<Etablissement>
+    evenement_dom: Collection<Evenement>
+}
+
+class Etablissement {
+    SIREN: int
+    adresse: String
+    nom: String
+    entreprise: boolean
+    description: String
+    image: String
+    utilisateur_etab: Collection<Utilisateur>
+    evenements_etab: Collection<Evenement>
+    domains_etab: Collection<Domain>
+}
+
+class Evenement {
+    id: int
+    titre: String
+    description: String
+    creneau: LocalDateTime
+    duree: int
+    utilisateurs_event: Collection<Utilisateur>
+    etablissement_event: Etablissement
+    demandes_event: Collection<Demande>
+    domains_event: Collection<Domain>
+    avis_event: Collection<Avis>
+}
+
+class Utilisateur {
+    id: int
+    nom: String
+    mdp: String
+    INE: String
+    admin: boolean
+    email: String
+    telephone: String
+    classe: String
+    token: String
+    etablissement_util: Etablissement
+    evenements_util: Collection<Evenement>
+    demandes_util: Collection<Demande>
+    documents_util: Collection<Document>
+    avis_util: Collection<Avis>
+}
+
+Avis "1" -- "N" Utilisateur : utilisateur_avis
+Avis "1" -- "1" Evenement : evenement_avis
+
+Demande "1" -- "N" Utilisateur : utilisateur_dem
+Demande "1" -- "1" Evenement : evenement_dem
+
+Document "1" -- "1" Utilisateur : utilisateur_doc
+
+Domain "1" -- "N" Etablissement : etablissements_dom
+Domain "1" -- "N" Evenement : evenement_dom
+
+Etablissement "1" -- "N" Utilisateur : utilisateur_etab
+Etablissement "1" -- "N" Evenement : evenements_etab
+Etablissement "1" -- "N" Domain : domains_etab
+
+Evenement "1" -- "N" Utilisateur : utilisateurs_event
+Evenement "1" -- "1" Etablissement : etablissement_event
+Evenement "1" -- "N" Demande : demandes_event
+Evenement "1" -- "N" Domain : domains_event
+Evenement "1" -- "N" Avis : avis_event
+
+Utilisateur "1" -- "1" Etablissement : etablissement_util
+Utilisateur "1" -- "N" Evenement : evenements_util
+Utilisateur "1" -- "N" Demande : demandes_util
+Utilisateur "1" -- "N" Document : documents_util
+Utilisateur "1" -- "N" Avis : avis_util
+@enduml
