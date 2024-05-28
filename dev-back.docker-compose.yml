@@ -29,6 +29,9 @@ services:
       /bin/sh -c "
       /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin123;
       /usr/bin/mc mb myminio/docs;
-      /usr/bin/mc policy set public myminio/somebucketname;
+      /usr/bin/mc policy set public myminio/docs;
+      /usr/bin/mc admin bucket remote set myminio/docs /config/cors.json;
       exit 0;
       "
+    volumes:
+      - ./cors.json:/config/cors.json
