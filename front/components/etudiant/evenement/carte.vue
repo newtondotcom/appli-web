@@ -69,7 +69,7 @@ if (demandeEffectue) {
       <CardContent>
         <div class="text-xl flex justify-between">
           <div>{{ props.evenement.description }}</div>
-          <div v-if="demandeEffectue" class="flex justify-center grid">
+          <div v-if="demandeEffectue" class="flex justify-center">
             <TicketCheck
               color="#3e9392"
               class="w-12 h-12 justify-self-center"
@@ -94,7 +94,7 @@ if (demandeEffectue) {
                 <Badge class="mr-2"
                   >{{ props.evenement.nom_etablissement }}
                 </Badge>
-                <Badge variant="secondary"
+                <Badge variant="secondary" v-if="props.evenement.note_etablissement !=-1"
                   >{{ props.evenement.note_etablissement }} / 5
                   <Star class="ml-1" :size="14" />
                 </Badge>
