@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Notebook, Star } from "lucide-vue-next";
 import { ref } from "vue";
+import { useToast } from "@/components/ui/toast/use-toast";
+const { toast } = useToast();
 const props = defineProps({
   id_util: {
     type: Number,
@@ -121,6 +123,17 @@ async function sendAvis() {
         id: Math.random(),
       };
       props.tabAvis.push(avis);
+      toast({
+        title: "Succès",
+        description: "Votre avis a bien été envoyé",
+      });
+      titre.value = "";
+      commentaire.value = "";
+      isStar1.value = false;
+      isStar2.value = false;
+      isStar3.value = false;
+      isStar4.value = false;
+      isStar5.value = false;
     } catch (error) {
       console.error(error);
     }
@@ -129,52 +142,54 @@ async function sendAvis() {
 </script>
 
 <template>
-  <Card class="w-[350px]">
+  <Card class="w-[700px] h-[300px]">
     <CardHeader>
       <CardTitle>
-        <Textarea v-model="titre" placeholder="Titre" class="w-[40%] h-1" />
+        <Input type="text" v-model="titre" placeholder="Titre" class="w-[40%] h-1" />
       </CardTitle>
     </CardHeader>
-    <CardContent>
-      <Textarea v-model="commentaire" placeholder="Commentaire" />
+    <CardContent class="p-0 px-6 h-[50%]">
+      <Textarea v-model="commentaire" placeholder="Commentaire" class="w-full h-[70%]" />
     </CardContent>
-    <CardFooter class="flex px-6 pb-6">
+    <CardFooter class="flex px-6 justify-between">
+      <div class="flex flex-row">
       <div @click="handleStar1">
         <Star
-          class="ml-1"
+          class="ml-1 cursor-pointer"
           :size="25"
           :color="isStar1 ? '#000000' : '#d6d6d6'"
         />
       </div>
       <div @click="handleStar2">
         <Star
-          class="ml-1"
+          class="ml-1 cursor-pointer"
           :size="25"
           :color="isStar2 ? '#000000' : '#d6d6d6'"
         />
       </div>
       <div @click="handleStar3">
         <Star
-          class="ml-1"
+          class="ml-1 cursor-pointer"
           :size="25"
           :color="isStar3 ? '#000000' : '#d6d6d6'"
         />
       </div>
       <div @click="handleStar4">
         <Star
-          class="ml-1"
+          class="ml-1 cursor-pointer"
           :size="25"
           :color="isStar4 ? '#000000' : '#d6d6d6'"
         />
       </div>
       <div @click="handleStar5">
         <Star
-          class="ml-1"
+          class="ml-1 cursor-pointer"
           :size="25"
           :color="isStar5 ? '#000000' : '#d6d6d6'"
         />
       </div>
-      <Button @click="sendAvis" variant="secondary" class="ml-10">
+    </div>
+      <Button @click="sendAvis">
         Envoyer
       </Button>
     </CardFooter>
