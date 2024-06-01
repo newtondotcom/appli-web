@@ -83,13 +83,13 @@ watch(token, async () => {
 
           <div class="md:block" v-if="isConnected && !isEntreprise">
             <nav aria-label="Global">
-              <ul class="flex items-center gap-6 text-sm">
+              <ul class="flex items-center text-sm">
                 <li>
                   <a
                     class="text-gray-500 transition hover:text-gray-500/75"
                     href="/etudiants/evenements"
                   >
-                    Rechercher un évènement
+                  Rechercher un évènement
                   </a>
                 </li>
               </ul>
@@ -114,11 +114,11 @@ watch(token, async () => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <a :href="lienCompte">
-                  <DropdownMenuItem>Paramètres</DropdownMenuItem>
-                </a>
                 <a :href="lienEvenements">
                   <DropdownMenuItem>Mes évènements</DropdownMenuItem>
+                </a>
+                <a :href="lienCompte">
+                  <DropdownMenuItem>Paramètres</DropdownMenuItem>
                 </a>
                 <DropdownMenuItem @click="deconnexion"
                   >Se déconnecter</DropdownMenuItem
