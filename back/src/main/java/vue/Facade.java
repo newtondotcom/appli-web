@@ -84,6 +84,8 @@ public class Facade {
     Evenement eventpasse = new Evenement("cool", LocalDateTime.of(2020, Month.MAY, 15, 14, 30, 0), new_etab1, 60,
         "Super");
     em.persist(eventpasse);
+    Evenement avenir = new Evenement("cool", LocalDateTime.of(2025, Month.JULY, 15, 14, 30, 0), new_etab1, 60,
+        "Super");
     event.getDomains_event().add(dom1);
     Avis avis = new Avis("Super", 5, "Génial", util, event);
     em.persist(avis);
