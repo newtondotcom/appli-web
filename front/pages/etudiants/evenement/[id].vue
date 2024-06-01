@@ -126,6 +126,11 @@ const avis = await $fetch(
 );
 const tabAvis = ref(avis);
 
+const duree = evenement.duree;
+const evenementPassed = computed(() => {
+  return new Date(event.creneau).getTime() + duree * 60000 < new Date().getTime()
+});
+
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
@@ -142,8 +147,8 @@ const handleFileChange = (event: Event) => {
   <div>
     <div class="flex flex-wrap justify-center gap-10">
       <EtudiantEvenementCarte :key="event.id" :evenement="event" />
-      <div class="grid w-full max-w-sm items-center gap-14 content-center">
-        <div>
+      <div v-if="!evenementPassed" class="grid w-full items-center gap-14 content-center justify-center">
+        <fieldset class="grid w-[70vw] gap-6 rounded-lg border p-4 justify">
           <Label for="lettreDeMotiv" class="place-self-center"
             >Lettre de Motivation</Label
           >
@@ -155,10 +160,9 @@ const handleFileChange = (event: Event) => {
             v-model="lettreDeMotiv"
             :disabled="demandeEffectue"
           />
-        </div>
+        </fieldset>
         <Button
           @click="sendDemand"
-          variant="secondary"
           class="w-[20%] place-self-center"
           :disabled="demandeEffectue"
         >
@@ -172,13 +176,12 @@ const handleFileChange = (event: Event) => {
         </AlertDescription>
       </Alert>
     </div>
-    <Separator class="my-4" />
-    <div class="flex justify-center">
-      <Titre title="Avis sur l'évènement" subtitle="" />
+    <div class="flex justify-cente mt-8">
+      <Titre title="Avis sur l'évènement" subtitle="Voici les avis postés sur l'évènement" />
     </div>
     <ScrollArea class="h-96 w-100 rounded-md border">
-      <div class="mt-20 flex flex-wrap justify-center">
-        <div v-for="a in tabAvis" :key="a.id" class="w-[40%] mx-4">
+      <div class="px-4 py-4 grid grid-cols-3 gap-4 justify-center">
+        <div v-for="a in tabAvis" :key="a.id" class="w-full">
           <EtudiantAvisCard :avis="a" />
         </div>
       </div>
